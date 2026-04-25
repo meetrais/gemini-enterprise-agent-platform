@@ -157,24 +157,26 @@ gcloud storage ls "${STAGING_BUCKET}/tuning/"
 
 ## 3.B.3 Launch the tuning job (Console method)
 
-1. In the console, go to **Agent Platform -> Studio -> Tune and Distill** or open the tuning entry point from **Model Garden**.
-2. Click **Create tuned model**.
-3. **Model details:**
+1. In the console navigation menu, under **Products**, expand **Agent Platform**.
+2. Click **Studio**.
+3. On the Studio page, find the **Tune and Distill** area or table.
+4. Click **Create tuned model**.
+5. **Model details:**
  - **Tuned model name:** `support-classifier-v1` (max 128 chars).
  - **Base model:** select `gemini-2.5-flash` or the current tunable Flash model available in your region.
  - **Region:** `us-central1`.
  - **Tuning method:** **Supervised tuning** (radio button).
-4. **Advanced options** (expand):
+6. **Advanced options** (expand):
  - **Number of epochs:** start with `3`. More epochs risk overfitting; fewer risk undertraining.
  - **Adapter size:** `4` is a sensible default. Larger = more trainable parameters = needs more data.
  - **Learning rate multiplier:** `1.0` is the recommended start. Use `0.5` if you're seeing overfit, `2.0` if undertrained.
-5. Click **Continue**.
-6. **Tuning dataset page:**
+7. Click **Continue**.
+8. **Tuning dataset page:**
  - Select **Existing file on Cloud Storage**.
  - **Cloud Storage file path:** click **Browse** and pick `gs://my-agent-platform-agent-staging/tuning/train.jsonl`.
-7. **Validation dataset:** toggle **Enable model validation**. Browse to `gs://my-agent-platform-agent-staging/tuning/val.jsonl`.
-8. (Optional) **Evaluation config:** toggle on to have the **Gen AI Evaluation Service** auto-run after tuning. This region must be `us-central1`.
-9. Click **Start Tuning**.
+9. **Validation dataset:** toggle **Enable model validation**. Browse to `gs://my-agent-platform-agent-staging/tuning/val.jsonl`.
+10. (Optional) **Evaluation config:** toggle on to have the **Gen AI Evaluation Service** auto-run after tuning. This region must be `us-central1`.
+11. Click **Start Tuning**.
 
 Your job appears under **Tune and Distill** with status `Running`. A small (~100-example) dataset with 1 epoch finishes in ~20 minutes; 3 epochs on 1000 examples takes ~1 hour.
 
@@ -230,7 +232,7 @@ print("Tuned model:", job.tuned_model_endpoint_name)
 
 ## 3.B.5 Monitor tuning metrics
 
-While the job runs, in the console go to **Tune and Distill -> click your model -> Monitor tab**. You'll see:
+While the job runs, open the navigation menu, under **Products** expand **Agent Platform**, click **Studio**, find the **Tune and Distill** table, click your model, then open the **Monitor** tab. You'll see:
 
 - **`/train_total_loss`** - should decrease steadily.
 - **`/train_fraction_of_correct_next_step_preds`** - should increase.
@@ -450,8 +452,9 @@ A newer feature: instead of writing a static rubric, the service auto-generates 
 
 Every evaluation run is recorded as an Agent Platform experiment.
 
-1. Console -> **Agent Platform -> Studio -> Experiments**.
-2. Pick `support-classifier-eval` or `base-vs-tuned`.
+1. Open the navigation menu, under **Products** expand **Agent Platform**, and click **Studio**.
+2. Find the **Experiments** area on the Studio page, or use the console search bar to search for **Experiments**.
+3. Pick `support-classifier-eval` or `base-vs-tuned`.
 3. View summary metrics, distributions, and per-row drill-down.
 
 You can compare runs side by side here, which is the easiest way to track progress over weeks.

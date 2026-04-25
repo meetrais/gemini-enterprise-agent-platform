@@ -290,8 +290,9 @@ If you see `OK` (or close to it), your project, auth, billing, APIs, and SDKs al
 
 1. Browse to https://console.cloud.google.com.
 2. Top bar - confirm your project name shows `Agent Platform Demo`.
-3. Left nav -> **Agent Platform** and **Gemini Enterprise**. You should be able to reach Model Garden, Agent Engine, and your Gemini Enterprise app.
-4. Confirm you can reach the relevant pages: **Agent Platform > Models**, **Agent Platform > Agents**, and **Gemini Enterprise**.
+3. In the navigation menu, under **Products**, expand **Agent Platform**.
+4. Confirm you can open **Models**, **Agents**, and **Notebooks**.
+5. Use the console search bar to open **Gemini Enterprise**, then confirm you can reach your Gemini Enterprise app.
 
 ---
 

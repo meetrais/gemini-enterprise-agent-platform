@@ -192,9 +192,11 @@ The first session establishes facts. After it closes, Memory Bank extracts them 
 
 ## 8.5 Inspect memories in the console
 
-1. Console -> **Agent Platform -> Agents -> support-assistant-engine**.
-2. **Memories** tab.
-3. Filter by `user_id = alice@example.com`.
+1. In the navigation menu, under **Products**, expand **Agent Platform**.
+2. Click **Agents**.
+3. Open `support-assistant-engine`.
+4. Open the **Memories** tab.
+5. Filter by `user_id = alice@example.com`.
 
 You should see entries like:
 

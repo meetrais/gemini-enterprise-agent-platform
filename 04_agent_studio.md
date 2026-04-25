@@ -16,10 +16,11 @@ source ./set-env.sh
 
 ## 4.1 Open Agent Designer
 
-1. In the Google Cloud console, go to **Gemini Enterprise**.
-2. Open the Gemini Enterprise app you want to use.
-3. Go to **Agents** and choose **Create agent** or **Agent Designer**.
-4. If prompted, select the app region and complete the setup flow.
+1. In the Google Cloud console search bar, search for **Gemini Enterprise** and open it.
+2. Open **Apps**.
+3. Select your app and copy the Gemini Enterprise web app URL from the app dashboard.
+4. Open the web app URL in a new browser tab.
+5. In the web app navigation menu, click **+ Create agent**.
 
 Agent Designer is a Preview feature in the public docs, so labels can shift. If your UI differs, look for the flow that creates a custom agent from a prompt or from the visual flow builder.
 

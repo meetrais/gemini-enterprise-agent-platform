@@ -22,18 +22,21 @@ source ./set-env.sh
 
 Before this section will fully work:
 
-1. Console -> **Gemini Enterprise**.
-2. If you don't have an app or license, follow the setup flow or contact your Google Cloud administrator.
-3. Wait a few minutes for the license to provision.
-4. Refresh - the **Admin** sidebar entry should appear.
+1. In the Google Cloud console search bar, search for **Gemini Enterprise** and open it.
+2. Open **Apps**.
+3. If you don't have an app or license, follow the setup flow or contact your Google Cloud administrator.
+4. Wait a few minutes for the license to provision.
+5. Refresh - the admin controls should appear.
 
 ## 13.2 Register the Agent Engine agent
 
-1. Console -> **Gemini Enterprise**.
-2. Open the app that should contain the agent.
-3. Click **Agents -> Add agents**.
-4. Choose **Custom agent via Agent Engine**.
-5. Enter the Agent Engine resource path from section 10.
+1. In the Google Cloud console search bar, search for **Gemini Enterprise** and open it.
+2. Open **Apps**.
+3. Open the app that should contain the agent.
+4. Click **Agents**.
+5. Click **Add agents**.
+6. Choose **Custom agent via Agent Engine**.
+7. Enter the Agent Engine resource path from section 10.
 
 A configuration panel opens.
 
@@ -126,16 +129,17 @@ Do not assume every agent shares the same runtime controls. Review the specific 
 
 If your org uses Google Workspace:
 
-1. Console -> **Workspace Admin -> Apps -> Google Workspace -> Gemini Enterprise**.
-2. Enable Gemini Enterprise for selected OUs / groups.
-3. Configure data-access policies (which agents can read which Drive folders, Gmail labels, etc.).
-4. Users can now invoke ACME Support from the side panel of Gmail, Docs, Sheets, Meet.
+1. Open the Google Admin console at https://admin.google.com.
+2. Go to **Apps -> Google Workspace**.
+3. Open **Gemini Enterprise** or the Gemini service settings available in your tenant.
+4. Enable Gemini Enterprise for selected organizational units or groups.
+5. Configure data-access policies for Drive, Gmail, and other Workspace sources as required.
 
 ## 13.9 Branding and custom domains
 
 Standard / Plus customers can:
 
-- Upload a custom logo and color palette (Console -> **Gemini Enterprise -> Admin -> Branding**).
+- In the Google Cloud console, open **Gemini Enterprise**, open your app, then use the app's branding or customization settings to upload a logo and color palette.
 - Set a custom welcome message.
 - Configure the app to be available at a vanity URL (e.g., `gemini.acme.example.com`).
 

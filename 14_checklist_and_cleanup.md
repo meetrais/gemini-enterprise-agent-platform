@@ -71,11 +71,11 @@ python -c "import vertexai, os; vertexai.init(project=os.environ['PROJECT_ID'], 
 
 Then check these console pages:
 
-1. **Billing -> Reports** - filter by service.
-2. **Agent Platform -> Agents** - confirm only intended agents remain.
-3. **Cloud Run -> Services** - if you used Cloud Run.
-4. **GKE -> Clusters** - if you used GKE.
-5. **Cloud Storage -> Buckets** - confirm the staging bucket size is expected.
+1. Open **Billing**, then **Reports** - filter by service.
+2. Open the navigation menu, under **Products** expand **Agent Platform**, then click **Agents** - confirm only intended agents remain.
+3. Open **Cloud Run -> Services** - if you used Cloud Run.
+4. Open **Kubernetes Engine -> Clusters** - if you used GKE.
+5. Open **Cloud Storage -> Buckets** - confirm the staging bucket size is expected.
 
 ## 14.3 Cleanup
 
@@ -171,7 +171,7 @@ gcloud iam service-accounts delete "${AGENT_SA}" --quiet
 
 ### 14.3.7 Remove the agent from Gemini Enterprise
 
-In the Google Cloud console, open **Gemini Enterprise**, select the app, open **Agents**, select **ACME Support**, and remove it.
+In the Google Cloud console, search for **Gemini Enterprise**, open **Apps**, select the app, open **Agents**, select **ACME Support**, and remove it.
 
 ### 14.3.8 Delete the project
 

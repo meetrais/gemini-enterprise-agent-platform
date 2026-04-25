@@ -281,7 +281,7 @@ You get:
 
 ### 12.C.1 View traces
 
-1. Console -> **Operations -> Cloud Trace -> Trace Explorer**.
+1. In the Google Cloud console search bar, search for **Trace Explorer** and open it.
 2. Filter by service name `support-assistant-prod` (or whatever you named the Agent Engine).
 3. Click a trace to see a flame graph: router -> triage decision -> billing_agent -> tool calls -> final.
 
@@ -289,7 +289,7 @@ Each span has attributes like `agent.name`, `model.name`, `tool.name`, `tokens.i
 
 ### 12.C.2 View logs
 
-1. Console -> **Operations -> Logging -> Logs Explorer**.
+1. In the Google Cloud console search bar, search for **Logs Explorer** and open it.
 2. Query:
 
 ```

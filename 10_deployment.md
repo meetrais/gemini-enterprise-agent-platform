@@ -289,7 +289,7 @@ If your agent needs to call private VPC services (internal APIs, on-prem resourc
 
 Wrap the project in a VPC-SC perimeter to prevent data exfiltration:
 
-1. Console -> **Security -> VPC Service Controls**.
+1. In the Google Cloud console search bar, search for **VPC Service Controls** and open it.
 2. Create a perimeter that includes your project and the `aiplatform.googleapis.com`, `storage.googleapis.com`, `secretmanager.googleapis.com` APIs.
 3. Define ingress / egress rules for the specific identities allowed in/out.
 

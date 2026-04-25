@@ -79,16 +79,18 @@ Before you begin:
 
 Console path:
 
-1. Go to **Gemini Enterprise** in the Google Cloud console.
-2. Open the app that should contain the agent.
-3. Click **Agents -> Add agents**.
-4. Choose **Custom agent via Agent Engine**.
-5. Enter:
+1. In the Google Cloud console search bar, search for **Gemini Enterprise** and open it.
+2. Open **Apps**.
+3. Open the app that should contain the agent.
+4. Click **Agents**.
+5. Click **Add agents**.
+6. Choose **Custom agent via Agent Engine**.
+7. Enter:
  - **Agent name:** `ACME Support Assistant`
  - **Description:** `Answers support questions and routes billing, technical, and account requests.`
  - **Agent Engine resource:** `projects/<PROJECT_ID>/locations/<LOCATION>/reasoningEngines/<AGENT_ENGINE_ID>`
-6. Add OAuth authorization only if the agent needs to access Google Cloud resources on behalf of the end user.
-7. Create the registration, then share it with the right users or groups.
+8. Add OAuth authorization only if the agent needs to access Google Cloud resources on behalf of the end user.
+9. Create the registration, then share it with the right users or groups.
 
 Important: Google's Gemini Enterprise docs note that Model Armor, when enabled in Gemini Enterprise, does not protect conversations with ADK agents registered into the web app. Keep Model Armor in your own runtime path when you need prompt and response screening.
 

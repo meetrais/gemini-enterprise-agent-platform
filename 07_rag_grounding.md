@@ -7,7 +7,7 @@ The platform offers two paths:
 - **RAG Engine** - managed end-to-end. You point it at files; it handles parsing, chunking, embedding, indexing, and retrieval. Best for most teams.
 - **Vector Search** - direct, AI-native vector index. Use when you need full control of embeddings or exotic data types.
 
-This section uses RAG Engine for the main path and shows Vector Search as the alternative in 6.6.
+This section uses RAG Engine for the main path and shows Vector Search as the alternative in 7.6.
 
 ```powershell
 cd $HOME\agent-platform-demo
@@ -335,7 +335,7 @@ RAG Engine supports more than just Cloud Storage:
 - Slack (Preview)
 - Custom data via direct API calls
 
-In the console: **Agent Platform -> Studio -> RAG Engine -> your corpus -> Import files -> Source**. Pick the source, authenticate, and select folders.
+In the console, open the navigation menu, under **Products** expand **Agent Platform**, and click **Studio**. Find the **RAG Engine** area on the Studio page, or search for **RAG Engine**, then open your corpus and click **Import files -> Source**. Pick the source, authenticate, and select folders.
 
 ## 7.8 Re-index when documents change
 
