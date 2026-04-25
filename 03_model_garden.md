@@ -11,15 +11,15 @@ You don't have to do 3.B and 3.C for every project - they're optional but useful
 Before you start:
 
 ```powershell
-PS> cd $HOME\agent-platform-demo
-PS> . .\set-env.ps1
-PS> .\.venv\Scripts\Activate.ps1
+cd $HOME\agent-platform-demo
+. .\set-env.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
 ```bash
-$ cd "$HOME/agent-platform-demo"
-$ source ./set-env.sh
-$ source .venv/bin/activate
+cd "$HOME/agent-platform-demo"
+source ./set-env.sh
+source .venv/bin/activate
 ```
 
 ---
@@ -63,13 +63,13 @@ For the Support Assistant we will use:
 Save these in env vars:
 
 ```powershell
-PS> $env:TRIAGE_MODEL = "gemini-2.5-flash"
-PS> $env:RESOLUTION_MODEL = "gemini-2.5-pro"
+$env:TRIAGE_MODEL = "gemini-2.5-flash"
+$env:RESOLUTION_MODEL = "gemini-2.5-pro"
 ```
 
 ```bash
-$ export TRIAGE_MODEL="gemini-2.5-flash"
-$ export RESOLUTION_MODEL="gemini-2.5-pro"
+export TRIAGE_MODEL="gemini-2.5-flash"
+export RESOLUTION_MODEL="gemini-2.5-pro"
 ```
 
 Add those to `set-env.ps1` or `set-env.sh`.
@@ -113,15 +113,15 @@ But the actual `.jsonl` file must be compact one-line records like the examples 
 Create `tuning_data\train.jsonl`:
 
 ```powershell
-(.venv) PS> mkdir tuning_data
-(.venv) PS> notepad tuning_data\train.jsonl
+mkdir tuning_data
+notepad tuning_data\train.jsonl
 ```
 
 On macOS/Linux:
 
 ```bash
-(.venv) $ mkdir -p tuning_data
-(.venv) $ nano tuning_data/train.jsonl
+mkdir -p tuning_data
+nano tuning_data/train.jsonl
 ```
 
 Paste lines like these. Each physical line is one full training example. Repeat the pattern with at least 100 varied, realistic tickets:
@@ -137,24 +137,22 @@ Create `tuning_data\val.jsonl` similarly with another 20 - 50 examples.
 ## 3.B.2 Upload the dataset to Cloud Storage
 
 ```powershell
-(.venv) PS> gcloud storage cp tuning_data\train.jsonl `
- "$($env:STAGING_BUCKET)/tuning/train.jsonl"
-(.venv) PS> gcloud storage cp tuning_data\val.jsonl `
- "$($env:STAGING_BUCKET)/tuning/val.jsonl"
+gcloud storage cp tuning_data\train.jsonl "$($env:STAGING_BUCKET)/tuning/train.jsonl"
+gcloud storage cp tuning_data\val.jsonl "$($env:STAGING_BUCKET)/tuning/val.jsonl"
 ```
 
 Verify:
 
 ```powershell
-(.venv) PS> gcloud storage ls "$($env:STAGING_BUCKET)/tuning/"
+gcloud storage ls "$($env:STAGING_BUCKET)/tuning/"
 ```
 
 macOS/Linux:
 
 ```bash
-(.venv) $ gcloud storage cp tuning_data/train.jsonl "${STAGING_BUCKET}/tuning/train.jsonl"
-(.venv) $ gcloud storage cp tuning_data/val.jsonl "${STAGING_BUCKET}/tuning/val.jsonl"
-(.venv) $ gcloud storage ls "${STAGING_BUCKET}/tuning/"
+gcloud storage cp tuning_data/train.jsonl "${STAGING_BUCKET}/tuning/train.jsonl"
+gcloud storage cp tuning_data/val.jsonl "${STAGING_BUCKET}/tuning/val.jsonl"
+gcloud storage ls "${STAGING_BUCKET}/tuning/"
 ```
 
 ## 3.B.3 Launch the tuning job (Console method)
@@ -206,7 +204,7 @@ print("Tuning job started:", job.resource_name)
 Run it:
 
 ```powershell
-(.venv) PS> python tune_model.py
+python tune_model.py
 ```
 
 The job runs asynchronously. Poll its status:
@@ -304,15 +302,15 @@ Create a CSV (or pandas DataFrame) with at least these columns:
 Save as `eval_data\support_eval.csv`:
 
 ```powershell
-(.venv) PS> mkdir eval_data
-(.venv) PS> notepad eval_data\support_eval.csv
+mkdir eval_data
+notepad eval_data\support_eval.csv
 ```
 
 On macOS/Linux:
 
 ```bash
-(.venv) $ mkdir -p eval_data
-(.venv) $ nano eval_data/support_eval.csv
+mkdir -p eval_data
+nano eval_data/support_eval.csv
 ```
 
 ```csv
@@ -384,7 +382,7 @@ result.metrics_table.to_csv("eval_data/pointwise_result.csv", index=False)
 Run:
 
 ```powershell
-(.venv) PS> python eval_pointwise.py
+python eval_pointwise.py
 ```
 
 You'll see:

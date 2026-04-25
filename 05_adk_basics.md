@@ -5,27 +5,27 @@ The **Agent Development Kit** is the code-first framework for production-grade a
 In this section you'll scaffold an ADK project, write a single agent, and run it locally with the CLI and the web UI.
 
 ```powershell
-PS> cd $HOME\agent-platform-demo
-PS> . .\set-env.ps1
-PS> .\.venv\Scripts\Activate.ps1
+cd $HOME\agent-platform-demo
+. .\set-env.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
 ```bash
-$ cd "$HOME/agent-platform-demo"
-$ source ./set-env.sh
-$ source .venv/bin/activate
+cd "$HOME/agent-platform-demo"
+source ./set-env.sh
+source .venv/bin/activate
 ```
 
 ## 5.1 Verify ADK is installed
 
 ```powershell
-(.venv) PS> adk --version
+adk --version
 ```
 
 If `adk` isn't recognized:
 
 ```powershell
-(.venv) PS> pip install --upgrade google-adk
+pip install --upgrade google-adk
 ```
 
 Make sure your venv is active - `(.venv)` should be in the prompt.
@@ -33,7 +33,7 @@ Make sure your venv is active - `(.venv)` should be in the prompt.
 ## 5.2 Scaffold an agent project
 
 ```powershell
-(.venv) PS> adk create support_assistant
+adk create support_assistant
 ```
 
 You'll be prompted for:
@@ -68,13 +68,13 @@ If anything's missing, edit it.
 Open it in VS Code:
 
 ```powershell
-(.venv) PS> code support_assistant\agent.py
+code support_assistant\agent.py
 ```
 
 On macOS/Linux:
 
 ```bash
-(.venv) $ code support_assistant/agent.py
+code support_assistant/agent.py
 ```
 
 Replace its contents with:
@@ -112,7 +112,7 @@ The variable **must be named `root_agent`** - that's what `adk run` and `adk web
 From the **parent** of `support_assistant\` (i.e., `agent-platform-demo\`):
 
 ```powershell
-(.venv) PS> adk run support_assistant
+adk run support_assistant
 ```
 
 You'll get an interactive prompt. Try:
@@ -128,7 +128,7 @@ The first answer comes from the model itself. The second forces use of `google_s
 ## 5.5 Run the agent in the web UI
 
 ```powershell
-(.venv) PS> adk web
+adk web
 ```
 
 This starts a local web server. Open http://localhost:8000 in your browser. From the dropdown in the upper-left, select `support_assistant` and chat.
@@ -148,7 +148,7 @@ To stop: `Ctrl+C` in the PowerShell window.
 For integration testing from another app:
 
 ```powershell
-(.venv) PS> adk api_server support_assistant --port 8080
+adk api_server support_assistant --port 8080
 ```
 
 Then from a second terminal.
@@ -156,7 +156,7 @@ Then from a second terminal.
 Windows PowerShell:
 
 ```powershell
-PS> $body = @{
+$body = @{
  app_name = "support_assistant"
  user_id = "u1"
  session_id = "s1"
@@ -166,14 +166,14 @@ PS> $body = @{
  }
 } | ConvertTo-Json -Depth 6
 
-PS> Invoke-RestMethod -Uri "http://localhost:8080/run" `
+Invoke-RestMethod -Uri "http://localhost:8080/run" `
  -Method POST -Body $body -ContentType "application/json"
 ```
 
 macOS/Linux:
 
 ```bash
-$ curl -s -X POST "http://localhost:8080/run" \
+curl -s -X POST "http://localhost:8080/run" \
  -H "Content-Type: application/json" \
  -d '{
  "app_name": "support_assistant",
@@ -215,7 +215,7 @@ asyncio.run(main())
 Run:
 
 ```powershell
-(.venv) PS> python call_agent.py
+python call_agent.py
 ```
 
 This is the unit-test pattern: spin up an in-memory runner, fire a message, assert on the response.
@@ -249,13 +249,13 @@ instruction=(
 You can override the model at run time via env var without editing code - useful when comparing options:
 
 ```powershell
-(.venv) PS> $env:GOOGLE_GENAI_MODEL = "gemini-2.5-flash"
-(.venv) PS> adk run support_assistant
+$env:GOOGLE_GENAI_MODEL = "gemini-2.5-flash"
+adk run support_assistant
 ```
 
 ```bash
-(.venv) $ export GOOGLE_GENAI_MODEL="gemini-2.5-flash"
-(.venv) $ adk run support_assistant
+export GOOGLE_GENAI_MODEL="gemini-2.5-flash"
+adk run support_assistant
 ```
 
 (This works only if your `agent.py` reads from env; otherwise edit `model=` in code.)
@@ -265,13 +265,13 @@ You can override the model at run time via env var without editing code - useful
 Set the log level high to see every prompt + tool call:
 
 ```powershell
-(.venv) PS> $env:GOOGLE_ADK_LOG_LEVEL = "DEBUG"
-(.venv) PS> adk run support_assistant
+$env:GOOGLE_ADK_LOG_LEVEL = "DEBUG"
+adk run support_assistant
 ```
 
 ```bash
-(.venv) $ export GOOGLE_ADK_LOG_LEVEL="DEBUG"
-(.venv) $ adk run support_assistant
+export GOOGLE_ADK_LOG_LEVEL="DEBUG"
+adk run support_assistant
 ```
 
 Useful when an agent does something unexpected - you can see whether the model received the wrong context or made a bad choice.

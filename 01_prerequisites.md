@@ -43,16 +43,16 @@ ADK requires Python 3.10 or later.
 3. Verify in a new PowerShell window:
 
 ```powershell
-PS> python --version
-PS> pip --version
+python --version
+pip --version
 ```
 
 **macOS**
 
 ```bash
-$ brew install python@3.12
-$ python3 --version
-$ python3 -m pip --version
+brew install python@3.12
+python3 --version
+python3 -m pip --version
 ```
 
 **Linux**
@@ -60,10 +60,10 @@ $ python3 -m pip --version
 Use your distro package manager or `pyenv`. On Debian/Ubuntu:
 
 ```bash
-$ sudo apt-get update
-$ sudo apt-get install -y python3 python3-venv python3-pip
-$ python3 --version
-$ python3 -m pip --version
+sudo apt-get update
+sudo apt-get install -y python3 python3-venv python3-pip
+python3 --version
+python3 -m pip --version
 ```
 
 ### 1.4.2 Google Cloud CLI (`gcloud`)
@@ -73,25 +73,25 @@ Install from https://cloud.google.com/sdk/docs/install. The page has current ins
 After installation, initialize and verify:
 
 ```powershell
-PS> gcloud --version
-PS> gcloud init
-PS> gcloud auth list
+gcloud --version
+gcloud init
+gcloud auth list
 ```
 
 ```bash
-$ gcloud --version
-$ gcloud init
-$ gcloud auth list
+gcloud --version
+gcloud init
+gcloud auth list
 ```
 
 ### 1.4.3 Git
 
 ```powershell
-PS> git --version
+git --version
 ```
 
 ```bash
-$ git --version
+git --version
 ```
 
 Install from https://git-scm.com/downloads or your package manager.
@@ -101,11 +101,11 @@ Install from https://git-scm.com/downloads or your package manager.
 Install Docker Desktop on Windows/macOS or Docker Engine on Linux. Verify:
 
 ```powershell
-PS> docker --version
+docker --version
 ```
 
 ```bash
-$ docker --version
+docker --version
 ```
 
 You can skip Docker if you'll only deploy to Agent Runtime (Agent Engine) or Cloud Run source-based deploys.
@@ -115,13 +115,13 @@ You can skip Docker if you'll only deploy to Agent Runtime (Agent Engine) or Clo
 In a fresh terminal:
 
 ```powershell
-PS> gcloud auth login
-PS> gcloud auth application-default login
+gcloud auth login
+gcloud auth application-default login
 ```
 
 ```bash
-$ gcloud auth login
-$ gcloud auth application-default login
+gcloud auth login
+gcloud auth application-default login
 ```
 
 Both commands open your browser. The first logs the `gcloud` CLI in. The second creates local Application Default Credentials that the Python SDKs use automatically.
@@ -131,7 +131,7 @@ Both commands open your browser. The first logs the `gcloud` CLI in. The second 
 When you create Python virtual environments, the activation script is `.ps1`. By default, PowerShell may block running it. Allow it for your user:
 
 ```powershell
-PS> Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
 Type **Y** to confirm. This affects only your account, not the whole machine.
@@ -141,13 +141,13 @@ Type **Y** to confirm. This affects only your account, not the whole machine.
 Create one folder under your home directory for everything in this guide:
 
 ```powershell
-PS> mkdir $HOME\agent-platform-demo
-PS> cd $HOME\agent-platform-demo
+mkdir $HOME\agent-platform-demo
+cd $HOME\agent-platform-demo
 ```
 
 ```bash
-$ mkdir -p "$HOME/agent-platform-demo"
-$ cd "$HOME/agent-platform-demo"
+mkdir -p "$HOME/agent-platform-demo"
+cd "$HOME/agent-platform-demo"
 ```
 
 You'll come back to this directory at the start of every section.

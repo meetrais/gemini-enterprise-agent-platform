@@ -10,15 +10,15 @@ A bare LLM can chat. An **agent** is an LLM that can take actions through tools.
 In this section you'll add concrete tools to the support agent.
 
 ```powershell
-PS> cd $HOME\agent-platform-demo
-PS> . .\set-env.ps1
-PS> .\.venv\Scripts\Activate.ps1
+cd $HOME\agent-platform-demo
+. .\set-env.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
 ```bash
-$ cd "$HOME/agent-platform-demo"
-$ source ./set-env.sh
-$ source .venv/bin/activate
+cd "$HOME/agent-platform-demo"
+source ./set-env.sh
+source .venv/bin/activate
 ```
 
 ## 6.1 Function tools
@@ -136,7 +136,7 @@ root_agent = Agent(
 Test it:
 
 ```powershell
-(.venv) PS> adk web
+adk web
 ```
 
 Try this conversation in the web UI:
@@ -236,11 +236,11 @@ root_agent = Agent(
 Set the token in your shell:
 
 ```powershell
-PS> $env:BILLING_API_TOKEN = "<your-token-or-secret-ref>"
+$env:BILLING_API_TOKEN = "<your-token-or-secret-ref>"
 ```
 
 ```bash
-$ export BILLING_API_TOKEN="<your-token-or-secret-ref>"
+export BILLING_API_TOKEN="<your-token-or-secret-ref>"
 ```
 
 Each operation in the spec becomes a tool the model can choose to call. The operation's `operationId`, `summary`, and parameter `description` fields are what the model reads - write them well.
@@ -277,8 +277,8 @@ root_agent = Agent(
 Storing secrets the right way: don't put them in `.env`. Put them in **Secret Manager** and grant the runtime service account read access.
 
 ```powershell
-(.venv) PS> echo "<the-secret-value>" | gcloud secrets create snow-client-secret --data-file=-
-(.venv) PS> gcloud secrets add-iam-policy-binding snow-client-secret `
+echo "<the-secret-value>" | gcloud secrets create snow-client-secret --data-file=-
+gcloud secrets add-iam-policy-binding snow-client-secret `
  --member="serviceAccount:$env:AGENT_SA" `
  --role="roles/secretmanager.secretAccessor"
 ```

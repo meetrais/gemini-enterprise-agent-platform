@@ -10,15 +10,15 @@ This section restructures your support assistant into:
 - **Account Agent** (`gemini-2.5-pro`) - handles login/email/MFA flows.
 
 ```powershell
-PS> cd $HOME\agent-platform-demo
-PS> . .\set-env.ps1
-PS> .\.venv\Scripts\Activate.ps1
+cd $HOME\agent-platform-demo
+. .\set-env.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
 ```bash
-$ cd "$HOME/agent-platform-demo"
-$ source ./set-env.sh
-$ source .venv/bin/activate
+cd "$HOME/agent-platform-demo"
+source ./set-env.sh
+source .venv/bin/activate
 ```
 
 ## 9.1 Refactor `agent.py` into multiple agents
@@ -161,7 +161,7 @@ You can see all of this clearly in `adk web` traces: each step shows which agent
 ## 9.3 Test the system
 
 ```powershell
-(.venv) PS> adk web
+adk web
 ```
 
 Try these conversations:

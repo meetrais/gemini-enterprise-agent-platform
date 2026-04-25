@@ -9,13 +9,13 @@ The **Gemini Enterprise web app** is the employee-facing front door. Admins can 
 This section publishes your support assistant to the right audience and shows how to extend it via Agent Designer and Agent Gallery.
 
 ```powershell
-PS> cd $HOME\agent-platform-demo
-PS> . .\set-env.ps1
+cd $HOME\agent-platform-demo
+. .\set-env.ps1
 ```
 
 ```bash
-$ cd "$HOME/agent-platform-demo"
-$ source ./set-env.sh
+cd "$HOME/agent-platform-demo"
+source ./set-env.sh
 ```
 
 ## 13.1 Make sure you have a Gemini Enterprise license

@@ -5,13 +5,13 @@ Gemini Enterprise includes **Agent Designer**, a no-code and low-code builder fo
 In this section you'll build the **Triage Agent**: a small classifier that reads an incoming support message and assigns it to `billing`, `technical`, `account`, or `general`.
 
 ```powershell
-PS> cd $HOME\agent-platform-demo
-PS> . .\set-env.ps1
+cd $HOME\agent-platform-demo
+. .\set-env.ps1
 ```
 
 ```bash
-$ cd "$HOME/agent-platform-demo"
-$ source ./set-env.sh
+cd "$HOME/agent-platform-demo"
+source ./set-env.sh
 ```
 
 ## 4.1 Open Agent Designer

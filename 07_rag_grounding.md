@@ -10,15 +10,15 @@ The platform offers two paths:
 This section uses RAG Engine for the main path and shows Vector Search as the alternative in 6.6.
 
 ```powershell
-PS> cd $HOME\agent-platform-demo
-PS> . .\set-env.ps1
-PS> .\.venv\Scripts\Activate.ps1
+cd $HOME\agent-platform-demo
+. .\set-env.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
 ```bash
-$ cd "$HOME/agent-platform-demo"
-$ source ./set-env.sh
-$ source .venv/bin/activate
+cd "$HOME/agent-platform-demo"
+source ./set-env.sh
+source .venv/bin/activate
 ```
 
 ## 7.1 Prepare some sample documents
@@ -26,15 +26,15 @@ $ source .venv/bin/activate
 Make a folder and put a few sample docs in it. In real life this is your actual product documentation, runbooks, FAQs, etc.
 
 ```powershell
-(.venv) PS> mkdir kb_docs
-(.venv) PS> notepad kb_docs\plans.md
+mkdir kb_docs
+notepad kb_docs\plans.md
 ```
 
 On macOS/Linux:
 
 ```bash
-(.venv) $ mkdir -p kb_docs
-(.venv) $ nano kb_docs/plans.md
+mkdir -p kb_docs
+nano kb_docs/plans.md
 ```
 
 Paste:
@@ -52,7 +52,7 @@ Annual prepay receives a 15% discount.
 ```
 
 ```powershell
-(.venv) PS> notepad kb_docs\refund_policy.md
+notepad kb_docs\refund_policy.md
 ```
 
 On macOS/Linux, edit `kb_docs/refund_policy.md`.
@@ -68,7 +68,7 @@ Annual prepay refunds are pro-rated to the month of cancellation.
 ```
 
 ```powershell
-(.venv) PS> notepad kb_docs\troubleshooting_503.md
+notepad kb_docs\troubleshooting_503.md
 ```
 
 On macOS/Linux, edit `kb_docs/troubleshooting_503.md`.
@@ -92,13 +92,13 @@ Add 5 - 10 more files in real-world deployments. Larger corpora benefit from a c
 ## 7.2 Upload to Cloud Storage
 
 ```powershell
-(.venv) PS> gcloud storage cp -r kb_docs "$($env:STAGING_BUCKET)/kb/"
-(.venv) PS> gcloud storage ls "$($env:STAGING_BUCKET)/kb/kb_docs/"
+gcloud storage cp -r kb_docs "$($env:STAGING_BUCKET)/kb/"
+gcloud storage ls "$($env:STAGING_BUCKET)/kb/kb_docs/"
 ```
 
 ```bash
-(.venv) $ gcloud storage cp -r kb_docs "${STAGING_BUCKET}/kb/"
-(.venv) $ gcloud storage ls "${STAGING_BUCKET}/kb/kb_docs/"
+gcloud storage cp -r kb_docs "${STAGING_BUCKET}/kb/"
+gcloud storage ls "${STAGING_BUCKET}/kb/kb_docs/"
 ```
 
 ## 7.3 Create a RAG corpus
@@ -143,13 +143,13 @@ print("Import complete. Files indexed:", op.imported_rag_files_count)
 Run:
 
 ```powershell
-(.venv) PS> python create_rag_corpus.py
+python create_rag_corpus.py
 ```
 
 Save the corpus name:
 
 ```powershell
-PS> notepad set-env.ps1
+notepad set-env.ps1
 ```
 
 Add (replace with the value printed):
@@ -192,7 +192,7 @@ for ctx in results.contexts.contexts:
 Run:
 
 ```powershell
-(.venv) PS> python query_rag.py
+python query_rag.py
 ```
 
 You should see chunks from `refund_policy.md` ranked first. If you get empty results, your `vector_distance_threshold` is too tight - raise it (e.g., `0.7`) or remove it.
@@ -246,7 +246,7 @@ root_agent = Agent(
 Test:
 
 ```powershell
-(.venv) PS> adk web
+adk web
 ```
 
 Try:

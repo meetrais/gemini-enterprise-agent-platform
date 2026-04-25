@@ -9,15 +9,15 @@ The platform's "Optimize" pillar gives you three tools:
 Together they form an evaluation-driven release cycle: change something -> simulate -> evaluate -> ship -> observe.
 
 ```powershell
-PS> cd $HOME\agent-platform-demo
-PS> . .\set-env.ps1
-PS> .\.venv\Scripts\Activate.ps1
+cd $HOME\agent-platform-demo
+. .\set-env.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
 ```bash
-$ cd "$HOME/agent-platform-demo"
-$ source ./set-env.sh
-$ source .venv/bin/activate
+cd "$HOME/agent-platform-demo"
+source ./set-env.sh
+source .venv/bin/activate
 ```
 
 ## 12.A - Agent Simulation
@@ -29,15 +29,15 @@ Simulation runs your deployed agent against AI-driven personas across scenario s
 Create `simulation\personas.json`:
 
 ```powershell
-(.venv) PS> mkdir simulation
-(.venv) PS> notepad simulation\personas.json
+mkdir simulation
+notepad simulation\personas.json
 ```
 
 On macOS/Linux:
 
 ```bash
-(.venv) $ mkdir -p simulation
-(.venv) $ nano simulation/personas.json
+mkdir -p simulation
+nano simulation/personas.json
 ```
 
 ```json
@@ -132,11 +132,11 @@ report.to_csv("simulation/results.csv")
 Run:
 
 ```powershell
-(.venv) PS> python simulation\run_sim.py
+python simulation\run_sim.py
 ```
 
 ```bash
-(.venv) $ python simulation/run_sim.py
+python simulation/run_sim.py
 ```
 
 This will run `4 personas x4 scenarios x5 runs = 80 conversations` against the deployed agent. With 12-turn limit and async execution it takes ~10 - 20 minutes.
@@ -228,14 +228,14 @@ result.to_html("eval/sxs_report.html")
 Run:
 
 ```powershell
-(.venv) PS> python eval\agent_sxs.py
-PS> start eval\sxs_report.html
+python eval\agent_sxs.py
+start eval\sxs_report.html
 ```
 
 ```bash
-(.venv) $ python eval/agent_sxs.py
-(.venv) $ open eval/sxs_report.html # macOS
-(.venv) $ xdg-open eval/sxs_report.html # Linux
+python eval/agent_sxs.py
+open eval/sxs_report.html # macOS
+xdg-open eval/sxs_report.html # Linux
 ```
 
 The report shows per-metric win rates. A meaningful release is one where the candidate beats the baseline on most metrics with no significant regression on safety.
@@ -380,7 +380,7 @@ Create `dashboard.json`:
 Apply it:
 
 ```powershell
-PS> gcloud monitoring dashboards create --config-from-file=dashboard.json
+gcloud monitoring dashboards create --config-from-file=dashboard.json
 ```
 
 ### 12.C.4 Alert policies
@@ -406,7 +406,7 @@ notificationChannels:
 Apply:
 
 ```powershell
-PS> gcloud alpha monitoring policies create --policy-from-file=alerts.yaml
+gcloud alpha monitoring policies create --policy-from-file=alerts.yaml
 ```
 
 Repeat for:

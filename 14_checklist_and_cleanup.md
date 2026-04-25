@@ -3,15 +3,15 @@
 You've now built, governed, optimized, and distributed an enterprise-grade multi-agent system. This final section gives you a practical verification checklist and cleanup steps so you don't keep paying for demo resources.
 
 ```powershell
-PS> cd $HOME\agent-platform-demo
-PS> . .\set-env.ps1
-PS> .\.venv\Scripts\Activate.ps1
+cd $HOME\agent-platform-demo
+. .\set-env.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
 ```bash
-$ cd "$HOME/agent-platform-demo"
-$ source ./set-env.sh
-$ source .venv/bin/activate
+cd "$HOME/agent-platform-demo"
+source ./set-env.sh
+source .venv/bin/activate
 ```
 
 ## 14.1 End-to-end checklist
@@ -62,11 +62,11 @@ $ source .venv/bin/activate
 Run a quick local SDK check:
 
 ```powershell
-(.venv) PS> python -c "import vertexai, os; vertexai.init(project=os.environ['PROJECT_ID'], location=os.environ['LOCATION']); print('OK')"
+python -c "import vertexai, os; vertexai.init(project=os.environ['PROJECT_ID'], location=os.environ['LOCATION']); print('OK')"
 ```
 
 ```bash
-(.venv) $ python -c "import vertexai, os; vertexai.init(project=os.environ['PROJECT_ID'], location=os.environ['LOCATION']); print('OK')"
+python -c "import vertexai, os; vertexai.init(project=os.environ['PROJECT_ID'], location=os.environ['LOCATION']); print('OK')"
 ```
 
 Then check these console pages:
@@ -104,23 +104,23 @@ print("Deleted:", os.environ["AGENT_ENGINE_NAME"])
 Run:
 
 ```powershell
-(.venv) PS> python delete_agent_engine.py
+python delete_agent_engine.py
 ```
 
 ```bash
-(.venv) $ python delete_agent_engine.py
+python delete_agent_engine.py
 ```
 
 ### 14.3.2 Delete Cloud Run service
 
 ```powershell
-PS> gcloud run services delete support-assistant `
+gcloud run services delete support-assistant `
  --region=$env:LOCATION `
  --quiet
 ```
 
 ```bash
-$ gcloud run services delete support-assistant \
+gcloud run services delete support-assistant \
  --region="${LOCATION}" \
  --quiet
 ```
@@ -128,13 +128,13 @@ $ gcloud run services delete support-assistant \
 ### 14.3.3 Delete GKE cluster
 
 ```powershell
-PS> gcloud container clusters delete <YOUR_CLUSTER_NAME> `
+gcloud container clusters delete <YOUR_CLUSTER_NAME> `
  --region=$env:LOCATION `
  --quiet
 ```
 
 ```bash
-$ gcloud container clusters delete <YOUR_CLUSTER_NAME> \
+gcloud container clusters delete <YOUR_CLUSTER_NAME> \
  --region="${LOCATION}" \
  --quiet
 ```
@@ -142,31 +142,31 @@ $ gcloud container clusters delete <YOUR_CLUSTER_NAME> \
 ### 14.3.4 Delete the RAG corpus
 
 ```powershell
-(.venv) PS> python -c "import os, vertexai; from vertexai import rag; vertexai.init(project=os.environ['PROJECT_ID'], location=os.environ['LOCATION']); rag.delete_corpus(name=os.environ['RAG_CORPUS']); print('RAG corpus deleted')"
+python -c "import os, vertexai; from vertexai import rag; vertexai.init(project=os.environ['PROJECT_ID'], location=os.environ['LOCATION']); rag.delete_corpus(name=os.environ['RAG_CORPUS']); print('RAG corpus deleted')"
 ```
 
 ```bash
-(.venv) $ python -c "import os, vertexai; from vertexai import rag; vertexai.init(project=os.environ['PROJECT_ID'], location=os.environ['LOCATION']); rag.delete_corpus(name=os.environ['RAG_CORPUS']); print('RAG corpus deleted')"
+python -c "import os, vertexai; from vertexai import rag; vertexai.init(project=os.environ['PROJECT_ID'], location=os.environ['LOCATION']); rag.delete_corpus(name=os.environ['RAG_CORPUS']); print('RAG corpus deleted')"
 ```
 
 ### 14.3.5 Delete the staging bucket
 
 ```powershell
-PS> gcloud storage rm --recursive $env:STAGING_BUCKET
+gcloud storage rm --recursive $env:STAGING_BUCKET
 ```
 
 ```bash
-$ gcloud storage rm --recursive "${STAGING_BUCKET}"
+gcloud storage rm --recursive "${STAGING_BUCKET}"
 ```
 
 ### 14.3.6 Delete the agent service account
 
 ```powershell
-PS> gcloud iam service-accounts delete $env:AGENT_SA --quiet
+gcloud iam service-accounts delete $env:AGENT_SA --quiet
 ```
 
 ```bash
-$ gcloud iam service-accounts delete "${AGENT_SA}" --quiet
+gcloud iam service-accounts delete "${AGENT_SA}" --quiet
 ```
 
 ### 14.3.7 Remove the agent from Gemini Enterprise
@@ -178,11 +178,11 @@ In the Google Cloud console, open **Gemini Enterprise**, select the app, open **
 Only do this if the whole project was created for the guide:
 
 ```powershell
-PS> gcloud projects delete $env:PROJECT_ID --quiet
+gcloud projects delete $env:PROJECT_ID --quiet
 ```
 
 ```bash
-$ gcloud projects delete "${PROJECT_ID}" --quiet
+gcloud projects delete "${PROJECT_ID}" --quiet
 ```
 
 Google Cloud puts the project into a pending-deletion state before permanent deletion.
@@ -192,15 +192,15 @@ Google Cloud puts the project into a pending-deletion state before permanent del
 Windows:
 
 ```powershell
-PS> cd $HOME
-PS> Remove-Item -Recurse -Force agent-platform-demo
+cd $HOME
+Remove-Item -Recurse -Force agent-platform-demo
 ```
 
 macOS/Linux:
 
 ```bash
-$ cd "$HOME"
-$ rm -rf agent-platform-demo
+cd "$HOME"
+rm -rf agent-platform-demo
 ```
 
 ## 14.4 What to keep

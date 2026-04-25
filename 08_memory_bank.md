@@ -11,15 +11,15 @@ The platform provides both:
 - **Agent Engine Memory Bank** - managed long-term memory, with Gemini auto-extracting key facts from session history asynchronously.
 
 ```powershell
-PS> cd $HOME\agent-platform-demo
-PS> . .\set-env.ps1
-PS> .\.venv\Scripts\Activate.ps1
+cd $HOME\agent-platform-demo
+. .\set-env.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
 ```bash
-$ cd "$HOME/agent-platform-demo"
-$ source ./set-env.sh
-$ source .venv/bin/activate
+cd "$HOME/agent-platform-demo"
+source ./set-env.sh
+source .venv/bin/activate
 ```
 
 ## 8.1 Create an Agent Engine instance
@@ -49,7 +49,7 @@ print(agent_engine.api_resource.name.split("/")[-1])
 Run:
 
 ```powershell
-(.venv) PS> python create_agent_engine.py
+python create_agent_engine.py
 ```
 
 You'll get something like:
@@ -62,7 +62,7 @@ projects/123456/locations/us-central1/reasoningEngines/8479666769873600512
 Save the ID:
 
 ```powershell
-PS> notepad set-env.ps1
+notepad set-env.ps1
 ```
 
 Add:
@@ -185,7 +185,7 @@ asyncio.run(main())
 Run:
 
 ```powershell
-(.venv) PS> python test_memory.py
+python test_memory.py
 ```
 
 The first session establishes facts. After it closes, Memory Bank extracts them in the background. The second session starts fresh - but the agent has access to the user's memories and uses them.
@@ -286,7 +286,7 @@ Long-term memory introduces a real attack surface: a hostile user plants a false
 Use IAM Conditions to scope memory access. For example, only allow the agent's own service account to read its memories:
 
 ```powershell
-PS> gcloud projects add-iam-policy-binding $env:PROJECT_ID `
+gcloud projects add-iam-policy-binding $env:PROJECT_ID `
  --member="serviceAccount:$env:AGENT_SA" `
  --role="roles/aiplatform.memoryBank.user" `
  --condition="expression=resource.name.startsWith('projects/$env:PROJECT_ID/locations/us-central1/reasoningEngines/$env:AGENT_ENGINE_ID'),title=support-engine-only,description=Limit to support assistant Agent Engine"

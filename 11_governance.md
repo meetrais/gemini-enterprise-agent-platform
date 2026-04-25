@@ -7,15 +7,15 @@ This section tightens the production controls around the agent you deployed in s
 - Model Armor and platform logging where your serving path supports them.
 
 ```powershell
-PS> cd $HOME\agent-platform-demo
-PS> . .\set-env.ps1
-PS> .\.venv\Scripts\Activate.ps1
+cd $HOME\agent-platform-demo
+. .\set-env.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
 ```bash
-$ cd "$HOME/agent-platform-demo"
-$ source ./set-env.sh
-$ source .venv/bin/activate
+cd "$HOME/agent-platform-demo"
+source ./set-env.sh
+source .venv/bin/activate
 ```
 
 ## 11.1 Agent identity
@@ -27,7 +27,7 @@ You created the `agent-runner` service account in section 2.5. Keep using a dedi
 Windows PowerShell:
 
 ```powershell
-PS> gcloud projects get-iam-policy $env:PROJECT_ID `
+gcloud projects get-iam-policy $env:PROJECT_ID `
  --flatten="bindings[].members" `
  --filter="bindings.members:serviceAccount:$env:AGENT_SA" `
  --format="table(bindings.role)"
@@ -36,7 +36,7 @@ PS> gcloud projects get-iam-policy $env:PROJECT_ID `
 macOS/Linux:
 
 ```bash
-$ gcloud projects get-iam-policy "${PROJECT_ID}" \
+gcloud projects get-iam-policy "${PROJECT_ID}" \
  --flatten="bindings[].members" \
  --filter="bindings.members:serviceAccount:${AGENT_SA}" \
  --format="table(bindings.role)"
@@ -47,15 +47,15 @@ You should see only roles the runtime actually needs, such as Agent Platform acc
 ### 11.1.2 Add runtime observability roles
 
 ```powershell
-PS> gcloud projects add-iam-policy-binding $env:PROJECT_ID `
+gcloud projects add-iam-policy-binding $env:PROJECT_ID `
  --member="serviceAccount:$env:AGENT_SA" `
  --role="roles/cloudtrace.agent"
 
-PS> gcloud projects add-iam-policy-binding $env:PROJECT_ID `
+gcloud projects add-iam-policy-binding $env:PROJECT_ID `
  --member="serviceAccount:$env:AGENT_SA" `
  --role="roles/logging.logWriter"
 
-PS> gcloud projects add-iam-policy-binding $env:PROJECT_ID `
+gcloud projects add-iam-policy-binding $env:PROJECT_ID `
  --member="serviceAccount:$env:AGENT_SA" `
  --role="roles/monitoring.metricWriter"
 ```
@@ -140,11 +140,11 @@ print(created.name)
 Run it:
 
 ```powershell
-(.venv) PS> python armor_template.py
+python armor_template.py
 ```
 
 ```bash
-(.venv) $ python armor_template.py
+python armor_template.py
 ```
 
 Add RAI and Sensitive Data Protection settings once you confirm the exact template fields available in your installed `google-cloud-modelarmor` version.
@@ -178,11 +178,11 @@ for text in [
 Run:
 
 ```powershell
-(.venv) PS> python armor_test.py
+python armor_test.py
 ```
 
 ```bash
-(.venv) $ python armor_test.py
+python armor_test.py
 ```
 
 ### 11.4.3 Wire Model Armor into your serving path

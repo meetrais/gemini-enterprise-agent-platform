@@ -11,15 +11,15 @@ You have three deployment paths. Pick based on needs:
 This section deploys to Agent Runtime (Agent Engine) first (recommended), then shows the Cloud Run and GKE alternatives.
 
 ```powershell
-PS> cd $HOME\agent-platform-demo
-PS> . .\set-env.ps1
-PS> .\.venv\Scripts\Activate.ps1
+cd $HOME\agent-platform-demo
+. .\set-env.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
 ```bash
-$ cd "$HOME/agent-platform-demo"
-$ source ./set-env.sh
-$ source .venv/bin/activate
+cd "$HOME/agent-platform-demo"
+source ./set-env.sh
+source .venv/bin/activate
 ```
 
 ## 10.1 Path A - Deploy to Agent Runtime (Agent Engine)
@@ -65,7 +65,7 @@ print(agent_engine.api_resource.name)
 Run it:
 
 ```powershell
-(.venv) PS> python deploy_agent_engine.py
+python deploy_agent_engine.py
 ```
 
 Deployment takes several minutes the first time. The platform packages your code, installs dependencies, and provisions a managed runtime. Future deployments are usually faster.
@@ -93,7 +93,7 @@ asyncio.run(main())
 Run:
 
 ```powershell
-(.venv) PS> python call_deployed.py
+python call_deployed.py
 ```
 
 You should see streaming events arrive - the router's decision, the specialist's tool calls, the final response.
@@ -144,7 +144,7 @@ Cloud Run is a great fit when you want a normal HTTP service that happens to hav
 ADK includes a Cloud Run-friendly server. From your working directory:
 
 ```powershell
-(.venv) PS> gcloud run deploy support-assistant `
+gcloud run deploy support-assistant `
  --source . `
  --region $env:LOCATION `
  --service-account $env:AGENT_SA `
@@ -155,7 +155,7 @@ ADK includes a Cloud Run-friendly server. From your working directory:
 macOS/Linux:
 
 ```bash
-(.venv) $ gcloud run deploy support-assistant \
+gcloud run deploy support-assistant \
  --source . \
  --region "${LOCATION}" \
  --service-account "${AGENT_SA}" \
@@ -168,8 +168,8 @@ Cloud Run builds the container with Cloud Build, pushes it to Artifact Registry,
 The first deploy needs the Cloud Run builder role on the Compute Engine default service account:
 
 ```powershell
-PS> $env:PROJECT_NUMBER = (gcloud projects describe $env:PROJECT_ID --format="value(projectNumber)")
-PS> gcloud projects add-iam-policy-binding $env:PROJECT_ID `
+$env:PROJECT_NUMBER = (gcloud projects describe $env:PROJECT_ID --format="value(projectNumber)")
+gcloud projects add-iam-policy-binding $env:PROJECT_ID `
  --member="serviceAccount:$($env:PROJECT_NUMBER)-compute@developer.gserviceaccount.com" `
  --role="roles/run.builder"
 ```
@@ -177,8 +177,8 @@ PS> gcloud projects add-iam-policy-binding $env:PROJECT_ID `
 macOS/Linux:
 
 ```bash
-$ PROJECT_NUMBER="$(gcloud projects describe "${PROJECT_ID}" --format="value(projectNumber)")"
-$ gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
+PROJECT_NUMBER="$(gcloud projects describe "${PROJECT_ID}" --format="value(projectNumber)")"
+gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
  --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
  --role="roles/run.builder"
 ```
@@ -186,9 +186,9 @@ $ gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
 ### 10.2.2 Test the Cloud Run service
 
 ```powershell
-PS> $URL = (gcloud run services describe support-assistant --region=$env:LOCATION --format="value(status.url)")
-PS> $TOKEN = (gcloud auth print-identity-token)
-PS> Invoke-RestMethod -Uri "$URL/run" `
+$URL = (gcloud run services describe support-assistant --region=$env:LOCATION --format="value(status.url)")
+$TOKEN = (gcloud auth print-identity-token)
+Invoke-RestMethod -Uri "$URL/run" `
  -Method POST `
  -Headers @{ Authorization = "Bearer $TOKEN" } `
  -Body (@{
@@ -206,9 +206,9 @@ PS> Invoke-RestMethod -Uri "$URL/run" `
 macOS/Linux:
 
 ```bash
-$ URL="$(gcloud run services describe support-assistant --region="${LOCATION}" --format="value(status.url)")"
-$ TOKEN="$(gcloud auth print-identity-token)"
-$ curl -s -X POST "${URL}/run" \
+URL="$(gcloud run services describe support-assistant --region="${LOCATION}" --format="value(status.url)")"
+TOKEN="$(gcloud auth print-identity-token)"
+curl -s -X POST "${URL}/run" \
  -H "Authorization: Bearer ${TOKEN}" \
  -H "Content-Type: application/json" \
  -d '{
@@ -225,7 +225,7 @@ $ curl -s -X POST "${URL}/run" \
 ### 10.2.3 Configure scaling
 
 ```powershell
-(.venv) PS> gcloud run services update support-assistant `
+gcloud run services update support-assistant `
  --region=$env:LOCATION `
  --min-instances=1 `
  --max-instances=20 `
@@ -252,21 +252,21 @@ For full Kubernetes control. Sketch:
 2. Build and push to Artifact Registry:
 
  ```powershell
- PS> gcloud artifacts repositories create agents --repository-format=docker --location=$env:LOCATION
- PS> $IMG = "$env:LOCATION-docker.pkg.dev/$env:PROJECT_ID/agents/support-assistant:v1"
- PS> docker build -t $IMG .
- PS> gcloud auth configure-docker "$env:LOCATION-docker.pkg.dev"
- PS> docker push $IMG
+ gcloud artifacts repositories create agents --repository-format=docker --location=$env:LOCATION
+ $IMG = "$env:LOCATION-docker.pkg.dev/$env:PROJECT_ID/agents/support-assistant:v1"
+ docker build -t $IMG .
+ gcloud auth configure-docker "$env:LOCATION-docker.pkg.dev"
+ docker push $IMG
  ```
 
  macOS/Linux:
 
  ```bash
- $ gcloud artifacts repositories create agents --repository-format=docker --location="${LOCATION}"
- $ IMG="${LOCATION}-docker.pkg.dev/${PROJECT_ID}/agents/support-assistant:v1"
- $ docker build -t "${IMG}" .
- $ gcloud auth configure-docker "${LOCATION}-docker.pkg.dev"
- $ docker push "${IMG}"
+ gcloud artifacts repositories create agents --repository-format=docker --location="${LOCATION}"
+ IMG="${LOCATION}-docker.pkg.dev/${PROJECT_ID}/agents/support-assistant:v1"
+ docker build -t "${IMG}" .
+ gcloud auth configure-docker "${LOCATION}-docker.pkg.dev"
+ docker push "${IMG}"
  ```
 
 3. Deploy with a standard Deployment + Service + (optionally) Gateway. Use **Workload Identity** to map the pod's k8s SA to your `agent-runner` GCP service account.
@@ -304,18 +304,18 @@ For data-at-rest encryption with your own keys, attach CMEK to:
 - The RAG corpus.
 
 ```powershell
-PS> gcloud kms keyrings create agent-keyring --location=$env:LOCATION
-PS> gcloud kms keys create agent-cmek --location=$env:LOCATION --keyring=agent-keyring --purpose=encryption
-PS> gcloud storage buckets update $env:STAGING_BUCKET `
+gcloud kms keyrings create agent-keyring --location=$env:LOCATION
+gcloud kms keys create agent-cmek --location=$env:LOCATION --keyring=agent-keyring --purpose=encryption
+gcloud storage buckets update $env:STAGING_BUCKET `
  --default-encryption-key="projects/$env:PROJECT_ID/locations/$env:LOCATION/keyRings/agent-keyring/cryptoKeys/agent-cmek"
 ```
 
 macOS/Linux:
 
 ```bash
-$ gcloud kms keyrings create agent-keyring --location="${LOCATION}"
-$ gcloud kms keys create agent-cmek --location="${LOCATION}" --keyring=agent-keyring --purpose=encryption
-$ gcloud storage buckets update "${STAGING_BUCKET}" \
+gcloud kms keyrings create agent-keyring --location="${LOCATION}"
+gcloud kms keys create agent-cmek --location="${LOCATION}" --keyring=agent-keyring --purpose=encryption
+gcloud storage buckets update "${STAGING_BUCKET}" \
  --default-encryption-key="projects/${PROJECT_ID}/locations/${LOCATION}/keyRings/agent-keyring/cryptoKeys/agent-cmek"
 ```
 
@@ -342,7 +342,7 @@ agent_engine = client.agent_engines.update(
 Each `gcloud run deploy` creates a new revision. Traffic split between revisions for canary releases:
 
 ```powershell
-PS> gcloud run services update-traffic support-assistant `
+gcloud run services update-traffic support-assistant `
  --region=$env:LOCATION `
  --to-revisions="support-assistant-00007-abc=10,support-assistant-00006-xyz=90"
 ```
@@ -354,7 +354,7 @@ PS> gcloud run services update-traffic support-assistant `
 Always finish a deploy with a smoke test:
 
 ```powershell
-(.venv) PS> python call_deployed.py
+python call_deployed.py
 ```
 
 If anything fails, the right diagnostic is the **Trace** in section 12 - spans show exactly where it fell over.
