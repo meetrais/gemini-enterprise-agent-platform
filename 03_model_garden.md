@@ -34,7 +34,8 @@ Model Garden provides first-class access to **200+ models** from Google, open-so
 2. Open the navigation menu.
 3. Under **Products**, expand **Agent Platform**.
 4. Click **Models**.
-3. Use the filters in the left panel:
+5. In the Models left navigation, click **Model garden**.
+6. Use the filters in the Model garden page:
  - **Modalities:** Text, Vision, Audio, Video, Embedding.
  - **Tasks:** Generation, Classification, Translation, etc.
  - **Provider:** Google, Anthropic, Meta, Mistral, DeepSeek, Qwen, etc.
@@ -158,8 +159,8 @@ gcloud storage ls "${STAGING_BUCKET}/tuning/"
 ## 3.B.3 Launch the tuning job (Console method)
 
 1. In the console navigation menu, under **Products**, expand **Agent Platform**.
-2. Click **Studio**.
-3. On the Studio page, find the **Tune and Distill** area or table.
+2. Click **Models**.
+3. In the Models left navigation, click **Tuning**.
 4. Click **Create tuned model**.
 5. **Model details:**
  - **Tuned model name:** `support-classifier-v1` (max 128 chars).
@@ -178,7 +179,7 @@ gcloud storage ls "${STAGING_BUCKET}/tuning/"
 10. (Optional) **Evaluation config:** toggle on to have the **Gen AI Evaluation Service** auto-run after tuning. This region must be `us-central1`.
 11. Click **Start Tuning**.
 
-Your job appears under **Tune and Distill** with status `Running`. A small (~100-example) dataset with 1 epoch finishes in ~20 minutes; 3 epochs on 1000 examples takes ~1 hour.
+Your job appears in **Agent Platform -> Models -> Tuning** with status `Running`. A small (~100-example) dataset with 1 epoch finishes in ~20 minutes; 3 epochs on 1000 examples takes ~1 hour.
 
 ## 3.B.4 Launch the tuning job (SDK method)
 
@@ -232,7 +233,7 @@ print("Tuned model:", job.tuned_model_endpoint_name)
 
 ## 3.B.5 Monitor tuning metrics
 
-While the job runs, open the navigation menu, under **Products** expand **Agent Platform**, click **Studio**, find the **Tune and Distill** table, click your model, then open the **Monitor** tab. You'll see:
+While the job runs, open the navigation menu, under **Products** expand **Agent Platform**, click **Models**, then click **Tuning** in the Models left navigation. Click your model, then open the **Monitor** tab. You'll see:
 
 - **`/train_total_loss`** - should decrease steadily.
 - **`/train_fraction_of_correct_next_step_preds`** - should increase.
@@ -241,21 +242,47 @@ While the job runs, open the navigation menu, under **Products** expand **Agent 
 
 ## 3.B.6 Test the tuned model
 
-When status is **Succeeded**, you get a tuned model endpoint. Try it:
+When the tuning job status is **Succeeded**, deploy the tuned model and copy the deployed endpoint resource name. The value should look like this:
+
+```text
+projects/<PROJECT_NUMBER>/locations/us-central1/endpoints/<ENDPOINT_ID>
+```
+
+Set that endpoint as `TUNED_MODEL`, then run the test script. From the repo root:
+
+```powershell
+$env:TUNED_MODEL = "projects/<PROJECT_NUMBER>/locations/us-central1/endpoints/<ENDPOINT_ID>"
+python code\test_tuned.py
+```
+
+If you are already in the `code` folder:
+
+```powershell
+$env:TUNED_MODEL = "projects/<PROJECT_NUMBER>/locations/us-central1/endpoints/<ENDPOINT_ID>"
+python test_tuned.py
+```
+
+Use the deployed endpoint resource (`.../endpoints/...`) here, not the model version resource (`.../models/...@1`).
+
+The script reads `TUNED_MODEL` from your environment:
 
 ```python
 # test_tuned.py
 import os
 from google import genai
 
+TUNED_MODEL = os.environ.get("TUNED_MODEL")
+if not TUNED_MODEL:
+ raise RuntimeError(
+  "Set TUNED_MODEL to your tuned model endpoint resource name first, for example:\n"
+  '$env:TUNED_MODEL = "projects/123456789/locations/us-central1/endpoints/987654321"'
+ )
+
 client = genai.Client(
  vertexai=True,
  project=os.environ["PROJECT_ID"],
  location=os.environ["LOCATION"],
 )
-
-# Replace with your tuned-model endpoint name from the console / SDK output
-TUNED_MODEL = "projects/<PROJECT_NUMBER>/locations/us-central1/endpoints/<ENDPOINT_ID>"
 
 resp = client.models.generate_content(
  model=TUNED_MODEL,
@@ -372,7 +399,7 @@ eval_task = EvalTask(
  experiment="support-classifier-eval",
 )
 
-# Use the tuned model. Replace with the endpoint resource name from 2.B.6,
+# Use the tuned model. Replace with the endpoint resource name from 3.B.6,
 # or use a base model name like "gemini-2.5-flash" for comparison.
 result = eval_task.evaluate(model="gemini-2.5-flash")
 
@@ -411,7 +438,7 @@ client = genai.Client(vertexai=True, project=os.environ["PROJECT_ID"], location=
 dataset = pd.read_csv("eval_data/support_eval.csv")
 
 BASE_MODEL = "gemini-2.5-flash"
-TUNED_MODEL = "projects/<PROJECT_NUMBER>/locations/us-central1/endpoints/<ENDPOINT_ID>"
+TUNED_MODEL = os.environ["TUNED_MODEL"]
 
 base_responses, tuned_responses = [], []
 for prompt in dataset["prompt"]:
