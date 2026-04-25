@@ -42,7 +42,7 @@ $ gcloud projects get-iam-policy "${PROJECT_ID}" \
  --format="table(bindings.role)"
 ```
 
-You should see only roles the runtime actually needs, such as Vertex AI access, storage read access for staged artifacts, Secret Manager access for configured secrets, and logging/monitoring roles.
+You should see only roles the runtime actually needs, such as Agent Platform access, storage read access for staged artifacts, Secret Manager access for configured secrets, and logging/monitoring roles.
 
 ### 11.1.2 Add runtime observability roles
 
@@ -68,14 +68,14 @@ Where supported, use IAM Conditions to limit a binding to the Agent Engine resou
 
 ## 11.2 Register the ADK agent with Gemini Enterprise
 
-Registering the deployed ADK agent makes it available in a Gemini Enterprise app. This is separate from deploying the agent to Vertex AI Agent Engine.
+Registering the deployed ADK agent makes it available in a Gemini Enterprise app. This is separate from deploying the agent to Agent Runtime (Agent Engine).
 
 Before you begin:
 
 - Enable the Discovery Engine API.
 - Make sure you have `roles/discoveryengine.admin` or equivalent permissions.
 - Create or choose an existing Gemini Enterprise app.
-- Deploy the ADK agent to Vertex AI Agent Engine.
+- Deploy the ADK agent to Agent Runtime (Agent Engine).
 
 Console path:
 
@@ -96,7 +96,7 @@ Important: Google's Gemini Enterprise docs note that Model Armor, when enabled i
 
 Use the serving surface from section 10:
 
-- **Vertex AI Agent Engine:** use IAM, custom service accounts, audit logs, VPC-SC, CMEK where supported, and app-level sharing in Gemini Enterprise.
+- **Agent Runtime (Agent Engine):** use IAM, custom service accounts, audit logs, VPC-SC, CMEK where supported, and app-level sharing in Gemini Enterprise.
 - **Cloud Run:** use IAM authentication, Identity-Aware Proxy if appropriate, Cloud Armor, Cloud Logging, and explicit app middleware for rate limits and approvals.
 - **GKE:** use Kubernetes network policy, service mesh or gateway controls, Workload Identity, and centralized logging.
 
@@ -219,4 +219,4 @@ For regulated or sensitive agents, evaluate:
 - ✅ Tool confirmation remains enabled for high-impact tools.
 - ✅ Compliance choices are documented for VPC-SC, CMEK, audit logs, and regional placement.
 
-Move on to **`12_optimization.md`** for evaluation and observability.
+Move on to **[`12_optimization.md`](12_optimization.md)** for evaluation and observability.

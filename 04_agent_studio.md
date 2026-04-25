@@ -119,4 +119,4 @@ Those become the initial ADK agent instruction, tests, and eval rows.
 - ✅ The final instruction saved for the ADK implementation.
 - ✅ A decision on whether this stays a no-code helper or moves into the production ADK path.
 
-Move on to **`05_adk_basics.md`**.
+Move on to **[`05_adk_basics.md`](05_adk_basics.md)**.

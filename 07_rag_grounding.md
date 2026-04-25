@@ -335,7 +335,7 @@ RAG Engine supports more than just Cloud Storage:
 - Slack (Preview)
 - Custom data via direct API calls
 
-In the console: **Vertex AI -> RAG Engine -> your corpus -> Import files -> Source**. Pick the source, authenticate, and select folders.
+In the console: **Agent Platform -> Studio -> RAG Engine -> your corpus -> Import files -> Source**. Pick the source, authenticate, and select folders.
 
 ## 7.8 Re-index when documents change
 
@@ -367,4 +367,4 @@ eval_task = EvalTask(
 - ✅ You've tested in `adk web` and the agent cites the right docs.
 - ✅ (Optional) You know how to fall back to Vector Search if needed.
 
-Move on to **`08_memory_bank.md`** to give the agent long-term memory.
+Move on to **[`08_memory_bank.md`](08_memory_bank.md)** to give the agent long-term memory.

@@ -1,6 +1,6 @@
 ﻿# Gemini Enterprise Agent Platform - Implementation Guide
 
-This is a hands-on, step-by-step implementation guide for building, deploying, governing, and distributing enterprise agents with **Gemini Enterprise**, **Vertex AI Agent Engine**, and the **Agent Development Kit (ADK)**.
+This is a hands-on, step-by-step implementation guide for building, deploying, governing, and distributing enterprise agents with **Gemini Enterprise**, **Agent Runtime (Agent Engine)**, and the **Agent Development Kit (ADK)**.
 
 You will build one realistic system end-to-end: an **Enterprise Support Assistant** that triages customer questions, retrieves answers from internal docs, executes account actions through tools, remembers users across sessions, and can be registered for use in the Gemini Enterprise web app.
 
@@ -19,7 +19,7 @@ Follow the sections in order. Each file is self-contained and ends with a "What 
 | 07 | [`07_rag_grounding.md`](07_rag_grounding.md) | Build | RAG Engine and Vector Search for private data |
 | 08 | [`08_memory_bank.md`](08_memory_bank.md) | Build | Agent Engine Sessions and Memory Bank |
 | 09 | [`09_multi_agent.md`](09_multi_agent.md) | Build | Multi-agent orchestration and A2A concepts |
-| 10 | [`10_deployment.md`](10_deployment.md) | Scale | Deploy to Vertex AI Agent Engine, Cloud Run, or GKE |
+| 10 | [`10_deployment.md`](10_deployment.md) | Scale | Deploy to Agent Runtime (Agent Engine), Cloud Run, or GKE |
 | 11 | [`11_governance.md`](11_governance.md) | Govern | IAM, Gemini Enterprise registration, Model Armor |
 | 12 | [`12_optimization.md`](12_optimization.md) | Optimize | Simulation, Evaluation, Observability |
 | 13 | [`13_distribution.md`](13_distribution.md) | Distribute | Surface in the Gemini Enterprise web app |
@@ -44,7 +44,7 @@ This guide was reviewed against public Google Cloud documentation in April 2026.
 
 - Gemini Enterprise: https://docs.cloud.google.com/gemini/enterprise/docs
 - Gemini Enterprise agents: https://docs.cloud.google.com/gemini/enterprise/docs/agents-overview
-- Vertex AI Agent Engine: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview
+- Agent Runtime (Agent Engine): https://docs.cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview
 - ADK docs: https://google.github.io/adk-docs/
 - Model Armor: https://docs.cloud.google.com/model-armor
 - Gen AI Evaluation: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/evaluation-overview

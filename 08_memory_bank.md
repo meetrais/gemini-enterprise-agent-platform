@@ -128,7 +128,7 @@ root_agent = Agent(
 # When you instantiate a Runner, pass these services in.
 ```
 
-When deploying to Vertex AI Agent Engine with the `AdkApp` template (section 10), session management is handled for deployed ADK agents. Keep the explicit service wiring above for local testing and for examples where you want to control the service instances.
+When deploying to Agent Runtime (Agent Engine) with the `AdkApp` template (section 10), session management is handled for deployed ADK agents. Keep the explicit service wiring above for local testing and for examples where you want to control the service instances.
 
 ## 8.4 Test end-to-end with a Python runner
 
@@ -192,7 +192,7 @@ The first session establishes facts. After it closes, Memory Bank extracts them 
 
 ## 8.5 Inspect memories in the console
 
-1. Console -> **Vertex AI -> Agent Engine -> support-assistant-engine**.
+1. Console -> **Agent Platform -> Agents -> support-assistant-engine**.
 2. **Memories** tab.
 3. Filter by `user_id = alice@example.com`.
 
@@ -308,4 +308,4 @@ On macOS/Linux, use `${PROJECT_ID}`, `${AGENT_SA}`, and `${AGENT_ENGINE_ID}` in 
 - ✅ An allow-list / TTL configured for the Memory Bank instance.
 - ✅ Memory-poisoning mitigations understood.
 
-Move on to **`09_multi_agent.md`**.
+Move on to **[`09_multi_agent.md`](09_multi_agent.md)**.

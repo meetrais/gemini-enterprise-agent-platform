@@ -31,7 +31,9 @@ Model Garden provides first-class access to **200+ models** from Google, open-so
 ## 3.A.1 Open Model Garden in the console
 
 1. Go to https://console.cloud.google.com.
-2. Left nav -> **Vertex AI -> Model Garden**.
+2. Open the navigation menu.
+3. Under **Products**, expand **Agent Platform**.
+4. Click **Models**.
 3. Use the filters in the left panel:
  - **Modalities:** Text, Vision, Audio, Video, Embedding.
  - **Tasks:** Generation, Classification, Translation, etc.
@@ -174,7 +176,7 @@ macOS/Linux:
 
 ## 3.B.3 Launch the tuning job (Console method)
 
-1. In the console, go to **Vertex AI -> Tune and Distill** or open the tuning entry point from **Model Garden**.
+1. In the console, go to **Agent Platform -> Studio -> Tune and Distill** or open the tuning entry point from **Model Garden**.
 2. Click **Create tuned model**.
 3. **Model details:**
  - **Tuned model name:** `support-classifier-v1` (max 128 chars).
@@ -465,9 +467,9 @@ A newer feature: instead of writing a static rubric, the service auto-generates 
 
 ## 3.C.5 View results in the console
 
-Every evaluation run is recorded as a Vertex AI Experiment.
+Every evaluation run is recorded as an Agent Platform experiment.
 
-1. Console -> **Vertex AI -> Experiments**.
+1. Console -> **Agent Platform -> Studio -> Experiments**.
 2. Pick `support-classifier-eval` or `base-vs-tuned`.
 3. View summary metrics, distributions, and per-row drill-down.
 
@@ -484,4 +486,4 @@ You can compare runs side by side here, which is the easiest way to track progre
 - ✅ Eval results visible in the Experiments console.
 - ✅ `TRIAGE_MODEL` and `RESOLUTION_MODEL` env vars set.
 
-Move on to **`04_agent_studio.md`**.
+Move on to **[`04_agent_studio.md`](04_agent_studio.md)**.

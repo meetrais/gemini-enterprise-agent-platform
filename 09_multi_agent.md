@@ -214,7 +214,7 @@ A2A is Google's open protocol for agent-to-agent calls. It's how a Gemini agent 
 
 ### 9.5.1 Expose your agent over A2A
 
-Vertex AI Agent Engine supports agents built with the Agent2Agent protocol. Treat A2A registration as an integration step: confirm the exact endpoint and registration requirements in the current Agent Engine or Gemini Enterprise docs for your deployment type.
+Agent Runtime (Agent Engine) supports agents built with the Agent2Agent protocol. Treat A2A registration as an integration step: confirm the exact endpoint and registration requirements in the current Agent Engine or Gemini Enterprise docs for your deployment type.
 
 ### 9.5.2 Call another A2A agent as a tool
 
@@ -245,7 +245,7 @@ In Gemini Enterprise, admins can register A2A agents and make them available to 
 
 ## 9.6 Running 3rd-party frameworks alongside ADK
 
-ADK is the most ergonomic choice on Google Cloud, but Vertex AI Agent Engine supports other Python agent frameworks too:
+ADK is the most ergonomic choice on Google Cloud, but Agent Runtime (Agent Engine) supports other Python agent frameworks too:
 
 - **LangChain / LangGraph** - `vertexai.preview.reasoning_engines.LangchainAgent`
 - **CrewAI** - wrap with the runnable interface
@@ -272,4 +272,4 @@ Memory Bank works across all of these with notebook samples for LangGraph and Cr
 - ✅ You know how to use SequentialAgent / ParallelAgent for deterministic flows.
 - ✅ You understand how A2A lets you call agents you don't own.
 
-Move on to **`10_deployment.md`** to ship this to production.
+Move on to **[`10_deployment.md`](10_deployment.md)** to ship this to production.

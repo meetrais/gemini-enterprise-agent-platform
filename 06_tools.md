@@ -325,7 +325,7 @@ You: I'm on Pro. If I downgrade to Free for 4 months and back to Pro for 8 month
 Agent: [code_execution: 4*0 + 8*20 = 160] -> "$160 per year."
 ```
 
-The sandbox is the **Vertex AI Code Execution Sandbox**: isolated, no network by default, no shared state with your environment. Safe for arbitrary user-driven calculations.
+The sandbox is the **Agent Platform Code Execution Sandbox**: isolated, no network by default, no shared state with your environment. Safe for arbitrary user-driven calculations.
 
 ## 6.6 Built-in tools quick reference
 
@@ -367,4 +367,4 @@ root_agent = Agent(
 - ✅ Secrets stored in Secret Manager rather than `.env` for any third-party API.
 - ✅ Trace pane in `adk web` shows tool calls and arguments correctly.
 
-Move on to **`07_rag_grounding.md`** to ground the agent in your private docs.
+Move on to **[`07_rag_grounding.md`](07_rag_grounding.md)** to ground the agent in your private docs.

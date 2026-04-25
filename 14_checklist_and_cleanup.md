@@ -30,7 +30,7 @@ $ source .venv/bin/activate
 
 ### Deploy
 
-- [ ] **Vertex AI Agent Engine** - deployed the ADK agent and smoke-tested it.
+- [ ] **Agent Runtime (Agent Engine)** - deployed the ADK agent and smoke-tested it.
 - [ ] **Cloud Run or GKE** - used only if you need custom HTTP, containers, or Kubernetes control.
 - [ ] **Networking** - decided whether PSC, VPC-SC, CMEK, or regional pinning are required.
 - [ ] **Rollback** - know how to redeploy a previous version or Cloud Run revision.
@@ -72,7 +72,7 @@ Run a quick local SDK check:
 Then check these console pages:
 
 1. **Billing -> Reports** - filter by service.
-2. **Vertex AI -> Agent Engine** - confirm only intended agents remain.
+2. **Agent Platform -> Agents** - confirm only intended agents remain.
 3. **Cloud Run -> Services** - if you used Cloud Run.
 4. **GKE -> Clusters** - if you used GKE.
 5. **Cloud Storage -> Buckets** - confirm the staging bucket size is expected.
@@ -225,6 +225,6 @@ Before deleting local files, consider keeping:
 Useful starting points:
 
 - Gemini Enterprise docs: https://docs.cloud.google.com/gemini/enterprise/docs
-- Vertex AI Agent Engine docs: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview
+- Agent Runtime (Agent Engine) docs: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview
 - ADK docs: https://google.github.io/adk-docs/
 - Gen AI Evaluation docs: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/evaluation-overview

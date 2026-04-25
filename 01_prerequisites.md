@@ -22,7 +22,7 @@ Most developer steps use Google Cloud services directly. Section 13 needs an exi
 
 Ask your GCP admin to grant your user the following roles on the project you'll use, or grant them yourself if you have org admin:
 
-- `roles/aiplatform.user` - Vertex AI user access
+- `roles/aiplatform.user` - Agent Platform user access
 - `roles/run.sourceDeveloper` - Cloud Run Source Developer (for Cloud Run deploys)
 - `roles/iam.serviceAccountUser` - Service Account User
 - `roles/serviceusage.serviceUsageAdmin` - to enable APIs
@@ -108,7 +108,7 @@ PS> docker --version
 $ docker --version
 ```
 
-You can skip Docker if you'll only deploy to Vertex AI Agent Engine or Cloud Run source-based deploys.
+You can skip Docker if you'll only deploy to Agent Runtime (Agent Engine) or Cloud Run source-based deploys.
 
 ## 1.5 Sign in to gcloud and set Application Default Credentials
 
@@ -166,4 +166,4 @@ You'll come back to this directory at the start of every section.
 - ✅ Windows only: PowerShell execution policy set to RemoteSigned for CurrentUser.
 - ✅ A working directory at `~/agent-platform-demo`.
 
-When all boxes are checked, move on to **`02_project_setup.md`**.
+When all boxes are checked, move on to **[`02_project_setup.md`](02_project_setup.md)**.

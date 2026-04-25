@@ -249,7 +249,7 @@ To deactivate later: `deactivate`.
  google-cloud-discoveryengine
 ```
 
-The `[agent_engines,adk,evaluation]` extras pull in the modules used by Vertex AI Agent Engine, ADK, and the Gen AI Evaluation Service.
+The `[agent_engines,adk,evaluation]` extras pull in the modules used by Agent Runtime (Agent Engine), ADK, and the Gen AI Evaluation Service.
 
 Pin versions in a `requirements.txt` for reproducibility:
 
@@ -284,14 +284,14 @@ Run it:
 (.venv) PS> python smoke_test.py
 ```
 
-If you see `OK` (or close to it), your project, auth, billing, APIs, and SDKs all work end-to-end. If you get a `403 PERMISSION_DENIED`, double-check the IAM roles in section 1.3. If you get a `404 not found` for the model, check the current Vertex AI model list and use an available Gemini model in your region.
+If you see `OK` (or close to it), your project, auth, billing, APIs, and SDKs all work end-to-end. If you get a `403 PERMISSION_DENIED`, double-check the IAM roles in section 1.3. If you get a `404 not found` for the model, check the current Agent Platform model list and use an available Gemini model in your region.
 
 ## 2.9 Verify everything in the console
 
 1. Browse to https://console.cloud.google.com.
 2. Top bar - confirm your project name shows `Agent Platform Demo`.
-3. Left nav -> **Vertex AI** and **Gemini Enterprise**. You should be able to reach Model Garden, Agent Engine, and your Gemini Enterprise app.
-4. Confirm you can reach the relevant pages: **Vertex AI > Model Garden**, **Vertex AI > Agent Engine**, and **Gemini Enterprise**.
+3. Left nav -> **Agent Platform** and **Gemini Enterprise**. You should be able to reach Model Garden, Agent Engine, and your Gemini Enterprise app.
+4. Confirm you can reach the relevant pages: **Agent Platform > Models**, **Agent Platform > Agents**, and **Gemini Enterprise**.
 
 ---
 
@@ -306,4 +306,4 @@ If you see `OK` (or close to it), your project, auth, billing, APIs, and SDKs al
 - ✅ macOS/Linux: `set-env.sh` you can source in any new shell.
 - ✅ A working smoke test that calls Gemini and prints a response.
 
-Move on to **`03_model_garden.md`**.
+Move on to **[`03_model_garden.md`](03_model_garden.md)**.

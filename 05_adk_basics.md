@@ -286,4 +286,4 @@ Useful when an agent does something unexpected - you can see whether the model r
 - ✅ You've called the agent from a Python script using `InMemoryRunner`.
 - ✅ You've iterated on the instruction at least once and seen the behavior change.
 
-Move on to **`06_tools.md`** to give the agent real capabilities.
+Move on to **[`06_tools.md`](06_tools.md)** to give the agent real capabilities.

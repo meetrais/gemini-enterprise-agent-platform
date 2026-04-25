@@ -271,7 +271,7 @@ Plug into `AgentEvalTask` alongside the built-ins.
 
 ## 12.C - Agent Observability
 
-When you deploy via ADK to Vertex AI Agent Engine, Cloud Run, or GKE, use Cloud Trace, Cloud Logging, and Cloud Monitoring as your common observability stack. Some telemetry is automatic in managed paths; custom business metrics still require code.
+When you deploy via ADK to Agent Runtime (Agent Engine), Cloud Run, or GKE, use Cloud Trace, Cloud Logging, and Cloud Monitoring as your common observability stack. Some telemetry is automatic in managed paths; custom business metrics still require code.
 
 You get:
 
@@ -474,4 +474,4 @@ Now any release that doesn't pass simulation + Auto SxS gates simply doesn't go 
 - ✅ At least one alert policy for latency or eval regression.
 - ✅ (Optional) CI scripts gating releases on sim + sxs thresholds.
 
-Move on to **`13_distribution.md`** to put the agent in front of users.
+Move on to **[`13_distribution.md`](13_distribution.md)** to put the agent in front of users.

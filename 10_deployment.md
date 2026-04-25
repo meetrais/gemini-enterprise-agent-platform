@@ -1,14 +1,14 @@
-﻿# 10 - Deploy to Vertex AI Agent Engine, Cloud Run, or GKE
+﻿# 10 - Deploy to Agent Runtime (Agent Engine), Cloud Run, or GKE
 
 You have three deployment paths. Pick based on needs:
 
 | Path | Use when |
 |------|----------|
-| **Vertex AI Agent Engine** | You want managed scaling, production agent management, and native session/memory integration. The default for most teams. |
+| **Agent Runtime (Agent Engine)** | You want managed scaling, production agent management, and native session/memory integration. The default for most teams. |
 | **Cloud Run** | You want serverless containers, custom HTTP endpoints, or you have non-agent components in the same service. |
 | **GKE** | You need full Kubernetes control, complex networking, sidecars, or are running large-scale custom infrastructure. |
 
-This section deploys to Vertex AI Agent Engine first (recommended), then shows the Cloud Run and GKE alternatives.
+This section deploys to Agent Runtime (Agent Engine) first (recommended), then shows the Cloud Run and GKE alternatives.
 
 ```powershell
 PS> cd $HOME\agent-platform-demo
@@ -22,7 +22,7 @@ $ source ./set-env.sh
 $ source .venv/bin/activate
 ```
 
-## 10.1 Path A - Deploy to Vertex AI Agent Engine
+## 10.1 Path A - Deploy to Agent Runtime (Agent Engine)
 
 ### 10.1.1 Wrap your agent as an `AdkApp`
 
@@ -58,7 +58,7 @@ agent_engine = client.agent_engines.update(
  "service_account": os.environ["AGENT_SA"],
  },
 )
-print("Deployed to Vertex AI Agent Engine:")
+print("Deployed to Agent Runtime (Agent Engine):")
 print(agent_engine.api_resource.name)
 ```
 
@@ -127,7 +127,7 @@ agent_engine = client.agent_engines.update(
 
 ### 10.1.4 List and manage deployed agents
 
-Use the Vertex AI Agent Engine console page or the SDK to list and inspect deployed agents. If your `gcloud` installation includes Agent Engine commands, prefer the command names shown by `gcloud ai --help` or the current docs for your SDK version.
+Use the Agent Runtime (Agent Engine) console page or the SDK to list and inspect deployed agents. If your `gcloud` installation includes Agent Engine commands, prefer the command names shown by `gcloud ai --help` or the current docs for your SDK version.
 
 To delete:
 
@@ -281,7 +281,7 @@ For all three deployment paths:
 
 If your agent needs to call private VPC services (internal APIs, on-prem resources via Cloud Interconnect):
 
-- Vertex AI Agent Engine: configure Private Service Connect settings in the deployment config when your project uses PSC.
+- Agent Runtime (Agent Engine): configure Private Service Connect settings in the deployment config when your project uses PSC.
 - Cloud Run: use VPC connectors via `--vpc-connector` or **Direct VPC egress** via `--vpc-egress=all-traffic --network=...`.
 - GKE: native VPC.
 
@@ -363,11 +363,11 @@ If anything fails, the right diagnostic is the **Trace** in section 12 - spans s
 
 ## What you should have now
 
-- ✅ Your multi-agent system deployed to Vertex AI Agent Engine (Path A).
+- ✅ Your multi-agent system deployed to Agent Runtime (Agent Engine) (Path A).
 - ✅ (Optional) Same agent running on Cloud Run (Path B) or GKE (Path C).
 - ✅ Smoke test confirms streaming responses from the deployed agent.
 - ✅ Min/max instances and concurrency tuned for expected traffic.
 - ✅ Networking decisions made: PSC if needed, VPC-SC if regulated, CMEK if mandated.
 - ✅ You know how to roll back to a previous version.
 
-Move on to **`11_governance.md`** for IAM, Gemini Enterprise registration, and Model Armor.
+Move on to **[`11_governance.md`](11_governance.md)** for IAM, Gemini Enterprise registration, and Model Armor.

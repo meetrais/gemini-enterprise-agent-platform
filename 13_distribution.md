@@ -1,6 +1,6 @@
 ﻿# 13 - Distribute via the Gemini Enterprise app
 
-The **Gemini Enterprise web app** is the employee-facing front door. Admins can register supported custom agents, including ADK agents hosted on Vertex AI Agent Engine, and share them with the right users. The app also includes:
+The **Gemini Enterprise web app** is the employee-facing front door. Admins can register supported custom agents, including ADK agents hosted on Agent Runtime (Agent Engine), and share them with the right users. The app also includes:
 
 - **Agent Designer** - a no-code builder for non-developers.
 - **Agent Gallery** - a place to browse available Google, organization, and personal agents.
@@ -171,4 +171,4 @@ This is the real long-term operating loop.
 - ✅ (Optional) A marketplace or A2A agent reviewed and shared with the right audience.
 - ✅ (Optional) Workspace integration enabled for your audience.
 
-Move on to **`14_checklist_and_cleanup.md`** for final verification and cleanup.
+Move on to **[`14_checklist_and_cleanup.md`](14_checklist_and_cleanup.md)** for final verification and cleanup.
