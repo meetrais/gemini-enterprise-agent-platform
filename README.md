@@ -10,20 +10,20 @@ Follow the sections in order. Each file is self-contained and ends with a "What 
 
 | # | File | Pillar | What you build |
 |---|------|--------|----------------|
-| 00 | `00_prerequisites.md` | Foundation | Accounts, IAM roles, software you need installed |
-| 01 | `01_project_setup.md` | Foundation | GCP project, APIs, staging bucket, SDKs |
-| 02 | `02_model_garden.md` | Build | Choose a model, tune it, evaluate it |
-| 03 | `03_agent_studio.md` | Build | Low-code triage agent in Agent Designer |
-| 04 | `04_adk_basics.md` | Build | First code-first agent with ADK |
-| 05 | `05_tools.md` | Build | Function tools, OpenAPI, MCP, Code Execution |
-| 06 | `06_rag_grounding.md` | Build | RAG Engine and Vector Search for private data |
-| 07 | `07_memory_bank.md` | Build | Agent Engine Sessions and Memory Bank |
-| 08 | `08_multi_agent.md` | Build | Multi-agent orchestration and A2A concepts |
-| 09 | `09_deployment.md` | Scale | Deploy to Vertex AI Agent Engine, Cloud Run, or GKE |
-| 10 | `10_governance.md` | Govern | IAM, Gemini Enterprise registration, Model Armor |
-| 11 | `11_optimization.md` | Optimize | Simulation, Evaluation, Observability |
-| 12 | `12_distribution.md` | Distribute | Surface in the Gemini Enterprise web app |
-| 13 | `13_checklist_and_cleanup.md` | — | Final E2E checklist and resource cleanup |
+| 00 | [`00_prerequisites.md`](00_prerequisites.md) | Foundation | Accounts, IAM roles, software you need installed |
+| 01 | [`01_project_setup.md`](01_project_setup.md) | Foundation | GCP project, APIs, staging bucket, SDKs |
+| 02 | [`02_model_garden.md`](02_model_garden.md) | Build | Choose a model, tune it, evaluate it |
+| 03 | [`03_agent_studio.md`](03_agent_studio.md) | Build | Low-code triage agent in Agent Designer |
+| 04 | [`04_adk_basics.md`](04_adk_basics.md) | Build | First code-first agent with ADK |
+| 05 | [`05_tools.md`](05_tools.md) | Build | Function tools, OpenAPI, MCP, Code Execution |
+| 06 | [`06_rag_grounding.md`](06_rag_grounding.md) | Build | RAG Engine and Vector Search for private data |
+| 07 | [`07_memory_bank.md`](07_memory_bank.md) | Build | Agent Engine Sessions and Memory Bank |
+| 08 | [`08_multi_agent.md`](08_multi_agent.md) | Build | Multi-agent orchestration and A2A concepts |
+| 09 | [`09_deployment.md`](09_deployment.md) | Scale | Deploy to Vertex AI Agent Engine, Cloud Run, or GKE |
+| 10 | [`10_governance.md`](10_governance.md) | Govern | IAM, Gemini Enterprise registration, Model Armor |
+| 11 | [`11_optimization.md`](11_optimization.md) | Optimize | Simulation, Evaluation, Observability |
+| 12 | [`12_distribution.md`](12_distribution.md) | Distribute | Surface in the Gemini Enterprise web app |
+| 13 | [`13_checklist_and_cleanup.md`](13_checklist_and_cleanup.md) | — | Final E2E checklist and resource cleanup |
 
 ## Conventions used throughout
 
