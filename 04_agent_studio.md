@@ -43,9 +43,9 @@ message and classify it into exactly one category:
 
 Return strict JSON only:
 {
-  "category": "<billing|technical|account|general>",
-  "confidence": <number from 0.0 to 1.0>,
-  "reason": "<one short sentence>"
+ "category": "<billing|technical|account|general>",
+ "confidence": <number from 0.0 to 1.0>,
+ "reason": "<one short sentence>"
 }
 
 Do not include markdown fences. Do not include any other text.
@@ -59,16 +59,16 @@ If Agent Designer offers structured output or JSON schema validation, use this s
 
 ```json
 {
-  "type": "object",
-  "required": ["category", "confidence", "reason"],
-  "properties": {
-    "category": {
-      "type": "string",
-      "enum": ["billing", "technical", "account", "general"]
-    },
-    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
-    "reason": { "type": "string" }
-  }
+ "type": "object",
+ "required": ["category", "confidence", "reason"],
+ "properties": {
+ "category": {
+ "type": "string",
+ "enum": ["billing", "technical", "account", "general"]
+ },
+ "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+ "reason": { "type": "string" }
+ }
 }
 ```
 

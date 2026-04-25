@@ -1,4 +1,4 @@
-﻿# 05 â€” Build with the Agent Development Kit (ADK)
+﻿# 05 - Build with the Agent Development Kit (ADK)
 
 The **Agent Development Kit** is the code-first framework for production-grade agents. It's open-source, model-agnostic, and available in Python, TypeScript, Go, and Java. This guide uses Python.
 
@@ -28,7 +28,7 @@ If `adk` isn't recognized:
 (.venv) PS> pip install --upgrade google-adk
 ```
 
-Make sure your venv is active â€” `(.venv)` should be in the prompt.
+Make sure your venv is active - `(.venv)` should be in the prompt.
 
 ## 5.2 Scaffold an agent project
 
@@ -46,14 +46,14 @@ The result is a folder structure:
 
 ```
 support_assistant\
-  __init__.py
-  agent.py        # the main agent definition
-  .env            # local env vars (don't commit)
+ __init__.py
+ agent.py # the main agent definition
+ .env # local env vars (don't commit)
 ```
 
 On macOS/Linux, paths use `/`, for example `support_assistant/agent.py`.
 
-Look at `.env` â€” it should contain:
+Look at `.env` - it should contain:
 
 ```
 GOOGLE_CLOUD_PROJECT=my-agent-platform
@@ -80,32 +80,32 @@ On macOS/Linux:
 Replace its contents with:
 
 ```python
-"""ACME Support Assistant â€” ADK root agent."""
+"""ACME Support Assistant - ADK root agent."""
 
 from google.adk.agents import Agent
 from google.adk.tools import google_search
 
 
 root_agent = Agent(
-    name="support_assistant",
-    model="gemini-2.5-pro",
-    description=(
-        "ACME's customer support assistant. Answers questions about ACME's "
-        "products, billing, and accounts."
-    ),
-    instruction=(
-        "You are ACME's helpful customer support assistant. "
-        "Be concise and friendly. "
-        "If you do not know the answer, say so honestly and offer to escalate "
-        "to a human. Never invent product details or policies. "
-        "When the user asks about anything outside ACME (general web facts), "
-        "use the google_search tool."
-    ),
-    tools=[google_search],
+ name="support_assistant",
+ model="gemini-2.5-pro",
+ description=(
+ "ACME's customer support assistant. Answers questions about ACME's "
+ "products, billing, and accounts."
+ ),
+ instruction=(
+ "You are ACME's helpful customer support assistant. "
+ "Be concise and friendly. "
+ "If you do not know the answer, say so honestly and offer to escalate "
+ "to a human. Never invent product details or policies. "
+ "When the user asks about anything outside ACME (general web facts), "
+ "use the google_search tool."
+ ),
+ tools=[google_search],
 )
 ```
 
-The variable **must be named `root_agent`** â€” that's what `adk run` and `adk web` look for.
+The variable **must be named `root_agent`** - that's what `adk run` and `adk web` look for.
 
 ## 5.4 Run the agent in the terminal
 
@@ -135,11 +135,11 @@ This starts a local web server. Open http://localhost:8000 in your browser. From
 
 The web UI shows:
 
-- **Conversation** â€” left pane.
-- **Trace** â€” right pane, with the full reasoning, model calls, and tool invocations expanded.
-- **State** â€” session state inspector.
+- **Conversation** - left pane.
+- **Trace** - right pane, with the full reasoning, model calls, and tool invocations expanded.
+- **State** - session state inspector.
 
-> **Note:** `adk web` is a development tool. **Do not** use it in production â€” there's no auth, no rate-limit, no scaling.
+> **Note:** `adk web` is a development tool. **Do not** use it in production - there's no auth, no rate-limit, no scaling.
 
 To stop: `Ctrl+C` in the PowerShell window.
 
@@ -157,33 +157,33 @@ Windows PowerShell:
 
 ```powershell
 PS> $body = @{
-  app_name = "support_assistant"
-  user_id  = "u1"
-  session_id = "s1"
-  new_message = @{
-    role = "user"
-    parts = @(@{ text = "Hi, what does ACME do?" })
-  }
+ app_name = "support_assistant"
+ user_id = "u1"
+ session_id = "s1"
+ new_message = @{
+ role = "user"
+ parts = @(@{ text = "Hi, what does ACME do?" })
+ }
 } | ConvertTo-Json -Depth 6
 
 PS> Invoke-RestMethod -Uri "http://localhost:8080/run" `
-    -Method POST -Body $body -ContentType "application/json"
+ -Method POST -Body $body -ContentType "application/json"
 ```
 
 macOS/Linux:
 
 ```bash
 $ curl -s -X POST "http://localhost:8080/run" \
-    -H "Content-Type: application/json" \
-    -d '{
-      "app_name": "support_assistant",
-      "user_id": "u1",
-      "session_id": "s1",
-      "new_message": {
-        "role": "user",
-        "parts": [{ "text": "Hi, what does ACME do?" }]
-      }
-    }'
+ -H "Content-Type: application/json" \
+ -d '{
+ "app_name": "support_assistant",
+ "user_id": "u1",
+ "session_id": "s1",
+ "new_message": {
+ "role": "user",
+ "parts": [{ "text": "Hi, what does ACME do?" }]
+ }
+ }'
 ```
 
 This is a useful pattern for E2E tests and for integrating with non-Python clients.
@@ -198,16 +198,16 @@ from google.adk.runners import InMemoryRunner
 from google.genai import types
 
 async def main():
-    runner = InMemoryRunner(agent=root_agent, app_name="support_assistant")
-    session = await runner.session_service.create_session(
-        app_name="support_assistant", user_id="u1"
-    )
-    msg = types.Content(role="user", parts=[types.Part(text="Hi, what's ACME?")])
-    async for event in runner.run_async(
-        user_id="u1", session_id=session.id, new_message=msg
-    ):
-        if event.is_final_response():
-            print(event.content.parts[0].text)
+ runner = InMemoryRunner(agent=root_agent, app_name="support_assistant")
+ session = await runner.session_service.create_session(
+ app_name="support_assistant", user_id="u1"
+ )
+ msg = types.Content(role="user", parts=[types.Part(text="Hi, what's ACME?")])
+ async for event in runner.run_async(
+ user_id="u1", session_id=session.id, new_message=msg
+ ):
+ if event.is_final_response():
+ print(event.content.parts[0].text)
 
 asyncio.run(main())
 ```
@@ -233,20 +233,20 @@ A good ACME support instruction adds:
 
 ```python
 instruction=(
-    "You are ACME's helpful customer support assistant. "
-    "ACME is a SaaS platform for managing IoT fleet telemetry. "
-    "Plans are Free, Pro ($20/mo), and Enterprise (custom). "
-    "Be concise and friendly. Default to a 2-3 sentence answer. "
-    "If a request requires looking up a customer account, refunding "
-    "money, or any other action you cannot complete, say you'll "
-    "escalate and ask the user for their account ID. "
-    "If you don't know something, say so. Never invent details."
+ "You are ACME's helpful customer support assistant. "
+ "ACME is a SaaS platform for managing IoT fleet telemetry. "
+ "Plans are Free, Pro ($20/mo), and Enterprise (custom). "
+ "Be concise and friendly. Default to a 2-3 sentence answer. "
+ "If a request requires looking up a customer account, refunding "
+ "money, or any other action you cannot complete, say you'll "
+ "escalate and ask the user for their account ID. "
+ "If you don't know something, say so. Never invent details."
 )
 ```
 
 ## 5.9 Switch models without code changes
 
-You can override the model at run time via env var without editing code â€” useful when comparing options:
+You can override the model at run time via env var without editing code - useful when comparing options:
 
 ```powershell
 (.venv) PS> $env:GOOGLE_GENAI_MODEL = "gemini-2.5-flash"
@@ -274,7 +274,7 @@ Set the log level high to see every prompt + tool call:
 (.venv) $ adk run support_assistant
 ```
 
-Useful when an agent does something unexpected â€” you can see whether the model received the wrong context or made a bad choice.
+Useful when an agent does something unexpected - you can see whether the model received the wrong context or made a bad choice.
 
 ---
 

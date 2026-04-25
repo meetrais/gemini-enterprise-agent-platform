@@ -1,4 +1,4 @@
-﻿# Gemini Enterprise Agent Platform â€” Implementation Guide
+﻿# Gemini Enterprise Agent Platform - Implementation Guide
 
 This is a hands-on, step-by-step implementation guide for building, deploying, governing, and distributing enterprise agents with **Gemini Enterprise**, **Vertex AI Agent Engine**, and the **Agent Development Kit (ADK)**.
 
@@ -6,7 +6,7 @@ You will build one realistic system end-to-end: an **Enterprise Support Assistan
 
 ## How to use this guide
 
-Follow the sections in order. Each file is self-contained and ends with a "What you should have now" checklist â€” finish it before moving to the next.
+Follow the sections in order. Each file is self-contained and ends with a "What you should have now" checklist - finish it before moving to the next.
 
 | # | File | Pillar | What you build |
 |---|------|--------|----------------|
@@ -23,18 +23,18 @@ Follow the sections in order. Each file is self-contained and ends with a "What 
 | 11 | [`11_governance.md`](11_governance.md) | Govern | IAM, Gemini Enterprise registration, Model Armor |
 | 12 | [`12_optimization.md`](12_optimization.md) | Optimize | Simulation, Evaluation, Observability |
 | 13 | [`13_distribution.md`](13_distribution.md) | Distribute | Surface in the Gemini Enterprise web app |
-| 14 | [`14_checklist_and_cleanup.md`](14_checklist_and_cleanup.md) | â€” | Final E2E checklist and resource cleanup |
+| 14 | [`14_checklist_and_cleanup.md`](14_checklist_and_cleanup.md) | - | Final E2E checklist and resource cleanup |
 
 ## Conventions used throughout
 
 - Lines starting with `PS>` mean Windows PowerShell. Lines starting with `$` mean macOS/Linux Bash or Zsh. Plain code blocks are file contents (Python, YAML, JSON).
 - Wherever you see `<ANGLE_BRACKETS>` in commands, replace with your own value.
 - Most `gcloud` commands are the same on Windows, macOS, and Linux. The differences are usually environment variables, virtual environment activation, path separators, and line-continuation characters.
-- The running example uses these names â€” change them only if you have a reason to:
-  - **Project ID:** `my-agent-platform`
-  - **Region:** `us-central1`
-  - **Staging bucket:** `gs://my-agent-platform-agent-staging`
-  - **Service account:** `agent-runner@my-agent-platform.iam.gserviceaccount.com`
+- The running example uses these names - change them only if you have a reason to:
+ - **Project ID:** `my-agent-platform`
+ - **Region:** `us-central1`
+ - **Staging bucket:** `gs://my-agent-platform-agent-staging`
+ - **Service account:** `agent-runner@my-agent-platform.iam.gserviceaccount.com`
 
 ## A note on dates and previews
 

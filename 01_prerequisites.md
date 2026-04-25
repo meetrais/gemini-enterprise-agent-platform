@@ -1,4 +1,4 @@
-﻿# 01 â€” Prerequisites
+﻿# 01 - Prerequisites
 
 Before writing a line of agent code, get your local machine and your Google Cloud account set up.
 
@@ -6,15 +6,15 @@ Before writing a line of agent code, get your local machine and your Google Clou
 
 1. Go to https://console.cloud.google.com and sign in.
 2. If you're new, click **Activate** on the $300 free credit banner. New customers get **$300 in free credits** for Google Cloud products.
-3. Create a billing account if you don't have one (Billing â†’ Manage billing accounts â†’ Create account). You need a billing account attached to the project even when using free credits.
+3. Create a billing account if you don't have one (Billing -> Manage billing accounts -> Create account). You need a billing account attached to the project even when using free credits.
 
 ## 1.2 Pick the Gemini Enterprise edition you'll target
 
 This affects what features you can demo at the end. Pick now so you don't get surprised in section 13.
 
-- **Standard** â€” core Gemini Enterprise app, enterprise security, connectors, and agent access.
-- **Plus** â€” larger storage/indexing allowances and the broadest enterprise feature set.
-- **Frontline** â€” for frontline workers; requires a Standard or Plus environment.
+- **Standard** - core Gemini Enterprise app, enterprise security, connectors, and agent access.
+- **Plus** - larger storage/indexing allowances and the broadest enterprise feature set.
+- **Frontline** - for frontline workers; requires a Standard or Plus environment.
 
 Most developer steps use Google Cloud services directly. Section 13 needs an existing Gemini Enterprise app and the right admin permissions.
 
@@ -22,13 +22,13 @@ Most developer steps use Google Cloud services directly. Section 13 needs an exi
 
 Ask your GCP admin to grant your user the following roles on the project you'll use, or grant them yourself if you have org admin:
 
-- `roles/aiplatform.user` â€” Vertex AI user access
-- `roles/run.sourceDeveloper` â€” Cloud Run Source Developer (for Cloud Run deploys)
-- `roles/iam.serviceAccountUser` â€” Service Account User
-- `roles/serviceusage.serviceUsageAdmin` â€” to enable APIs
-- `roles/storage.admin` â€” for the staging Cloud Storage bucket
-- `roles/discoveryengine.admin` â€” for Gemini Enterprise app agent registration in section 13
-- `roles/resourcemanager.projectCreator` â€” only if you'll create projects yourself
+- `roles/aiplatform.user` - Vertex AI user access
+- `roles/run.sourceDeveloper` - Cloud Run Source Developer (for Cloud Run deploys)
+- `roles/iam.serviceAccountUser` - Service Account User
+- `roles/serviceusage.serviceUsageAdmin` - to enable APIs
+- `roles/storage.admin` - for the staging Cloud Storage bucket
+- `roles/discoveryengine.admin` - for Gemini Enterprise app agent registration in section 13
+- `roles/resourcemanager.projectCreator` - only if you'll create projects yourself
 
 ## 1.4 Install local software
 

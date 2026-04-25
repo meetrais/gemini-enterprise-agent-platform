@@ -1,10 +1,10 @@
-﻿# 13 â€” Distribute via the Gemini Enterprise app
+﻿# 13 - Distribute via the Gemini Enterprise app
 
 The **Gemini Enterprise web app** is the employee-facing front door. Admins can register supported custom agents, including ADK agents hosted on Vertex AI Agent Engine, and share them with the right users. The app also includes:
 
-- **Agent Designer** â€” a no-code builder for non-developers.
-- **Agent Gallery** â€” a place to browse available Google, organization, and personal agents.
-- **Inbox** â€” a central location to monitor long-running agent tasks.
+- **Agent Designer** - a no-code builder for non-developers.
+- **Agent Gallery** - a place to browse available Google, organization, and personal agents.
+- **Inbox** - a central location to monitor long-running agent tasks.
 
 This section publishes your support assistant to the right audience and shows how to extend it via Agent Designer and Agent Gallery.
 
@@ -25,7 +25,7 @@ Before this section will fully work:
 1. Console -> **Gemini Enterprise**.
 2. If you don't have an app or license, follow the setup flow or contact your Google Cloud administrator.
 3. Wait a few minutes for the license to provision.
-4. Refresh â€” the **Admin** sidebar entry should appear.
+4. Refresh - the **Admin** sidebar entry should appear.
 
 ## 13.2 Register the Agent Engine agent
 
@@ -44,13 +44,13 @@ Fill in the configuration panel:
 - **Display name in app:** `ACME Support`
 - **Short description:** `Get answers fast on billing, technical, and account questions.`
 - **Long description:** A paragraph explaining what the agent can do, with sample prompts.
-- **Icon:** upload a 256Ã—256 PNG, or pick from the icon library.
+- **Icon:** upload a 256x256 PNG, or pick from the icon library.
 - **Color theme:** match brand colors.
-- **Starter prompts** (3â€“5 â€” these appear as buttons in the chat UI):
-  - "Why was I charged twice?"
-  - "My API is throwing 503s"
-  - "How do I change my email?"
-  - "What's the difference between Pro and Enterprise?"
+- **Starter prompts** (3 - 5 - these appear as buttons in the chat UI):
+ - "Why was I charged twice?"
+ - "My API is throwing 503s"
+ - "How do I change my email?"
+ - "What's the difference between Pro and Enterprise?"
 - **Audience:** select which Google Group, OU, or list of emails can see this agent. For internal-only, pick `support-team@acme.com`. For company-wide, pick `all-employees@acme.com`.
 - **Inbox enabled:** ON. This lets users monitor long-running runs from the Inbox panel.
 - **Sharing:** allow users to share conversations with colleagues, OR restrict for sensitive PII flows.
@@ -69,8 +69,8 @@ Click **Publish**.
 If the agent doesn't appear:
 
 - The audience setting may not include your account.
-- Cache â€” sign out and back in.
-- License â€” make sure your account has a Gemini Enterprise seat assigned.
+- Cache - sign out and back in.
+- License - make sure your account has a Gemini Enterprise seat assigned.
 
 ## 13.5 Inbox for long-running tasks
 
@@ -82,18 +82,18 @@ In your agent code, mark a sub-agent or workflow as long-running:
 from google.adk.agents import Agent
 
 deep_research_agent = Agent(
-    name="deep_research_agent",
-    model="gemini-2.5-pro",
-    instruction="...",
-    tools=[google_search, search_kb, code_execution],
-    long_running=True,    # surfaced in Inbox
-    estimated_duration_seconds=600,
+ name="deep_research_agent",
+ model="gemini-2.5-pro",
+ instruction="...",
+ tools=[google_search, search_kb, code_execution],
+ long_running=True, # surfaced in Inbox
+ estimated_duration_seconds=600,
 )
 ```
 
 When triggered, the agent emits status updates to the user's Inbox; users can navigate away and come back to see the result.
 
-## 13.6 Agent Designer â€” no-code agents for end users
+## 13.6 Agent Designer - no-code agents for end users
 
 The Gemini Enterprise app includes **Agent Designer**, a natural-language no-code builder. Admins can control whether end users are allowed to create their own agents.
 
@@ -103,9 +103,9 @@ Walk an end user through it:
 2. **Agent Designer** opens with a chat-style prompt: *"Describe what your agent should do."*
 3. Example: "Every Monday at 9am, summarize last week's support tickets from ServiceNow grouped by category, and email me the result."
 4. Designer generates a draft agent that includes:
-   - The required MCP tools (ServiceNow, Gmail).
-   - A schedule trigger.
-   - The summarization prompt.
+ - The required MCP tools (ServiceNow, Gmail).
+ - A schedule trigger.
+ - The summarization prompt.
 5. The user reviews the draft, adjusts, and clicks **Save**.
 6. The agent is saved in the app and governed by the app's sharing and admin controls.
 
@@ -135,7 +135,7 @@ If your org uses Google Workspace:
 
 Standard / Plus customers can:
 
-- Upload a custom logo and color palette (Console â†’ **Gemini Enterprise â†’ Admin â†’ Branding**).
+- Upload a custom logo and color palette (Console -> **Gemini Enterprise -> Admin -> Branding**).
 - Set a custom welcome message.
 - Configure the app to be available at a vanity URL (e.g., `gemini.acme.example.com`).
 
@@ -144,7 +144,7 @@ Standard / Plus customers can:
 Distribution isn't just publishing; it's adoption. Two artifacts to produce:
 
 1. **A short video or doc** showing 3 example queries the agent handles well.
-2. **An "escape hatch"** â€” make sure users know how to get to a human, and that the agent's "I'll escalate" response actually creates a ticket somewhere.
+2. **An "escape hatch"** - make sure users know how to get to a human, and that the agent's "I'll escalate" response actually creates a ticket somewhere.
 
 ## 13.11 Iterate based on real traffic
 

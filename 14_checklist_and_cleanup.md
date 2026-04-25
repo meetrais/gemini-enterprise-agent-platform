@@ -90,13 +90,13 @@ import os
 import vertexai
 
 client = vertexai.Client(
-    project=os.environ["PROJECT_ID"],
-    location=os.environ["LOCATION"],
+ project=os.environ["PROJECT_ID"],
+ location=os.environ["LOCATION"],
 )
 
 client.agent_engines.delete(
-    name=os.environ["AGENT_ENGINE_NAME"],
-    config={"force": True},
+ name=os.environ["AGENT_ENGINE_NAME"],
+ config={"force": True},
 )
 print("Deleted:", os.environ["AGENT_ENGINE_NAME"])
 ```
@@ -115,28 +115,28 @@ Run:
 
 ```powershell
 PS> gcloud run services delete support-assistant `
-    --region=$env:LOCATION `
-    --quiet
+ --region=$env:LOCATION `
+ --quiet
 ```
 
 ```bash
 $ gcloud run services delete support-assistant \
-    --region="${LOCATION}" \
-    --quiet
+ --region="${LOCATION}" \
+ --quiet
 ```
 
 ### 14.3.3 Delete GKE cluster
 
 ```powershell
 PS> gcloud container clusters delete <YOUR_CLUSTER_NAME> `
-    --region=$env:LOCATION `
-    --quiet
+ --region=$env:LOCATION `
+ --quiet
 ```
 
 ```bash
 $ gcloud container clusters delete <YOUR_CLUSTER_NAME> \
-    --region="${LOCATION}" \
-    --quiet
+ --region="${LOCATION}" \
+ --quiet
 ```
 
 ### 14.3.4 Delete the RAG corpus

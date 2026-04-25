@@ -1,11 +1,11 @@
-﻿# 07 â€” Ground the agent in private data with RAG Engine and Vector Search
+﻿# 07 - Ground the agent in private data with RAG Engine and Vector Search
 
-LLMs hallucinate when asked about things they weren't trained on â€” your runbooks, your product docs, your policies. The fix is **Retrieval-Augmented Generation (RAG)**: at inference time, look up relevant snippets from your data and pass them to the model as context.
+LLMs hallucinate when asked about things they weren't trained on - your runbooks, your product docs, your policies. The fix is **Retrieval-Augmented Generation (RAG)**: at inference time, look up relevant snippets from your data and pass them to the model as context.
 
 The platform offers two paths:
 
-- **RAG Engine** â€” managed end-to-end. You point it at files; it handles parsing, chunking, embedding, indexing, and retrieval. Best for most teams.
-- **Vector Search** â€” direct, AI-native vector index. Use when you need full control of embeddings or exotic data types.
+- **RAG Engine** - managed end-to-end. You point it at files; it handles parsing, chunking, embedding, indexing, and retrieval. Best for most teams.
+- **Vector Search** - direct, AI-native vector index. Use when you need full control of embeddings or exotic data types.
 
 This section uses RAG Engine for the main path and shows Vector Search as the alternative in 6.6.
 
@@ -80,14 +80,14 @@ If a customer reports persistent 503 errors:
 
 1. Check status.acme.example.com for active incidents.
 2. Verify the customer's API key is on the correct plan tier (Free keys are
-   throttled at 100 events/day).
+ throttled at 100 events/day).
 3. Have them retry with exponential backoff. Our gateway will accept retries
-   from 1s to 60s.
+ from 1s to 60s.
 4. If still failing, escalate to L2 with the customer's account ID and a
-   sample of the failed request IDs.
+ sample of the failed request IDs.
 ```
 
-Add 5â€“10 more files in real-world deployments. Larger corpora benefit from a coverage strategy â€” make sure every common question has at least one source document.
+Add 5 - 10 more files in real-world deployments. Larger corpora benefit from a coverage strategy - make sure every common question has at least one source document.
 
 ## 7.2 Upload to Cloud Storage
 
@@ -116,26 +116,26 @@ vertexai.init(project=os.environ["PROJECT_ID"], location=os.environ["LOCATION"])
 
 # 1. Create the corpus
 corpus = rag.create_corpus(
-    display_name="acme-support-kb",
-    description="ACME product docs, refund policy, runbooks, FAQs",
-    backend_config=rag.RagVectorDbConfig(
-        rag_embedding_model_config=rag.RagEmbeddingModelConfig(
-            vertex_prediction_endpoint=rag.VertexPredictionEndpoint(
-                publisher_model="publishers/google/models/text-embedding-005"
-            )
-        )
-    ),
+ display_name="acme-support-kb",
+ description="ACME product docs, refund policy, runbooks, FAQs",
+ backend_config=rag.RagVectorDbConfig(
+ rag_embedding_model_config=rag.RagEmbeddingModelConfig(
+ vertex_prediction_endpoint=rag.VertexPredictionEndpoint(
+ publisher_model="publishers/google/models/text-embedding-005"
+ )
+ )
+ ),
 )
 print("Corpus created:", corpus.name)
 
 # 2. Import files from Cloud Storage
 op = rag.import_files(
-    corpus_name=corpus.name,
-    paths=[f"{os.environ['STAGING_BUCKET']}/kb/"],
-    transformation_config=rag.TransformationConfig(
-        chunking_config=rag.ChunkingConfig(chunk_size=512, chunk_overlap=64)
-    ),
-    max_embedding_requests_per_min=900,
+ corpus_name=corpus.name,
+ paths=[f"{os.environ['STAGING_BUCKET']}/kb/"],
+ transformation_config=rag.TransformationConfig(
+ chunking_config=rag.ChunkingConfig(chunk_size=512, chunk_overlap=64)
+ ),
+ max_embedding_requests_per_min=900,
 )
 print("Import complete. Files indexed:", op.imported_rag_files_count)
 ```
@@ -177,16 +177,16 @@ from vertexai import rag
 vertexai.init(project=os.environ["PROJECT_ID"], location=os.environ["LOCATION"])
 
 results = rag.retrieval_query(
-    rag_resources=[rag.RagResource(rag_corpus=os.environ["RAG_CORPUS"])],
-    text="What's ACME's refund window?",
-    rag_retrieval_config=rag.RagRetrievalConfig(
-        top_k=5,
-        filter=rag.Filter(vector_distance_threshold=0.5),
-    ),
+ rag_resources=[rag.RagResource(rag_corpus=os.environ["RAG_CORPUS"])],
+ text="What's ACME's refund window?",
+ rag_retrieval_config=rag.RagRetrievalConfig(
+ top_k=5,
+ filter=rag.Filter(vector_distance_threshold=0.5),
+ ),
 )
 for ctx in results.contexts.contexts:
-    print(f"--- score: {ctx.score:.3f}")
-    print(ctx.text[:200])
+ print(f"--- score: {ctx.score:.3f}")
+ print(ctx.text[:200])
 ```
 
 Run:
@@ -195,7 +195,7 @@ Run:
 (.venv) PS> python query_rag.py
 ```
 
-You should see chunks from `refund_policy.md` ranked first. If you get empty results, your `vector_distance_threshold` is too tight â€” raise it (e.g., `0.7`) or remove it.
+You should see chunks from `refund_policy.md` ranked first. If you get empty results, your `vector_distance_threshold` is too tight - raise it (e.g., `0.7`) or remove it.
 
 ## 7.5 Wire RAG into the agent
 
@@ -213,33 +213,33 @@ from vertexai import rag
 
 
 search_kb = VertexAiRagRetrieval(
-    name="search_acme_kb",
-    description=(
-        "Search ACME's internal knowledge base â€” product plans, pricing, "
-        "policies, runbooks, troubleshooting guides. Use this for any "
-        "question about how ACME products work or what ACME's policies are."
-    ),
-    rag_resources=[rag.RagResource(rag_corpus=os.environ["RAG_CORPUS"])],
-    similarity_top_k=8,
-    vector_distance_threshold=0.6,
+ name="search_acme_kb",
+ description=(
+ "Search ACME's internal knowledge base - product plans, pricing, "
+ "policies, runbooks, troubleshooting guides. Use this for any "
+ "question about how ACME products work or what ACME's policies are."
+ ),
+ rag_resources=[rag.RagResource(rag_corpus=os.environ["RAG_CORPUS"])],
+ similarity_top_k=8,
+ vector_distance_threshold=0.6,
 )
 
 root_agent = Agent(
-    name="support_assistant",
-    model="gemini-2.5-pro",
-    instruction=(
-        "You are ACME's customer support assistant. "
-        "For ANY question about ACME's products, pricing, plans, policies, "
-        "or troubleshooting, use search_acme_kb FIRST. Cite the document "
-        "you're answering from. "
-        "For account lookups use get_account_status / get_recent_invoices. "
-        "For refunds use issue_refund only after explicit user confirmation."
-    ),
-    tools=[
-        search_kb,
-        get_account_status, get_recent_invoices, issue_refund,
-        code_execution, google_search,
-    ],
+ name="support_assistant",
+ model="gemini-2.5-pro",
+ instruction=(
+ "You are ACME's customer support assistant. "
+ "For ANY question about ACME's products, pricing, plans, policies, "
+ "or troubleshooting, use search_acme_kb FIRST. Cite the document "
+ "you're answering from. "
+ "For account lookups use get_account_status / get_recent_invoices. "
+ "For refunds use issue_refund only after explicit user confirmation."
+ ),
+ tools=[
+ search_kb,
+ get_account_status, get_recent_invoices, issue_refund,
+ code_execution, google_search,
+ ],
 )
 ```
 
@@ -260,7 +260,7 @@ You: My API is throwing 503s, what should I check?
 Agent: [calls search_acme_kb] -> "Three things to check first: ..."
 ```
 
-In the trace, you'll see the retrieved chunks alongside the model's response â€” exactly the documents the answer came from.
+In the trace, you'll see the retrieved chunks alongside the model's response - exactly the documents the answer came from.
 
 ## 7.6 (Alternative) Vector Search directly
 
@@ -271,7 +271,7 @@ When you need:
 - Very high QPS (>1000 qps).
 - Multi-tenant isolation at the index level.
 
-â€¦ use Vector Search directly instead of RAG Engine.
+... use Vector Search directly instead of RAG Engine.
 
 ### 7.6.1 Create an index
 
@@ -283,13 +283,13 @@ from google.cloud import aiplatform
 aiplatform.init(project=os.environ["PROJECT_ID"], location=os.environ["LOCATION"])
 
 index = aiplatform.MatchingEngineIndex.create_tree_ah_index(
-    display_name="acme-kb-index",
-    contents_delta_uri=f"{os.environ['STAGING_BUCKET']}/vs_data/",
-    dimensions=768,
-    approximate_neighbors_count=20,
-    distance_measure_type="DOT_PRODUCT_DISTANCE",
-    leaf_node_embedding_count=500,
-    leaf_nodes_to_search_percent=10,
+ display_name="acme-kb-index",
+ contents_delta_uri=f"{os.environ['STAGING_BUCKET']}/vs_data/",
+ dimensions=768,
+ approximate_neighbors_count=20,
+ distance_measure_type="DOT_PRODUCT_DISTANCE",
+ leaf_node_embedding_count=500,
+ leaf_nodes_to_search_percent=10,
 )
 print(index.resource_name)
 ```
@@ -306,8 +306,8 @@ You produce these by embedding your text with `text-embedding-005`.
 
 ```python
 endpoint = aiplatform.MatchingEngineIndexEndpoint.create(
-    display_name="acme-kb-endpoint",
-    public_endpoint_enabled=True,
+ display_name="acme-kb-endpoint",
+ public_endpoint_enabled=True,
 )
 endpoint.deploy_index(index=index, deployed_index_id="acme_kb_v1")
 ```
@@ -316,9 +316,9 @@ endpoint.deploy_index(index=index, deployed_index_id="acme_kb_v1")
 
 ```python
 neighbors = endpoint.find_neighbors(
-    deployed_index_id="acme_kb_v1",
-    queries=[query_embedding_vector],
-    num_neighbors=5,
+ deployed_index_id="acme_kb_v1",
+ queries=[query_embedding_vector],
+ num_neighbors=5,
 )
 ```
 
@@ -339,7 +339,7 @@ In the console: **Vertex AI -> RAG Engine -> your corpus -> Import files -> Sour
 
 ## 7.8 Re-index when documents change
 
-Re-run `rag.import_files(...)` whenever your underlying docs change. By default, RAG Engine de-duplicates by file URI â€” re-importing the same path replaces existing chunks for those files. For very frequent updates, schedule it with Cloud Scheduler or a CI workflow.
+Re-run `rag.import_files(...)` whenever your underlying docs change. By default, RAG Engine de-duplicates by file URI - re-importing the same path replaces existing chunks for those files. For very frequent updates, schedule it with Cloud Scheduler or a CI workflow.
 
 ## 7.9 Evaluate retrieval quality
 
@@ -349,8 +349,8 @@ The Gen AI Evaluation Service has built-in retrieval metrics. Add a `groundednes
 from vertexai.evaluation import EvalTask
 
 eval_task = EvalTask(
-    dataset=dataset,
-    metrics=["groundedness", "question_answering_quality"],
+ dataset=dataset,
+ metrics=["groundedness", "question_answering_quality"],
 )
 ```
 
