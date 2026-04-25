@@ -162,13 +162,13 @@ This is the real long-term operating loop.
 
 ## What you should have now
 
-- [ ] A Gemini Enterprise license active on your project.
-- [ ] `support-assistant-prod` registered with the Gemini Enterprise app.
-- [ ] Display name, icon, starter prompts, audience all configured.
-- [ ] You've used the agent yourself from the Gemini Enterprise web app URL.
-- [ ] (Optional) An Inbox-enabled long-running sub-agent.
-- [ ] (Optional) A no-code agent built in Agent Designer to demonstrate the user path.
-- [ ] (Optional) A marketplace or A2A agent reviewed and shared with the right audience.
-- [ ] (Optional) Workspace integration enabled for your audience.
+- ✅ A Gemini Enterprise license active on your project.
+- ✅ `support-assistant-prod` registered with the Gemini Enterprise app.
+- ✅ Display name, icon, starter prompts, audience all configured.
+- ✅ You've used the agent yourself from the Gemini Enterprise web app URL.
+- ✅ (Optional) An Inbox-enabled long-running sub-agent.
+- ✅ (Optional) A no-code agent built in Agent Designer to demonstrate the user path.
+- ✅ (Optional) A marketplace or A2A agent reviewed and shared with the right audience.
+- ✅ (Optional) Workspace integration enabled for your audience.
 
 Move on to **`14_checklist_and_cleanup.md`** for final verification and cleanup.

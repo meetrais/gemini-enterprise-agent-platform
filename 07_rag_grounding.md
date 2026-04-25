@@ -360,11 +360,11 @@ eval_task = EvalTask(
 
 ## What you should have now
 
-- [ ] A RAG corpus (`acme-support-kb`) populated from Cloud Storage.
-- [ ] `RAG_CORPUS` saved as an env var.
-- [ ] A standalone `query_rag.py` proves retrieval works.
-- [ ] `support_assistant\agent.py` updated with `search_acme_kb` as a tool.
-- [ ] You've tested in `adk web` and the agent cites the right docs.
-- [ ] (Optional) You know how to fall back to Vector Search if needed.
+- ✅ A RAG corpus (`acme-support-kb`) populated from Cloud Storage.
+- ✅ `RAG_CORPUS` saved as an env var.
+- ✅ A standalone `query_rag.py` proves retrieval works.
+- ✅ `support_assistant\agent.py` updated with `search_acme_kb` as a tool.
+- ✅ You've tested in `adk web` and the agent cites the right docs.
+- ✅ (Optional) You know how to fall back to Vector Search if needed.
 
 Move on to **`08_memory_bank.md`** to give the agent long-term memory.

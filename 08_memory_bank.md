@@ -300,12 +300,12 @@ On macOS/Linux, use `${PROJECT_ID}`, `${AGENT_SA}`, and `${AGENT_ENGINE_ID}` in 
 
 ## What you should have now
 
-- [ ] An Agent Engine instance created with ID saved in env.
-- [ ] `support_assistant\agent.py` configured to use Memory Bank.
-- [ ] `test_memory.py` proves memory survives across sessions.
-- [ ] You've inspected memories in the console.
-- [ ] You can read/write memories directly via the SDK.
-- [ ] An allow-list / TTL configured for the Memory Bank instance.
-- [ ] Memory-poisoning mitigations understood.
+- ✅ An Agent Engine instance created with ID saved in env.
+- ✅ `support_assistant\agent.py` configured to use Memory Bank.
+- ✅ `test_memory.py` proves memory survives across sessions.
+- ✅ You've inspected memories in the console.
+- ✅ You can read/write memories directly via the SDK.
+- ✅ An allow-list / TTL configured for the Memory Bank instance.
+- ✅ Memory-poisoning mitigations understood.
 
 Move on to **`09_multi_agent.md`**.

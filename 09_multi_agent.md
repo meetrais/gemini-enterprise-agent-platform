@@ -266,10 +266,10 @@ Memory Bank works across all of these with notebook samples for LangGraph and Cr
 
 ## What you should have now
 
-- [ ] Four agents defined: router, billing, tech, account.
-- [ ] Router delegates correctly on at least three test cases.
-- [ ] You've watched a delegation in the trace pane and understand the flow.
-- [ ] You know how to use SequentialAgent / ParallelAgent for deterministic flows.
-- [ ] You understand how A2A lets you call agents you don't own.
+- ✅ Four agents defined: router, billing, tech, account.
+- ✅ Router delegates correctly on at least three test cases.
+- ✅ You've watched a delegation in the trace pane and understand the flow.
+- ✅ You know how to use SequentialAgent / ParallelAgent for deterministic flows.
+- ✅ You understand how A2A lets you call agents you don't own.
 
 Move on to **`10_deployment.md`** to ship this to production.

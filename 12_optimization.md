@@ -467,11 +467,11 @@ Now any release that doesn't pass simulation + Auto SxS gates simply doesn't go 
 
 ## What you should have now
 
-- [ ] Personas + scenarios defined under `simulation\`.
-- [ ] `run_sim.py` runs and produces a `results.csv` with success rates.
-- [ ] An `agent_eval.jsonl` and `agent_sxs.py` that run Auto SxS against a baseline.
-- [ ] A Cloud Monitoring dashboard with at least latency, tokens, tool success, and Armor blocks.
-- [ ] At least one alert policy for latency or eval regression.
-- [ ] (Optional) CI scripts gating releases on sim + sxs thresholds.
+- ✅ Personas + scenarios defined under `simulation\`.
+- ✅ `run_sim.py` runs and produces a `results.csv` with success rates.
+- ✅ An `agent_eval.jsonl` and `agent_sxs.py` that run Auto SxS against a baseline.
+- ✅ A Cloud Monitoring dashboard with at least latency, tokens, tool success, and Armor blocks.
+- ✅ At least one alert policy for latency or eval regression.
+- ✅ (Optional) CI scripts gating releases on sim + sxs thresholds.
 
 Move on to **`13_distribution.md`** to put the agent in front of users.

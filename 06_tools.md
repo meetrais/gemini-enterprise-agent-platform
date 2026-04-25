@@ -360,11 +360,11 @@ root_agent = Agent(
 
 ## What you should have now
 
-- [ ] At least three function tools (`get_account_status`, `get_recent_invoices`, `issue_refund`) wired into the agent.
-- [ ] Tool Confirmation enabled on `issue_refund` so the user must approve.
-- [ ] Either an OpenAPI tool, an MCP tool, or both wired in (or you've read the patterns and know how).
-- [ ] `code_execution` enabled and you've seen it run.
-- [ ] Secrets stored in Secret Manager rather than `.env` for any third-party API.
-- [ ] Trace pane in `adk web` shows tool calls and arguments correctly.
+- ✅ At least three function tools (`get_account_status`, `get_recent_invoices`, `issue_refund`) wired into the agent.
+- ✅ Tool Confirmation enabled on `issue_refund` so the user must approve.
+- ✅ Either an OpenAPI tool, an MCP tool, or both wired in (or you've read the patterns and know how).
+- ✅ `code_execution` enabled and you've seen it run.
+- ✅ Secrets stored in Secret Manager rather than `.env` for any third-party API.
+- ✅ Trace pane in `adk web` shows tool calls and arguments correctly.
 
 Move on to **`07_rag_grounding.md`** to ground the agent in your private docs.

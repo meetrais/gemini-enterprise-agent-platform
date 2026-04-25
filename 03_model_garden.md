@@ -477,11 +477,11 @@ You can compare runs side by side here, which is the easiest way to track progre
 
 ## What you should have now
 
-- [ ] You can list and call models from Model Garden.
-- [ ] (Optional) A tuned classifier model registered in your project.
-- [ ] Pointwise eval script that scores any model on your test set.
-- [ ] Pairwise eval script that compares two models head-to-head.
-- [ ] Eval results visible in the Experiments console.
-- [ ] `TRIAGE_MODEL` and `RESOLUTION_MODEL` env vars set.
+- ✅ You can list and call models from Model Garden.
+- ✅ (Optional) A tuned classifier model registered in your project.
+- ✅ Pointwise eval script that scores any model on your test set.
+- ✅ Pairwise eval script that compares two models head-to-head.
+- ✅ Eval results visible in the Experiments console.
+- ✅ `TRIAGE_MODEL` and `RESOLUTION_MODEL` env vars set.
 
 Move on to **`04_agent_studio.md`**.

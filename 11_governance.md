@@ -212,11 +212,11 @@ For regulated or sensitive agents, evaluate:
 
 ## What you should have now
 
-- [ ] `agent-runner` is the runtime identity and has only required roles.
-- [ ] Observability roles are added where needed.
-- [ ] The deployed ADK agent is ready to register with Gemini Enterprise.
-- [ ] Model Armor template created and tested.
-- [ ] Tool confirmation remains enabled for high-impact tools.
-- [ ] Compliance choices are documented for VPC-SC, CMEK, audit logs, and regional placement.
+- ✅ `agent-runner` is the runtime identity and has only required roles.
+- ✅ Observability roles are added where needed.
+- ✅ The deployed ADK agent is ready to register with Gemini Enterprise.
+- ✅ Model Armor template created and tested.
+- ✅ Tool confirmation remains enabled for high-impact tools.
+- ✅ Compliance choices are documented for VPC-SC, CMEK, audit logs, and regional placement.
 
 Move on to **`12_optimization.md`** for evaluation and observability.

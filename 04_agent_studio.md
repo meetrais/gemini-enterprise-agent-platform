@@ -114,9 +114,9 @@ Those become the initial ADK agent instruction, tests, and eval rows.
 
 ## What you should have now
 
-- [ ] A working triage prototype in Agent Designer.
-- [ ] At least 5 test prompts with expected categories.
-- [ ] The final instruction saved for the ADK implementation.
-- [ ] A decision on whether this stays a no-code helper or moves into the production ADK path.
+- ✅ A working triage prototype in Agent Designer.
+- ✅ At least 5 test prompts with expected categories.
+- ✅ The final instruction saved for the ADK implementation.
+- ✅ A decision on whether this stays a no-code helper or moves into the production ADK path.
 
 Move on to **`05_adk_basics.md`**.

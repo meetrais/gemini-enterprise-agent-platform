@@ -363,11 +363,11 @@ If anything fails, the right diagnostic is the **Trace** in section 12 - spans s
 
 ## What you should have now
 
-- [ ] Your multi-agent system deployed to Vertex AI Agent Engine (Path A).
-- [ ] (Optional) Same agent running on Cloud Run (Path B) or GKE (Path C).
-- [ ] Smoke test confirms streaming responses from the deployed agent.
-- [ ] Min/max instances and concurrency tuned for expected traffic.
-- [ ] Networking decisions made: PSC if needed, VPC-SC if regulated, CMEK if mandated.
-- [ ] You know how to roll back to a previous version.
+- ✅ Your multi-agent system deployed to Vertex AI Agent Engine (Path A).
+- ✅ (Optional) Same agent running on Cloud Run (Path B) or GKE (Path C).
+- ✅ Smoke test confirms streaming responses from the deployed agent.
+- ✅ Min/max instances and concurrency tuned for expected traffic.
+- ✅ Networking decisions made: PSC if needed, VPC-SC if regulated, CMEK if mandated.
+- ✅ You know how to roll back to a previous version.
 
 Move on to **`11_governance.md`** for IAM, Gemini Enterprise registration, and Model Armor.

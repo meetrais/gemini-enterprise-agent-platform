@@ -297,13 +297,13 @@ If you see `OK` (or close to it), your project, auth, billing, APIs, and SDKs al
 
 ## What you should have now
 
-- [ ] A GCP project with billing linked.
-- [ ] All required APIs enabled.
-- [ ] A staging bucket created in `us-central1`.
-- [ ] An `agent-runner` service account with the right roles.
-- [ ] A Python virtual environment with the platform SDKs installed.
-- [ ] `set-env.ps1` you can dot-source in any new shell.
-- [ ] macOS/Linux: `set-env.sh` you can source in any new shell.
-- [ ] A working smoke test that calls Gemini and prints a response.
+- ✅ A GCP project with billing linked.
+- ✅ All required APIs enabled.
+- ✅ A staging bucket created in `us-central1`.
+- ✅ An `agent-runner` service account with the right roles.
+- ✅ A Python virtual environment with the platform SDKs installed.
+- ✅ `set-env.ps1` you can dot-source in any new shell.
+- ✅ macOS/Linux: `set-env.sh` you can source in any new shell.
+- ✅ A working smoke test that calls Gemini and prints a response.
 
 Move on to **`03_model_garden.md`**.

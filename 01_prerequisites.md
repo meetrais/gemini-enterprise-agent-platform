@@ -110,11 +110,6 @@ $ docker --version
 
 You can skip Docker if you'll only deploy to Vertex AI Agent Engine or Cloud Run source-based deploys.
 
-### 1.4.5 Visual Studio Code (recommended editor)
-
-1. Download from https://code.visualstudio.com/.
-2. Install the **Python**, **Pylance**, and **Google Cloud Code** extensions.
-
 ## 1.5 Sign in to gcloud and set Application Default Credentials
 
 In a fresh terminal:
@@ -161,14 +156,14 @@ You'll come back to this directory at the start of every section.
 
 ## What you should have now
 
-- [ ] A Google Cloud account with billing and free credits applied.
-- [ ] IAM roles granted on your project.
-- [ ] Python 3.10+ installed and on PATH (`python --version` works).
-- [ ] gcloud CLI installed and authenticated (`gcloud auth list` shows your account).
-- [ ] Application Default Credentials configured.
-- [ ] Git installed.
-- [ ] Optional: Docker Desktop, VS Code.
-- [ ] Windows only: PowerShell execution policy set to RemoteSigned for CurrentUser.
-- [ ] A working directory at `~/agent-platform-demo`.
+- ✅ A Google Cloud account with billing and free credits applied.
+- ✅ IAM roles granted on your project.
+- ✅ Python 3.10+ installed and on PATH (`python --version` works).
+- ✅ gcloud CLI installed and authenticated (`gcloud auth list` shows your account).
+- ✅ Application Default Credentials configured.
+- ✅ Git installed.
+- ✅ Optional: Docker Desktop.
+- ✅ Windows only: PowerShell execution policy set to RemoteSigned for CurrentUser.
+- ✅ A working directory at `~/agent-platform-demo`.
 
 When all boxes are checked, move on to **`02_project_setup.md`**.
