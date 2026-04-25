@@ -53,28 +53,7 @@ Model names change over time, and preview models are not always available in eve
 
 Use Model Garden to see which preview, third-party, and open models are available to your project. Enable only the models you actually need; each extra provider can add separate terms, quotas, and billing behavior.
 
-## 3.A.3 Listing models from the SDK
-
-```python
-# list_models.py
-import os
-from google.cloud import aiplatform
-
-aiplatform.init(project=os.environ["PROJECT_ID"], location=os.environ["LOCATION"])
-
-# List Gemini publishers
-publisher_models = aiplatform.Model.list_publisher_models(
- filter="publisher_model.name:gemini"
-)
-for m in publisher_models[:25]:
- print(m.name, "-", m.display_name)
-```
-
-```powershell
-(.venv) PS> python list_models.py
-```
-
-## 3.A.4 Pick the model for the rest of this guide
+## 3.A.3 Pick the model for the rest of this guide
 
 For the Support Assistant we will use:
 
@@ -105,7 +84,9 @@ We'll tune `gemini-2.5-flash` to classify customer support requests into four ca
 
 ## 3.B.1 Prepare a tuning dataset
 
-The format is **JSONL** - one JSON object per line. Each line is one training example. Schema:
+The format is **JSONL** - one complete JSON object per line, with no outer array and no blank lines.
+
+For readability, the shape of one training example is shown below in pretty-printed JSON:
 
 ```json
 {
@@ -127,7 +108,9 @@ Recommendations from the Vertex docs:
 - Inputs should look like real production traffic.
 - Each example should be a complete, well-formed conversation.
 
-Create `tuning_data\train.jsonl` (one JSON per line, no blank lines):
+But the actual `.jsonl` file must be compact one-line records like the examples below.
+
+Create `tuning_data\train.jsonl`:
 
 ```powershell
 (.venv) PS> mkdir tuning_data
@@ -141,7 +124,7 @@ On macOS/Linux:
 (.venv) $ nano tuning_data/train.jsonl
 ```
 
-Paste a few example lines. Here's one - repeat the pattern with at least 100 lines of varied real-looking tickets:
+Paste lines like these. Each physical line is one full training example. Repeat the pattern with at least 100 varied, realistic tickets:
 
 ```json
 {"systemInstruction":{"role":"system","parts":[{"text":"You classify ACME support tickets into one of: billing, technical, account, general. Output only the category."}]},"contents":[{"role":"user","parts":[{"text":"Why was I charged twice for my Pro subscription this month?"}]},{"role":"model","parts":[{"text":"billing"}]}]}
