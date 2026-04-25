@@ -1,12 +1,12 @@
-# 11 — Optimize: Simulation, Evaluation, Observability
+﻿# 12 â€” Optimize: Simulation, Evaluation, Observability
 
 The platform's "Optimize" pillar gives you three tools:
 
-- **Agent Simulation** — run synthetic users and scenarios against your agent in a sandbox.
-- **Agent Evaluation** — score outputs with rubrics, including Auto SxS comparing versions.
-- **Agent Observability** — Cloud Trace, Cloud Logging, Cloud Monitoring with OpenTelemetry traces of every agent step.
+- **Agent Simulation** â€” run synthetic users and scenarios against your agent in a sandbox.
+- **Agent Evaluation** â€” score outputs with rubrics, including Auto SxS comparing versions.
+- **Agent Observability** â€” Cloud Trace, Cloud Logging, Cloud Monitoring with OpenTelemetry traces of every agent step.
 
-Together they form an evaluation-driven release cycle: change something → simulate → evaluate → ship → observe.
+Together they form an evaluation-driven release cycle: change something â†’ simulate â†’ evaluate â†’ ship â†’ observe.
 
 ```powershell
 PS> cd $HOME\agent-platform-demo
@@ -20,11 +20,11 @@ $ source ./set-env.sh
 $ source .venv/bin/activate
 ```
 
-## 11.A — Agent Simulation
+## 12.A â€” Agent Simulation
 
 Simulation runs your deployed agent against AI-driven personas across scenario scripts. It catches behavior bugs that single test cases miss.
 
-### 11.A.1 Define personas
+### 12.A.1 Define personas
 
 Create `simulation\personas.json`:
 
@@ -65,7 +65,7 @@ On macOS/Linux:
 ]
 ```
 
-### 11.A.2 Define scenarios
+### 12.A.2 Define scenarios
 
 Create `simulation\scenarios.json`:
 
@@ -94,7 +94,7 @@ Create `simulation\scenarios.json`:
 ]
 ```
 
-### 11.A.3 Run the simulation
+### 12.A.3 Run the simulation
 
 Create `simulation\run_sim.py`:
 
@@ -124,7 +124,7 @@ print("Summary:")
 print(report.summary)        # success_rate, avg_turns, escalation_rate
 print("\nDetails (top 5 failed runs):")
 for fail in report.failures[:5]:
-    print("  ", fail.persona, "/", fail.scenario, "—", fail.failure_reason)
+    print("  ", fail.persona, "/", fail.scenario, "â€”", fail.failure_reason)
 
 report.to_csv("simulation/results.csv")
 ```
@@ -139,20 +139,20 @@ Run:
 (.venv) $ python simulation/run_sim.py
 ```
 
-This will run `4 personas × 4 scenarios × 5 runs = 80 conversations` against the deployed agent. With 12-turn limit and async execution it takes ~10–20 minutes.
+This will run `4 personas Ã— 4 scenarios Ã— 5 runs = 80 conversations` against the deployed agent. With 12-turn limit and async execution it takes ~10â€“20 minutes.
 
-### 11.A.4 Read the report
+### 12.A.4 Read the report
 
 The output highlights:
 
 - **Success rate** per scenario (was the goal met?).
-- **Failure reasons** — bucketed by the judge into "didn't follow runbook", "issued refund without confirmation", "leaked PII", etc.
-- **Avg turns** — proxy for efficiency.
-- **Escalation rate** — proxy for over-escalation.
+- **Failure reasons** â€” bucketed by the judge into "didn't follow runbook", "issued refund without confirmation", "leaked PII", etc.
+- **Avg turns** â€” proxy for efficiency.
+- **Escalation rate** â€” proxy for over-escalation.
 
 Pay special attention to the `social_engineering_refund` scenario. If the agent ever issued a refund there, you have a real safety bug to fix before shipping.
 
-### 11.A.5 Make simulation a release gate
+### 12.A.5 Make simulation a release gate
 
 Add a `simulation\check_threshold.py`:
 
@@ -173,24 +173,24 @@ if success < THRESHOLD:
 
 In CI/CD, run this after each simulation; non-zero exit blocks the deploy.
 
-## 11.B — Agent Evaluation with Auto SxS
+## 12.B â€” Agent Evaluation with Auto SxS
 
-You used the Gen AI Evaluation Service in section 2.C for model-level evals. Now use it at the **agent level** to compare deployed versions head-to-head.
+You used the Gen AI Evaluation Service in section 3.C for model-level evals. Now use it at the **agent level** to compare deployed versions head-to-head.
 
-### 11.B.1 Build an agent eval set
+### 12.B.1 Build an agent eval set
 
 Create `eval\agent_eval.jsonl` (one JSON per line):
 
 ```json
-{"prompt":"My account A-12345 was charged twice — please help","expected_intent":"billing_refund_inquiry","expected_tools":["get_account_status","get_recent_invoices"]}
-{"prompt":"My API is throwing 503s — what should I check?","expected_intent":"technical_troubleshooting","expected_tools":["search_acme_kb"]}
+{"prompt":"My account A-12345 was charged twice â€” please help","expected_intent":"billing_refund_inquiry","expected_tools":["get_account_status","get_recent_invoices"]}
+{"prompt":"My API is throwing 503s â€” what should I check?","expected_intent":"technical_troubleshooting","expected_tools":["search_acme_kb"]}
 {"prompt":"How do I change the email on my account?","expected_intent":"account_email_change","expected_tools":["get_account_status","reset_password"]}
 {"prompt":"What's the difference between Pro and Enterprise?","expected_intent":"product_question","expected_tools":["search_acme_kb"]}
 ```
 
 Aim for 50+ rows in production.
 
-### 11.B.2 Run Auto SxS comparing two versions
+### 12.B.2 Run Auto SxS comparing two versions
 
 Create `eval\agent_sxs.py`:
 
@@ -240,9 +240,9 @@ PS> start eval\sxs_report.html
 
 The report shows per-metric win rates. A meaningful release is one where the candidate beats the baseline on most metrics with no significant regression on safety.
 
-### 11.B.3 Custom metrics for support-specific quality
+### 12.B.3 Custom metrics for support-specific quality
 
-You may care about things the built-in metrics don't measure — e.g., "did the agent never share PII outside the original user's account?":
+You may care about things the built-in metrics don't measure â€” e.g., "did the agent never share PII outside the original user's account?":
 
 ```python
 from vertexai.evaluation import PointwiseMetric
@@ -269,27 +269,27 @@ Output a single integer 1 or 5 and a one-sentence rationale.
 
 Plug into `AgentEvalTask` alongside the built-ins.
 
-## 11.C — Agent Observability
+## 12.C â€” Agent Observability
 
 When you deploy via ADK to Vertex AI Agent Engine, Cloud Run, or GKE, use Cloud Trace, Cloud Logging, and Cloud Monitoring as your common observability stack. Some telemetry is automatic in managed paths; custom business metrics still require code.
 
 You get:
 
-- **Traces** — full execution path: which agent, which sub-agent, which tool, which model, with arguments and latencies.
-- **Logs** — every event with structured fields.
-- **Metrics** — built-in metrics for latency, token usage, error rate, plus any custom ones you emit.
+- **Traces** â€” full execution path: which agent, which sub-agent, which tool, which model, with arguments and latencies.
+- **Logs** â€” every event with structured fields.
+- **Metrics** â€” built-in metrics for latency, token usage, error rate, plus any custom ones you emit.
 
-### 11.C.1 View traces
+### 12.C.1 View traces
 
-1. Console → **Operations → Cloud Trace → Trace Explorer**.
+1. Console â†’ **Operations â†’ Cloud Trace â†’ Trace Explorer**.
 2. Filter by service name `support-assistant-prod` (or whatever you named the Agent Engine).
-3. Click a trace to see a flame graph: router → triage decision → billing_agent → tool calls → final.
+3. Click a trace to see a flame graph: router â†’ triage decision â†’ billing_agent â†’ tool calls â†’ final.
 
 Each span has attributes like `agent.name`, `model.name`, `tool.name`, `tokens.input`, `tokens.output`. Use these for filtering and metric extraction.
 
-### 11.C.2 View logs
+### 12.C.2 View logs
 
-1. Console → **Operations → Logging → Logs Explorer**.
+1. Console â†’ **Operations â†’ Logging â†’ Logs Explorer**.
 2. Query:
 
 ```
@@ -300,13 +300,13 @@ severity>=INFO
 
 Filter further by `jsonPayload.tool_name` or `jsonPayload.user_id` to scope to specific failures.
 
-### 11.C.3 Build a Cloud Monitoring dashboard
+### 12.C.3 Build a Cloud Monitoring dashboard
 
 Create `dashboard.json`:
 
 ```json
 {
-  "displayName": "Support Assistant — Health",
+  "displayName": "Support Assistant â€” Health",
   "mosaicLayout": {
     "columns": 12,
     "tiles": [
@@ -383,12 +383,12 @@ Apply it:
 PS> gcloud monitoring dashboards create --config-from-file=dashboard.json
 ```
 
-### 11.C.4 Alert policies
+### 12.C.4 Alert policies
 
 Create `alerts.yaml`:
 
 ```yaml
-displayName: "Support Assistant — p95 latency too high"
+displayName: "Support Assistant â€” p95 latency too high"
 conditions:
   - displayName: "p95 > 5s for 10 minutes"
     conditionThreshold:
@@ -411,12 +411,12 @@ PS> gcloud alpha monitoring policies create --policy-from-file=alerts.yaml
 
 Repeat for:
 
-- **Eval score regression** — if your nightly eval drops by >5%.
+- **Eval score regression** â€” if your nightly eval drops by >5%.
 - **Tool error rate** > 5%.
 - **Memory Bank write rate** anomalies.
 - **Model Armor block rate** sudden spike (could mean attack traffic).
 
-### 11.C.5 Custom business metrics
+### 12.C.5 Custom business metrics
 
 Emit custom metrics from your tools so the dashboard tells the business story, not just the technical one:
 
@@ -441,12 +441,12 @@ def issue_refund(account_id: str, amount_usd: float, reason: str) -> dict:
 
 Now you can chart "refund volume per hour" right next to latency.
 
-## 11.D — Auto SxS in CI
+## 12.D â€” Auto SxS in CI
 
-Tie sections 11.A and 11.B together so they gate a release:
+Tie sections 12.A and 12.B together so they gate a release:
 
 ```yaml
-# .github/workflows/release.yml — sketch
+# .github/workflows/release.yml â€” sketch
 on:
   push:
     tags: ['v*']
@@ -474,4 +474,4 @@ Now any release that doesn't pass simulation + Auto SxS gates simply doesn't go 
 - [ ] At least one alert policy for latency or eval regression.
 - [ ] (Optional) CI scripts gating releases on sim + sxs thresholds.
 
-Move on to **`12_distribution.md`** to put the agent in front of users.
+Move on to **`13_distribution.md`** to put the agent in front of users.

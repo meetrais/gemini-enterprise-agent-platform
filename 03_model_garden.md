@@ -1,12 +1,12 @@
-# 02 — Model Garden, model tuning, and evaluation
+﻿# 03 â€” Model Garden, model tuning, and evaluation
 
 This section covers three things:
 
-1. **2.A** — Browse Model Garden and pick the right model for your use case.
-2. **2.B** — Tune a Gemini model with supervised fine-tuning, end to end.
-3. **2.C** — Run a Gen AI Evaluation Service evaluation to compare model versions.
+1. **3.A** â€” Browse Model Garden and pick the right model for your use case.
+2. **3.B** â€” Tune a Gemini model with supervised fine-tuning, end to end.
+3. **3.C** â€” Run a Gen AI Evaluation Service evaluation to compare model versions.
 
-You don't have to do 2.B and 2.C for every project — they're optional but useful before production. Skim them at minimum so you know what's possible.
+You don't have to do 3.B and 3.C for every project â€” they're optional but useful before production. Skim them at minimum so you know what's possible.
 
 Before you start:
 
@@ -24,11 +24,11 @@ $ source .venv/bin/activate
 
 ---
 
-# 2.A — Choose a model from Model Garden
+# 3.A â€” Choose a model from Model Garden
 
 Model Garden provides first-class access to **200+ models** from Google, open-source providers, and third parties.
 
-## 2.A.1 Open Model Garden in the console
+## 3.A.1 Open Model Garden in the console
 
 1. Go to https://console.cloud.google.com.
 2. Left nav -> **Vertex AI -> Model Garden**.
@@ -38,7 +38,7 @@ Model Garden provides first-class access to **200+ models** from Google, open-so
    - **Provider:** Google, Anthropic, Meta, Mistral, DeepSeek, Qwen, etc.
    - **Type:** First-party, Open weights, Third-party API.
 
-## 2.A.2 Pick stable defaults first
+## 3.A.2 Pick stable defaults first
 
 Model names change over time, and preview models are not always available in every region. For a tutorial, start with broadly available stable models and switch later if your project has newer Gemini models enabled.
 
@@ -51,7 +51,7 @@ Model names change over time, and preview models are not always available in eve
 
 Use Model Garden to see which preview, third-party, and open models are available to your project. Enable only the models you actually need; each extra provider can add separate terms, quotas, and billing behavior.
 
-## 2.A.3 Listing models from the SDK
+## 3.A.3 Listing models from the SDK
 
 ```python
 # list_models.py
@@ -72,7 +72,7 @@ for m in publisher_models[:25]:
 (.venv) PS> python list_models.py
 ```
 
-## 2.A.4 Pick the model for the rest of this guide
+## 3.A.4 Pick the model for the rest of this guide
 
 For the Support Assistant we will use:
 
@@ -95,15 +95,15 @@ Add those to `set-env.ps1` or `set-env.sh`.
 
 ---
 
-# 2.B — Tune a Gemini model with supervised fine-tuning
+# 3.B â€” Tune a Gemini model with supervised fine-tuning
 
-Fine-tuning is "behavior shaping": you teach the model to respond in a particular format, tone, or domain style. It is **not** for injecting new factual knowledge — that's what RAG (section 6) is for.
+Fine-tuning is "behavior shaping": you teach the model to respond in a particular format, tone, or domain style. It is **not** for injecting new factual knowledge â€” that's what RAG (section 7) is for.
 
 We'll tune `gemini-2.5-flash` to classify customer support requests into four categories.
 
-## 2.B.1 Prepare a tuning dataset
+## 3.B.1 Prepare a tuning dataset
 
-The format is **JSONL** — one JSON object per line. Each line is one training example. Schema:
+The format is **JSONL** â€” one JSON object per line. Each line is one training example. Schema:
 
 ```json
 {
@@ -120,8 +120,8 @@ The format is **JSONL** — one JSON object per line. Each line is one training 
 
 Recommendations from the Vertex docs:
 
-- Start with **at least 100–500 examples**. Quality beats quantity.
-- Reserve **10–20%** as a separate validation set.
+- Start with **at least 100â€“500 examples**. Quality beats quantity.
+- Reserve **10â€“20%** as a separate validation set.
 - Inputs should look like real production traffic.
 - Each example should be a complete, well-formed conversation.
 
@@ -139,7 +139,7 @@ On macOS/Linux:
 (.venv) $ nano tuning_data/train.jsonl
 ```
 
-Paste a few example lines. Here's one — repeat the pattern with at least 100 lines of varied real-looking tickets:
+Paste a few example lines. Here's one â€” repeat the pattern with at least 100 lines of varied real-looking tickets:
 
 ```json
 {"systemInstruction":{"role":"system","parts":[{"text":"You classify ACME support tickets into one of: billing, technical, account, general. Output only the category."}]},"contents":[{"role":"user","parts":[{"text":"Why was I charged twice for my Pro subscription this month?"}]},{"role":"model","parts":[{"text":"billing"}]}]}
@@ -147,9 +147,9 @@ Paste a few example lines. Here's one — repeat the pattern with at least 100 l
 {"systemInstruction":{"role":"system","parts":[{"text":"You classify ACME support tickets into one of: billing, technical, account, general. Output only the category."}]},"contents":[{"role":"user","parts":[{"text":"How do I change the email address on my account?"}]},{"role":"model","parts":[{"text":"account"}]}]}
 ```
 
-Create `tuning_data\val.jsonl` similarly with another 20–50 examples.
+Create `tuning_data\val.jsonl` similarly with another 20â€“50 examples.
 
-## 2.B.2 Upload the dataset to Cloud Storage
+## 3.B.2 Upload the dataset to Cloud Storage
 
 ```powershell
 (.venv) PS> gcloud storage cp tuning_data\train.jsonl `
@@ -172,7 +172,7 @@ macOS/Linux:
 (.venv) $ gcloud storage ls "${STAGING_BUCKET}/tuning/"
 ```
 
-## 2.B.3 Launch the tuning job (Console method)
+## 3.B.3 Launch the tuning job (Console method)
 
 1. In the console, go to **Vertex AI -> Tune and Distill** or open the tuning entry point from **Model Garden**.
 2. Click **Create tuned model**.
@@ -195,7 +195,7 @@ macOS/Linux:
 
 Your job appears under **Tune and Distill** with status `Running`. A small (~100-example) dataset with 1 epoch finishes in ~20 minutes; 3 epochs on 1000 examples takes ~1 hour.
 
-## 2.B.4 Launch the tuning job (SDK method)
+## 3.B.4 Launch the tuning job (SDK method)
 
 If you prefer the SDK, create `tune_model.py`:
 
@@ -245,16 +245,16 @@ while True:
 print("Tuned model:", job.tuned_model_endpoint_name)
 ```
 
-## 2.B.5 Monitor tuning metrics
+## 3.B.5 Monitor tuning metrics
 
-While the job runs, in the console go to **Tune and Distill → click your model → Monitor tab**. You'll see:
+While the job runs, in the console go to **Tune and Distill â†’ click your model â†’ Monitor tab**. You'll see:
 
-- **`/train_total_loss`** — should decrease steadily.
-- **`/train_fraction_of_correct_next_step_preds`** — should increase.
-- **`/eval_total_loss`** (if validation enabled) — watch for divergence from training loss (= overfitting).
-- **`/eval_fraction_of_correct_next_step_preds`** — climbing on val data is what you want.
+- **`/train_total_loss`** â€” should decrease steadily.
+- **`/train_fraction_of_correct_next_step_preds`** â€” should increase.
+- **`/eval_total_loss`** (if validation enabled) â€” watch for divergence from training loss (= overfitting).
+- **`/eval_fraction_of_correct_next_step_preds`** â€” climbing on val data is what you want.
 
-## 2.B.6 Test the tuned model
+## 3.B.6 Test the tuned model
 
 When status is **Succeeded**, you get a tuned model endpoint. Try it:
 
@@ -279,19 +279,19 @@ resp = client.models.generate_content(
 print(resp.text)  # expect: "billing"
 ```
 
-## 2.B.7 What if tuning didn't help?
+## 3.B.7 What if tuning didn't help?
 
 If your tuned model isn't clearly better than the base:
 
-- **More data** before more epochs — diminishing returns past ~5 epochs on small datasets.
-- **Higher quality data** — re-label edge cases.
+- **More data** before more epochs â€” diminishing returns past ~5 epochs on small datasets.
+- **Higher quality data** â€” re-label edge cases.
 - **Lower learning_rate_multiplier** to `0.5` if loss is bouncing.
 - **Larger adapter_size** (8 or 16) if your task is genuinely complex.
-- **Disable thinking** for tuned tasks — for models that support thinking, set the thinking budget to off or its lowest value. The Vertex docs note that during supervised fine-tuning, the model omits the thinking process, so the tuned model performs the task without needing a thinking budget.
+- **Disable thinking** for tuned tasks â€” for models that support thinking, set the thinking budget to off or its lowest value. The Vertex docs note that during supervised fine-tuning, the model omits the thinking process, so the tuned model performs the task without needing a thinking budget.
 
 ---
 
-# 2.C — Run a Gen AI Evaluation Service evaluation
+# 3.C â€” Run a Gen AI Evaluation Service evaluation
 
 The **Gen AI Evaluation Service** scores generative model outputs with explainable metrics. It's the standard way to:
 
@@ -302,18 +302,18 @@ The **Gen AI Evaluation Service** scores generative model outputs with explainab
 
 The service supports three evaluation modes:
 
-- **Pointwise** — judge model assigns a score (e.g., 1–5) to each candidate response.
-- **Pairwise** — judge model compares two responses and picks a winner. Used for "is the new model better than the old?"
-- **Computation-based** — exact match, ROUGE, BLEU, F1 — for tasks with ground-truth answers.
+- **Pointwise** â€” judge model assigns a score (e.g., 1â€“5) to each candidate response.
+- **Pairwise** â€” judge model compares two responses and picks a winner. Used for "is the new model better than the old?"
+- **Computation-based** â€” exact match, ROUGE, BLEU, F1 â€” for tasks with ground-truth answers.
 
 The judge model defaults to Gemini 2.5 Flash.
 
-## 2.C.1 Build an evaluation dataset
+## 3.C.1 Build an evaluation dataset
 
 Create a CSV (or pandas DataFrame) with at least these columns:
 
-- `prompt` — the input.
-- `reference` — (optional) ground-truth answer for computation-based metrics.
+- `prompt` â€” the input.
+- `reference` â€” (optional) ground-truth answer for computation-based metrics.
 - For pairwise: `response` (candidate) and `baseline_model_response`.
 
 Save as `eval_data\support_eval.csv`:
@@ -341,7 +341,7 @@ prompt,reference
 
 In real life, target **100+ rows**, sourced from real or realistic traffic.
 
-## 2.C.2 Pointwise evaluation — score one model
+## 3.C.2 Pointwise evaluation â€” score one model
 
 Create `eval_pointwise.py`:
 
@@ -407,7 +407,7 @@ You'll see:
 - A summary of mean scores per metric.
 - A row-by-row CSV with the judge model's score and rationale for every example.
 
-## 2.C.3 Pairwise evaluation — base vs. tuned
+## 3.C.3 Pairwise evaluation â€” base vs. tuned
 
 This is what Auto SxS does under the hood when you compare versions.
 
@@ -459,11 +459,11 @@ result.metrics_table.to_csv("eval_data/pairwise_result.csv", index=False)
 
 Run it. The summary shows what fraction of examples the tuned model won, lost, or tied. If the tuned model wins >55% on a meaningful sample, it's a real improvement.
 
-## 2.C.4 Adaptive rubrics (advanced)
+## 3.C.4 Adaptive rubrics (advanced)
 
 A newer feature: instead of writing a static rubric, the service auto-generates **per-prompt** rubrics ("the response must be exactly four sentences", "must mention solar"), then validates each one with Pass/Fail. This produces a more precise pass-rate metric. To enable it, set `metric_spec={"adaptive_rubrics": True}` on a `PointwiseMetric` (Preview as of writing).
 
-## 2.C.5 View results in the console
+## 3.C.5 View results in the console
 
 Every evaluation run is recorded as a Vertex AI Experiment.
 
@@ -484,4 +484,4 @@ You can compare runs side by side here, which is the easiest way to track progre
 - [ ] Eval results visible in the Experiments console.
 - [ ] `TRIAGE_MODEL` and `RESOLUTION_MODEL` env vars set.
 
-Move on to **`03_agent_studio.md`**.
+Move on to **`04_agent_studio.md`**.

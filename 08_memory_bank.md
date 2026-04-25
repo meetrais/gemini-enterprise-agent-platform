@@ -1,14 +1,14 @@
-# 07 — Sessions and Memory Bank
+﻿# 08 â€” Sessions and Memory Bank
 
 So far the agent forgets everything between conversations. Real support agents need:
 
-- **Sessions** — conversation history within a single chat.
-- **Long-term memory** — facts about the user that persist across chats ("their account ID is A-12345", "they prefer email over SMS").
+- **Sessions** â€” conversation history within a single chat.
+- **Long-term memory** â€” facts about the user that persist across chats ("their account ID is A-12345", "they prefer email over SMS").
 
 The platform provides both:
 
-- **Agent Engine Sessions** — managed conversation state.
-- **Agent Engine Memory Bank** — managed long-term memory, with Gemini auto-extracting key facts from session history asynchronously.
+- **Agent Engine Sessions** â€” managed conversation state.
+- **Agent Engine Memory Bank** â€” managed long-term memory, with Gemini auto-extracting key facts from session history asynchronously.
 
 ```powershell
 PS> cd $HOME\agent-platform-demo
@@ -22,7 +22,7 @@ $ source ./set-env.sh
 $ source .venv/bin/activate
 ```
 
-## 7.1 Create an Agent Engine instance
+## 8.1 Create an Agent Engine instance
 
 The Agent Engine instance is the home for both Sessions and Memory Bank. You create it once and reuse it across deployments.
 
@@ -79,7 +79,7 @@ export AGENT_ENGINE_ID="8479666769873600512"
 export AGENT_ENGINE_NAME="projects/123456/locations/us-central1/reasoningEngines/8479666769873600512"
 ```
 
-## 7.2 How Memory Bank works
+## 8.2 How Memory Bank works
 
 The flow is:
 
@@ -90,7 +90,7 @@ The flow is:
 
 Memories are isolated per user identity, can be configured with TTL for automatic expiration, and use similarity search at retrieval time.
 
-## 7.3 Wire ADK to Memory Bank for local runs
+## 8.3 Wire ADK to Memory Bank for local runs
 
 Edit `support_assistant\agent.py`:
 
@@ -128,9 +128,9 @@ root_agent = Agent(
 # When you instantiate a Runner, pass these services in.
 ```
 
-When deploying to Vertex AI Agent Engine with the `AdkApp` template (section 9), session management is handled for deployed ADK agents. Keep the explicit service wiring above for local testing and for examples where you want to control the service instances.
+When deploying to Vertex AI Agent Engine with the `AdkApp` template (section 10), session management is handled for deployed ADK agents. Keep the explicit service wiring above for local testing and for examples where you want to control the service instances.
 
-## 7.4 Test end-to-end with a Python runner
+## 8.4 Test end-to-end with a Python runner
 
 Create `test_memory.py`:
 
@@ -171,7 +171,7 @@ async def main():
     print("Session 1 closed. Waiting 30s for memory extraction...")
     await asyncio.sleep(30)
 
-    # Session 2 — new conversation, same user. Agent should recall things.
+    # Session 2 â€” new conversation, same user. Agent should recall things.
     s2 = await session_service.create_session(
         app_name="support_assistant", user_id=user_id
     )
@@ -188,9 +188,9 @@ Run:
 (.venv) PS> python test_memory.py
 ```
 
-The first session establishes facts. After it closes, Memory Bank extracts them in the background. The second session starts fresh — but the agent has access to the user's memories and uses them.
+The first session establishes facts. After it closes, Memory Bank extracts them in the background. The second session starts fresh â€” but the agent has access to the user's memories and uses them.
 
-## 7.5 Inspect memories in the console
+## 8.5 Inspect memories in the console
 
 1. Console -> **Vertex AI -> Agent Engine -> support-assistant-engine**.
 2. **Memories** tab.
@@ -203,7 +203,7 @@ Topic: account_id          Content: A-12345
 Topic: communication_pref  Content: prefers email
 ```
 
-## 7.6 Read and write memories directly via API
+## 8.6 Read and write memories directly via API
 
 Sometimes you want to inject a memory programmatically (e.g., from a CRM record) or read them from a non-ADK app.
 
@@ -237,7 +237,7 @@ for m in client.agent_engines.memories.list(name=os.environ["AGENT_ENGINE_NAME"]
 client.agent_engines.memories.delete(name="<MEMORY_RESOURCE_NAME>")
 ```
 
-## 7.7 Configure what gets remembered
+## 8.7 Configure what gets remembered
 
 By default Memory Bank extracts whatever Gemini judges to be durable user-specific information. You can constrain it.
 
@@ -270,18 +270,18 @@ client.agent_engines.update(
 
 A short TTL plus an allow-list is the safest starting point.
 
-## 7.8 Mitigate memory poisoning
+## 8.8 Mitigate memory poisoning
 
 Long-term memory introduces a real attack surface: a hostile user plants a false "fact" in one session, the agent acts on it later. Mitigations:
 
-1. **Model Armor** screening on all inputs and outputs touching memory (you'll wire this in section 10).
+1. **Model Armor** screening on all inputs and outputs touching memory (you'll wire this in section 11).
 2. **Topic allow-list** so off-policy facts are never persisted.
 3. **TTL** so even if something bad gets in, it ages out.
 4. **Tool Confirmation** on any high-impact action that consumes memory.
-5. **Provenance** — when retrieving memory, prefer ones backed by tool results (e.g., "account ID came from a verified `get_account_status` call") over ones extracted from free text.
-6. **Manual review** — periodically have an admin scan memory content through the console.
+5. **Provenance** â€” when retrieving memory, prefer ones backed by tool results (e.g., "account ID came from a verified `get_account_status` call") over ones extracted from free text.
+6. **Manual review** â€” periodically have an admin scan memory content through the console.
 
-## 7.9 IAM scoping for memories
+## 8.9 IAM scoping for memories
 
 Use IAM Conditions to scope memory access. For example, only allow the agent's own service account to read its memories:
 
@@ -292,7 +292,7 @@ PS> gcloud projects add-iam-policy-binding $env:PROJECT_ID `
     --condition="expression=resource.name.startsWith('projects/$env:PROJECT_ID/locations/us-central1/reasoningEngines/$env:AGENT_ENGINE_ID'),title=support-engine-only,description=Limit to support assistant Agent Engine"
 ```
 
-Adjust the role name if it has changed by the time you run this — check `gcloud iam roles list --filter="memoryBank"`.
+Adjust the role name if it has changed by the time you run this â€” check `gcloud iam roles list --filter="memoryBank"`.
 
 On macOS/Linux, use `${PROJECT_ID}`, `${AGENT_SA}`, and `${AGENT_ENGINE_ID}` in the same command.
 
@@ -308,4 +308,4 @@ On macOS/Linux, use `${PROJECT_ID}`, `${AGENT_SA}`, and `${AGENT_ENGINE_ID}` in 
 - [ ] An allow-list / TTL configured for the Memory Bank instance.
 - [ ] Memory-poisoning mitigations understood.
 
-Move on to **`08_multi_agent.md`**.
+Move on to **`09_multi_agent.md`**.

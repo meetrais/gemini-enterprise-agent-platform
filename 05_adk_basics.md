@@ -1,4 +1,4 @@
-# 04 — Build with the Agent Development Kit (ADK)
+﻿# 05 â€” Build with the Agent Development Kit (ADK)
 
 The **Agent Development Kit** is the code-first framework for production-grade agents. It's open-source, model-agnostic, and available in Python, TypeScript, Go, and Java. This guide uses Python.
 
@@ -16,7 +16,7 @@ $ source ./set-env.sh
 $ source .venv/bin/activate
 ```
 
-## 4.1 Verify ADK is installed
+## 5.1 Verify ADK is installed
 
 ```powershell
 (.venv) PS> adk --version
@@ -28,9 +28,9 @@ If `adk` isn't recognized:
 (.venv) PS> pip install --upgrade google-adk
 ```
 
-Make sure your venv is active — `(.venv)` should be in the prompt.
+Make sure your venv is active â€” `(.venv)` should be in the prompt.
 
-## 4.2 Scaffold an agent project
+## 5.2 Scaffold an agent project
 
 ```powershell
 (.venv) PS> adk create support_assistant
@@ -53,7 +53,7 @@ support_assistant\
 
 On macOS/Linux, paths use `/`, for example `support_assistant/agent.py`.
 
-Look at `.env` — it should contain:
+Look at `.env` â€” it should contain:
 
 ```
 GOOGLE_CLOUD_PROJECT=my-agent-platform
@@ -63,7 +63,7 @@ GOOGLE_GENAI_USE_VERTEXAI=True
 
 If anything's missing, edit it.
 
-## 4.3 Edit `agent.py`
+## 5.3 Edit `agent.py`
 
 Open it in VS Code:
 
@@ -80,7 +80,7 @@ On macOS/Linux:
 Replace its contents with:
 
 ```python
-"""ACME Support Assistant — ADK root agent."""
+"""ACME Support Assistant â€” ADK root agent."""
 
 from google.adk.agents import Agent
 from google.adk.tools import google_search
@@ -105,9 +105,9 @@ root_agent = Agent(
 )
 ```
 
-The variable **must be named `root_agent`** — that's what `adk run` and `adk web` look for.
+The variable **must be named `root_agent`** â€” that's what `adk run` and `adk web` look for.
 
-## 4.4 Run the agent in the terminal
+## 5.4 Run the agent in the terminal
 
 From the **parent** of `support_assistant\` (i.e., `agent-platform-demo\`):
 
@@ -125,7 +125,7 @@ You: exit
 
 The first answer comes from the model itself. The second forces use of `google_search`.
 
-## 4.5 Run the agent in the web UI
+## 5.5 Run the agent in the web UI
 
 ```powershell
 (.venv) PS> adk web
@@ -135,15 +135,15 @@ This starts a local web server. Open http://localhost:8000 in your browser. From
 
 The web UI shows:
 
-- **Conversation** — left pane.
-- **Trace** — right pane, with the full reasoning, model calls, and tool invocations expanded.
-- **State** — session state inspector.
+- **Conversation** â€” left pane.
+- **Trace** â€” right pane, with the full reasoning, model calls, and tool invocations expanded.
+- **State** â€” session state inspector.
 
-> **Note:** `adk web` is a development tool. **Do not** use it in production — there's no auth, no rate-limit, no scaling.
+> **Note:** `adk web` is a development tool. **Do not** use it in production â€” there's no auth, no rate-limit, no scaling.
 
 To stop: `Ctrl+C` in the PowerShell window.
 
-## 4.6 Run the agent as an API server
+## 5.6 Run the agent as an API server
 
 For integration testing from another app:
 
@@ -188,7 +188,7 @@ $ curl -s -X POST "http://localhost:8080/run" \
 
 This is a useful pattern for E2E tests and for integrating with non-Python clients.
 
-## 4.7 Run the agent from a Python script (for tests)
+## 5.7 Run the agent from a Python script (for tests)
 
 ```python
 # call_agent.py
@@ -220,7 +220,7 @@ Run:
 
 This is the unit-test pattern: spin up an in-memory runner, fire a message, assert on the response.
 
-## 4.8 Tweak the system instruction iteratively
+## 5.8 Tweak the system instruction iteratively
 
 The fastest improvement loop:
 
@@ -244,9 +244,9 @@ instruction=(
 )
 ```
 
-## 4.9 Switch models without code changes
+## 5.9 Switch models without code changes
 
-You can override the model at run time via env var without editing code — useful when comparing options:
+You can override the model at run time via env var without editing code â€” useful when comparing options:
 
 ```powershell
 (.venv) PS> $env:GOOGLE_GENAI_MODEL = "gemini-2.5-flash"
@@ -260,7 +260,7 @@ You can override the model at run time via env var without editing code — usef
 
 (This works only if your `agent.py` reads from env; otherwise edit `model=` in code.)
 
-## 4.10 Inspect what ADK sent to the model
+## 5.10 Inspect what ADK sent to the model
 
 Set the log level high to see every prompt + tool call:
 
@@ -274,7 +274,7 @@ Set the log level high to see every prompt + tool call:
 (.venv) $ adk run support_assistant
 ```
 
-Useful when an agent does something unexpected — you can see whether the model received the wrong context or made a bad choice.
+Useful when an agent does something unexpected â€” you can see whether the model received the wrong context or made a bad choice.
 
 ---
 
@@ -286,4 +286,4 @@ Useful when an agent does something unexpected — you can see whether the model
 - [ ] You've called the agent from a Python script using `InMemoryRunner`.
 - [ ] You've iterated on the instruction at least once and seen the behavior change.
 
-Move on to **`05_tools.md`** to give the agent real capabilities.
+Move on to **`06_tools.md`** to give the agent real capabilities.

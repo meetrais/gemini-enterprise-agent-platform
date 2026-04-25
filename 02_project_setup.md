@@ -1,4 +1,4 @@
-# 01 — Project setup and SDK install
+﻿# 02 â€” Project setup and SDK install
 
 In this section you will create (or select) a Google Cloud project, enable the APIs the platform needs, create a Cloud Storage staging bucket, and install the Python SDKs.
 
@@ -12,18 +12,18 @@ PS> cd $HOME\agent-platform-demo
 $ cd "$HOME/agent-platform-demo"
 ```
 
-## 1.1 Create or select the project
+## 2.1 Create or select the project
 
-### Option A — Create a new project
+### Option A â€” Create a new project
 
 ```powershell
 PS> gcloud projects create my-agent-platform --name="Agent Platform Demo"
 PS> gcloud config set project my-agent-platform
 ```
 
-If `my-agent-platform` is taken (project IDs are globally unique), pick a different ID — for example, `my-agent-platform-2026-jdoe`.
+If `my-agent-platform` is taken (project IDs are globally unique), pick a different ID â€” for example, `my-agent-platform-2026-jdoe`.
 
-### Option B — Use an existing project
+### Option B â€” Use an existing project
 
 ```powershell
 PS> gcloud config set project <YOUR_PROJECT_ID>
@@ -44,7 +44,7 @@ PS> gcloud beta billing projects link my-agent-platform --billing-account=<BILLI
 
 The billing account ID looks like `0X0X0X-0X0X0X-0X0X0X`.
 
-## 1.2 Set environment variables for the rest of this guide
+## 2.2 Set environment variables for the rest of this guide
 
 These persist only in the current shell unless you save them in a script.
 
@@ -80,7 +80,7 @@ In future shells, run:
 PS> . .\set-env.ps1
 ```
 
-(The dot at the start matters — it makes the variables stick after the script ends.)
+(The dot at the start matters â€” it makes the variables stick after the script ends.)
 
 **macOS/Linux**
 
@@ -112,7 +112,7 @@ In future shells, run:
 $ source ./set-env.sh
 ```
 
-## 1.3 Enable the required APIs
+## 2.3 Enable the required APIs
 
 ```powershell
 PS> gcloud services enable `
@@ -148,13 +148,13 @@ $ gcloud services enable \
     modelarmor.googleapis.com
 ```
 
-This call takes 30–60 seconds. Verify:
+This call takes 30â€“60 seconds. Verify:
 
 ```powershell
 PS> gcloud services list --enabled --filter="name:aiplatform OR name:run OR name:storage"
 ```
 
-## 1.4 Create the staging Cloud Storage bucket
+## 2.4 Create the staging Cloud Storage bucket
 
 The platform uses this bucket to stage agent code, dependencies, and intermediate artifacts during deployment.
 
@@ -164,7 +164,7 @@ PS> gcloud storage buckets create $env:STAGING_BUCKET `
     --uniform-bucket-level-access
 ```
 
-If you get a "bucket already exists" error, the name is taken globally — append something unique:
+If you get a "bucket already exists" error, the name is taken globally â€” append something unique:
 
 ```powershell
 PS> $env:STAGING_BUCKET = "gs://$($env:PROJECT_ID)-agent-staging-$(Get-Random -Maximum 9999)"
@@ -175,7 +175,7 @@ Then update `set-env.ps1` with the new value.
 
 On macOS/Linux, use `${STAGING_BUCKET}` instead of `$env:STAGING_BUCKET` and update `set-env.sh`.
 
-## 1.5 Create the agent runtime service account
+## 2.5 Create the agent runtime service account
 
 This is the identity your agent will run as. Best practice is one service account per agent (or per agent + environment combo).
 
@@ -216,14 +216,14 @@ $ gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
 
 Add `export AGENT_SA="agent-runner@${PROJECT_ID}.iam.gserviceaccount.com"` to `set-env.sh`.
 
-## 1.6 Create and activate a Python virtual environment
+## 2.6 Create and activate a Python virtual environment
 
 ```powershell
 PS> python -m venv .venv
 PS> .\.venv\Scripts\Activate.ps1
 ```
 
-Your prompt should now show `(.venv)` at the front. If you got a script-blocked error, revisit section 0.6.
+Your prompt should now show `(.venv)` at the front. If you got a script-blocked error, revisit section 1.6.
 
 > **CMD alternative:** `.\.venv\Scripts\activate.bat`
 
@@ -236,7 +236,7 @@ $ source .venv/bin/activate
 
 To deactivate later: `deactivate`.
 
-## 1.7 Install the Python SDKs
+## 2.7 Install the Python SDKs
 
 ```powershell
 (.venv) PS> python -m pip install --upgrade pip
@@ -257,7 +257,7 @@ Pin versions in a `requirements.txt` for reproducibility:
 (.venv) PS> pip freeze | Out-File -Encoding utf8 requirements.txt
 ```
 
-## 1.8 Smoke test — call a Gemini model
+## 2.8 Smoke test â€” call a Gemini model
 
 Create `smoke_test.py`:
 
@@ -284,12 +284,12 @@ Run it:
 (.venv) PS> python smoke_test.py
 ```
 
-If you see `OK` (or close to it), your project, auth, billing, APIs, and SDKs all work end-to-end. If you get a `403 PERMISSION_DENIED`, double-check the IAM roles in section 0.3. If you get a `404 not found` for the model, check the current Vertex AI model list and use an available Gemini model in your region.
+If you see `OK` (or close to it), your project, auth, billing, APIs, and SDKs all work end-to-end. If you get a `403 PERMISSION_DENIED`, double-check the IAM roles in section 1.3. If you get a `404 not found` for the model, check the current Vertex AI model list and use an available Gemini model in your region.
 
-## 1.9 Verify everything in the console
+## 2.9 Verify everything in the console
 
 1. Browse to https://console.cloud.google.com.
-2. Top bar — confirm your project name shows `Agent Platform Demo`.
+2. Top bar â€” confirm your project name shows `Agent Platform Demo`.
 3. Left nav -> **Vertex AI** and **Gemini Enterprise**. You should be able to reach Model Garden, Agent Engine, and your Gemini Enterprise app.
 4. Confirm you can reach the relevant pages: **Vertex AI > Model Garden**, **Vertex AI > Agent Engine**, and **Gemini Enterprise**.
 
@@ -306,4 +306,4 @@ If you see `OK` (or close to it), your project, auth, billing, APIs, and SDKs al
 - [ ] macOS/Linux: `set-env.sh` you can source in any new shell.
 - [ ] A working smoke test that calls Gemini and prints a response.
 
-Move on to **`02_model_garden.md`**.
+Move on to **`03_model_garden.md`**.

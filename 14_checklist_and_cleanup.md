@@ -1,4 +1,4 @@
-# 13 - Final checklist and cleanup
+﻿# 14 - Final checklist and cleanup
 
 You've now built, governed, optimized, and distributed an enterprise-grade multi-agent system. This final section gives you a practical verification checklist and cleanup steps so you don't keep paying for demo resources.
 
@@ -14,7 +14,7 @@ $ source ./set-env.sh
 $ source .venv/bin/activate
 ```
 
-## 13.1 End-to-end checklist
+## 14.1 End-to-end checklist
 
 ### Build
 
@@ -57,7 +57,7 @@ $ source .venv/bin/activate
 - [ ] **User guidance** - users know what the agent is good at and how to escalate to a human.
 - [ ] **Feedback loop** - thumbs-downs or audit samples feed back into eval data.
 
-## 13.2 Cost sanity check
+## 14.2 Cost sanity check
 
 Run a quick local SDK check:
 
@@ -77,11 +77,11 @@ Then check these console pages:
 4. **GKE -> Clusters** - if you used GKE.
 5. **Cloud Storage -> Buckets** - confirm the staging bucket size is expected.
 
-## 13.3 Cleanup
+## 14.3 Cleanup
 
 These steps are destructive. Delete only resources that belong to this demo.
 
-### 13.3.1 Delete the Agent Engine
+### 14.3.1 Delete the Agent Engine
 
 Create `delete_agent_engine.py`:
 
@@ -111,7 +111,7 @@ Run:
 (.venv) $ python delete_agent_engine.py
 ```
 
-### 13.3.2 Delete Cloud Run service
+### 14.3.2 Delete Cloud Run service
 
 ```powershell
 PS> gcloud run services delete support-assistant `
@@ -125,7 +125,7 @@ $ gcloud run services delete support-assistant \
     --quiet
 ```
 
-### 13.3.3 Delete GKE cluster
+### 14.3.3 Delete GKE cluster
 
 ```powershell
 PS> gcloud container clusters delete <YOUR_CLUSTER_NAME> `
@@ -139,7 +139,7 @@ $ gcloud container clusters delete <YOUR_CLUSTER_NAME> \
     --quiet
 ```
 
-### 13.3.4 Delete the RAG corpus
+### 14.3.4 Delete the RAG corpus
 
 ```powershell
 (.venv) PS> python -c "import os, vertexai; from vertexai import rag; vertexai.init(project=os.environ['PROJECT_ID'], location=os.environ['LOCATION']); rag.delete_corpus(name=os.environ['RAG_CORPUS']); print('RAG corpus deleted')"
@@ -149,7 +149,7 @@ $ gcloud container clusters delete <YOUR_CLUSTER_NAME> \
 (.venv) $ python -c "import os, vertexai; from vertexai import rag; vertexai.init(project=os.environ['PROJECT_ID'], location=os.environ['LOCATION']); rag.delete_corpus(name=os.environ['RAG_CORPUS']); print('RAG corpus deleted')"
 ```
 
-### 13.3.5 Delete the staging bucket
+### 14.3.5 Delete the staging bucket
 
 ```powershell
 PS> gcloud storage rm --recursive $env:STAGING_BUCKET
@@ -159,7 +159,7 @@ PS> gcloud storage rm --recursive $env:STAGING_BUCKET
 $ gcloud storage rm --recursive "${STAGING_BUCKET}"
 ```
 
-### 13.3.6 Delete the agent service account
+### 14.3.6 Delete the agent service account
 
 ```powershell
 PS> gcloud iam service-accounts delete $env:AGENT_SA --quiet
@@ -169,11 +169,11 @@ PS> gcloud iam service-accounts delete $env:AGENT_SA --quiet
 $ gcloud iam service-accounts delete "${AGENT_SA}" --quiet
 ```
 
-### 13.3.7 Remove the agent from Gemini Enterprise
+### 14.3.7 Remove the agent from Gemini Enterprise
 
 In the Google Cloud console, open **Gemini Enterprise**, select the app, open **Agents**, select **ACME Support**, and remove it.
 
-### 13.3.8 Delete the project
+### 14.3.8 Delete the project
 
 Only do this if the whole project was created for the guide:
 
@@ -187,7 +187,7 @@ $ gcloud projects delete "${PROJECT_ID}" --quiet
 
 Google Cloud puts the project into a pending-deletion state before permanent deletion.
 
-### 13.3.9 Local cleanup
+### 14.3.9 Local cleanup
 
 Windows:
 
@@ -203,7 +203,7 @@ $ cd "$HOME"
 $ rm -rf agent-platform-demo
 ```
 
-## 13.4 What to keep
+## 14.4 What to keep
 
 Before deleting local files, consider keeping:
 
@@ -214,7 +214,7 @@ Before deleting local files, consider keeping:
 - Dashboard and alert definitions
 - `set-env.ps1` or `set-env.sh` with secrets removed
 
-## 13.5 Where to go next
+## 14.5 Where to go next
 
 - Pick one narrow production use case.
 - Start with Agent Designer for fast stakeholder feedback.

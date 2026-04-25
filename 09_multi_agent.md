@@ -1,13 +1,13 @@
-# 08 — Multi-agent orchestration and the A2A protocol
+﻿# 09 â€” Multi-agent orchestration and the A2A protocol
 
 A single agent is rarely the best architecture. Specialists outperform generalists: a billing agent that knows refund policy and tools cold beats one that has to know everything. ADK supports composing specialized agents into hierarchies, with a coordinator that decides who handles what.
 
 This section restructures your support assistant into:
 
-- **Router** (`gemini-2.5-flash`) — the triage agent. Reads the user message and delegates.
-- **Billing Agent** (`gemini-2.5-pro`) — handles billing/refund flows.
-- **Tech Agent** (`gemini-2.5-pro`) — handles technical/troubleshooting flows.
-- **Account Agent** (`gemini-2.5-pro`) — handles login/email/MFA flows.
+- **Router** (`gemini-2.5-flash`) â€” the triage agent. Reads the user message and delegates.
+- **Billing Agent** (`gemini-2.5-pro`) â€” handles billing/refund flows.
+- **Tech Agent** (`gemini-2.5-pro`) â€” handles technical/troubleshooting flows.
+- **Account Agent** (`gemini-2.5-pro`) â€” handles login/email/MFA flows.
 
 ```powershell
 PS> cd $HOME\agent-platform-demo
@@ -21,12 +21,12 @@ $ source ./set-env.sh
 $ source .venv/bin/activate
 ```
 
-## 8.1 Refactor `agent.py` into multiple agents
+## 9.1 Refactor `agent.py` into multiple agents
 
 Replace `support_assistant\agent.py` with:
 
 ```python
-"""ACME Support Assistant — multi-agent system."""
+"""ACME Support Assistant â€” multi-agent system."""
 
 import os
 from google.adk.agents import Agent
@@ -37,7 +37,7 @@ from google.adk.tools.retrieval import VertexAiRagRetrieval
 from vertexai import rag
 
 
-# ----- Function tools (from section 5) -----
+# ----- Function tools (from section 6) -----
 def get_account_status(account_id: str) -> dict:
     """Looks up the current status of an ACME customer account."""
     return {"status": "active", "plan": "Pro", "balance_usd": 12.40,
@@ -150,15 +150,15 @@ session_service = VertexAiSessionService(
 )
 ```
 
-## 8.2 How delegation works
+## 9.2 How delegation works
 
-When `root_agent` decides to delegate, ADK transfers the conversation to the named sub-agent. The sub-agent has its own instruction, model, and tools, but inherits the session — so it sees what the user already said.
+When `root_agent` decides to delegate, ADK transfers the conversation to the named sub-agent. The sub-agent has its own instruction, model, and tools, but inherits the session â€” so it sees what the user already said.
 
-When the sub-agent finishes, control returns to the router (or stays with the sub-agent for a multi-turn specialist exchange — depends on the conversation).
+When the sub-agent finishes, control returns to the router (or stays with the sub-agent for a multi-turn specialist exchange â€” depends on the conversation).
 
 You can see all of this clearly in `adk web` traces: each step shows which agent ran, with what tools.
 
-## 8.3 Test the system
+## 9.3 Test the system
 
 ```powershell
 (.venv) PS> adk web
@@ -186,7 +186,7 @@ Try these conversations:
 
 In the trace, expand each step. You should see the router's reasoning, the delegation event, then the specialist's chain of tool calls.
 
-## 8.4 Workflow agents (alternative orchestration)
+## 9.4 Workflow agents (alternative orchestration)
 
 For deterministic flows (e.g., "always run A then B then C"), use **workflow agents** instead of free-form delegation:
 
@@ -208,15 +208,15 @@ parallel_search = ParallelAgent(
 
 Sequential, parallel, and loop agents are part of ADK Python 2.0 and are useful when you don't want the model to decide the flow.
 
-## 8.5 Agent2Agent (A2A) protocol — talking to agents you don't own
+## 9.5 Agent2Agent (A2A) protocol â€” talking to agents you don't own
 
 A2A is Google's open protocol for agent-to-agent calls. It's how a Gemini agent can hand off to a LangGraph agent, a CrewAI agent, or a partner agent in the Marketplace, regardless of framework.
 
-### 8.5.1 Expose your agent over A2A
+### 9.5.1 Expose your agent over A2A
 
 Vertex AI Agent Engine supports agents built with the Agent2Agent protocol. Treat A2A registration as an integration step: confirm the exact endpoint and registration requirements in the current Agent Engine or Gemini Enterprise docs for your deployment type.
 
-### 8.5.2 Call another A2A agent as a tool
+### 9.5.2 Call another A2A agent as a tool
 
 Suppose your org has a separate `legal_review_agent` that summarizes contract risk:
 
@@ -239,27 +239,27 @@ root_agent = Agent(
 )
 ```
 
-### 8.5.3 Discovering A2A agents in your org
+### 9.5.3 Discovering A2A agents in your org
 
 In Gemini Enterprise, admins can register A2A agents and make them available to users in the web app. In developer code, keep the remote endpoint and auth settings in configuration rather than hard-coding them.
 
-## 8.6 Running 3rd-party frameworks alongside ADK
+## 9.6 Running 3rd-party frameworks alongside ADK
 
 ADK is the most ergonomic choice on Google Cloud, but Vertex AI Agent Engine supports other Python agent frameworks too:
 
-- **LangChain / LangGraph** — `vertexai.preview.reasoning_engines.LangchainAgent`
-- **CrewAI** — wrap with the runnable interface
-- **LlamaIndex Query Pipeline** — first-class support
-- **Custom Python** — any Python class with `query()` and `stream_query()` methods
+- **LangChain / LangGraph** â€” `vertexai.preview.reasoning_engines.LangchainAgent`
+- **CrewAI** â€” wrap with the runnable interface
+- **LlamaIndex Query Pipeline** â€” first-class support
+- **Custom Python** â€” any Python class with `query()` and `stream_query()` methods
 
 Memory Bank works across all of these with notebook samples for LangGraph and CrewAI. Mix-and-match is fine.
 
-## 8.7 Best practices for multi-agent
+## 9.7 Best practices for multi-agent
 
-- **Keep the router cheap.** Use a flash-tier model — its only job is triage.
+- **Keep the router cheap.** Use a flash-tier model â€” its only job is triage.
 - **Specialists own their domain.** Don't share tools across agents that don't need them.
-- **Limit depth.** A → B → C is fine. A → B → C → D → E gets brittle. Flatten with workflow agents if you find yourself going deep.
-- **Test the boundaries.** "What plan am I on, and why am I getting 503s?" is a real user message. Make sure your router handles compound intents — usually by delegating to the most relevant agent and letting that agent ask follow-ups.
+- **Limit depth.** A â†’ B â†’ C is fine. A â†’ B â†’ C â†’ D â†’ E gets brittle. Flatten with workflow agents if you find yourself going deep.
+- **Test the boundaries.** "What plan am I on, and why am I getting 503s?" is a real user message. Make sure your router handles compound intents â€” usually by delegating to the most relevant agent and letting that agent ask follow-ups.
 - **Trace religiously.** When something misroutes, look at exactly what the router saw before assuming the model was dumb. Often the issue is your instruction.
 
 ---
@@ -272,4 +272,4 @@ Memory Bank works across all of these with notebook samples for LangGraph and Cr
 - [ ] You know how to use SequentialAgent / ParallelAgent for deterministic flows.
 - [ ] You understand how A2A lets you call agents you don't own.
 
-Move on to **`09_deployment.md`** to ship this to production.
+Move on to **`10_deployment.md`** to ship this to production.

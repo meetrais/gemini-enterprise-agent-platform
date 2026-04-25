@@ -1,11 +1,11 @@
-# 05 — Tools: function tools, OpenAPI, MCP, and Code Execution
+﻿# 06 â€” Tools: function tools, OpenAPI, MCP, and Code Execution
 
 A bare LLM can chat. An **agent** is an LLM that can take actions through tools. ADK supports four kinds of tools:
 
-1. **Function tools** — plain Python functions you write.
-2. **OpenAPI tools** — auto-generated from an OpenAPI / Swagger spec.
-3. **MCP tools** — exposed by a Model Context Protocol server (your own or third-party like ServiceNow, Jira, Slack).
-4. **Built-in tools** — `google_search`, `code_execution`, RAG retrieval, and others.
+1. **Function tools** â€” plain Python functions you write.
+2. **OpenAPI tools** â€” auto-generated from an OpenAPI / Swagger spec.
+3. **MCP tools** â€” exposed by a Model Context Protocol server (your own or third-party like ServiceNow, Jira, Slack).
+4. **Built-in tools** â€” `google_search`, `code_execution`, RAG retrieval, and others.
 
 In this section you'll add concrete tools to the support agent.
 
@@ -21,14 +21,14 @@ $ source ./set-env.sh
 $ source .venv/bin/activate
 ```
 
-## 5.1 Function tools
+## 6.1 Function tools
 
-A function tool is a Python function. ADK reads its **type hints** and **docstring** to teach the model when and how to call it. The docstring is critical — write it as if explaining the function to a junior engineer who has never seen your codebase.
+A function tool is a Python function. ADK reads its **type hints** and **docstring** to teach the model when and how to call it. The docstring is critical â€” write it as if explaining the function to a junior engineer who has never seen your codebase.
 
 Edit `support_assistant\agent.py` on Windows or `support_assistant/agent.py` on macOS/Linux:
 
 ```python
-"""ACME Support Assistant — ADK root agent with function tools."""
+"""ACME Support Assistant â€” ADK root agent with function tools."""
 
 from datetime import datetime, timezone
 from google.adk.agents import Agent
@@ -146,7 +146,7 @@ You: My account A-12345 looks weird, can you check?
 Agent: [calls get_account_status] -> "Your A-12345 account is active on Pro..."
 
 You: Can you refund $20 from my last invoice?
-Agent: "Just to confirm — refund $20 with reason 'requested by customer'?"
+Agent: "Just to confirm â€” refund $20 with reason 'requested by customer'?"
 
 You: Yes
 Agent: [calls issue_refund] -> "Done. Refund R-987 processed for $20."
@@ -159,9 +159,9 @@ In the right-hand **Trace** pane, expand each step. You should see:
 - The function return values.
 - The final response.
 
-## 5.2 Tool Confirmation (human-in-the-loop)
+## 6.2 Tool Confirmation (human-in-the-loop)
 
-Some tools shouldn't run silently — refunds, deletions, sending emails. ADK supports a **Tool Confirmation** flow that pauses the agent for explicit user OK.
+Some tools shouldn't run silently â€” refunds, deletions, sending emails. ADK supports a **Tool Confirmation** flow that pauses the agent for explicit user OK.
 
 ```python
 from google.adk.agents import Agent
@@ -185,9 +185,9 @@ When `issue_refund` is about to be called, the agent emits a confirmation event 
 
 This is the same mechanism the Gemini Enterprise app uses for high-impact actions.
 
-## 5.3 OpenAPI tools
+## 6.3 OpenAPI tools
 
-If you already have a REST API documented with OpenAPI 3.x, you don't need to write Python wrappers — point ADK at the spec.
+If you already have a REST API documented with OpenAPI 3.x, you don't need to write Python wrappers â€” point ADK at the spec.
 
 Suppose you have `billing_openapi.yaml`:
 
@@ -243,9 +243,9 @@ PS> $env:BILLING_API_TOKEN = "<your-token-or-secret-ref>"
 $ export BILLING_API_TOKEN="<your-token-or-secret-ref>"
 ```
 
-Each operation in the spec becomes a tool the model can choose to call. The operation's `operationId`, `summary`, and parameter `description` fields are what the model reads — write them well.
+Each operation in the spec becomes a tool the model can choose to call. The operation's `operationId`, `summary`, and parameter `description` fields are what the model reads â€” write them well.
 
-## 5.4 MCP tools
+## 6.4 MCP tools
 
 The **Model Context Protocol** is an open standard for exposing tools to AI assistants. Many SaaS vendors (ServiceNow, Jira, GitHub, Slack, Notion, ...) ship MCP servers.
 
@@ -299,9 +299,9 @@ def get_secret(name: str) -> str:
 snow_secret = get_secret("snow-client-secret")
 ```
 
-## 5.5 Code Execution tool
+## 6.5 Code Execution tool
 
-This lets the model write and run Python in a sandboxed environment for math, data analysis, plotting, regex work — anything where deterministic computation beats hallucinated numbers.
+This lets the model write and run Python in a sandboxed environment for math, data analysis, plotting, regex work â€” anything where deterministic computation beats hallucinated numbers.
 
 ```python
 from google.adk.tools import code_execution
@@ -327,19 +327,19 @@ Agent: [code_execution: 4*0 + 8*20 = 160] -> "$160 per year."
 
 The sandbox is the **Vertex AI Code Execution Sandbox**: isolated, no network by default, no shared state with your environment. Safe for arbitrary user-driven calculations.
 
-## 5.6 Built-in tools quick reference
+## 6.6 Built-in tools quick reference
 
 | Tool | Import | Purpose |
 |------|--------|---------|
 | `google_search` | `from google.adk.tools import google_search` | Search the public web |
 | `code_execution` | `from google.adk.tools import code_execution` | Run Python in sandbox |
-| `VertexAiRagRetrieval` | `from google.adk.tools import VertexAiRagRetrieval` | Query a RAG corpus (section 6) |
+| `VertexAiRagRetrieval` | `from google.adk.tools import VertexAiRagRetrieval` | Query a RAG corpus (section 7) |
 | `OpenAPIToolset` | `from google.adk.tools import OpenAPIToolset` | Auto-generated REST tools |
 | `MCPToolset` | `from google.adk.tools import MCPToolset` | Connect MCP server |
 
-## 5.7 Tools as agents (Agent-as-a-Tool pattern)
+## 6.7 Tools as agents (Agent-as-a-Tool pattern)
 
-You can wrap an entire agent and use it as a tool from another agent. This is the foundation of multi-agent architectures (section 8) and lets you stitch in cross-team agents you don't own:
+You can wrap an entire agent and use it as a tool from another agent. This is the foundation of multi-agent architectures (section 9) and lets you stitch in cross-team agents you don't own:
 
 ```python
 from google.adk.tools import AgentTool
@@ -367,4 +367,4 @@ root_agent = Agent(
 - [ ] Secrets stored in Secret Manager rather than `.env` for any third-party API.
 - [ ] Trace pane in `adk web` shows tool calls and arguments correctly.
 
-Move on to **`06_rag_grounding.md`** to ground the agent in your private docs.
+Move on to **`07_rag_grounding.md`** to ground the agent in your private docs.

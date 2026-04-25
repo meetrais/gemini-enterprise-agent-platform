@@ -1,4 +1,4 @@
-# 09 — Deploy to Vertex AI Agent Engine, Cloud Run, or GKE
+﻿# 10 â€” Deploy to Vertex AI Agent Engine, Cloud Run, or GKE
 
 You have three deployment paths. Pick based on needs:
 
@@ -22,9 +22,9 @@ $ source ./set-env.sh
 $ source .venv/bin/activate
 ```
 
-## 9.1 Path A — Deploy to Vertex AI Agent Engine
+## 10.1 Path A â€” Deploy to Vertex AI Agent Engine
 
-### 9.1.1 Wrap your agent as an `AdkApp`
+### 10.1.1 Wrap your agent as an `AdkApp`
 
 Create `deploy_agent_engine.py`:
 
@@ -42,7 +42,7 @@ client = vertexai.Client(
 adk_app = AdkApp(agent=root_agent)
 
 # Update the existing Agent Engine to deploy this agent.
-# (We created it in section 7. This adds the agent to it.)
+# (We created it in section 8. This adds the agent to it.)
 agent_engine = client.agent_engines.update(
     name=os.environ["AGENT_ENGINE_NAME"],
     agent=adk_app,
@@ -70,7 +70,7 @@ Run it:
 
 Deployment takes several minutes the first time. The platform packages your code, installs dependencies, and provisions a managed runtime. Future deployments are usually faster.
 
-### 9.1.2 Test the deployed agent
+### 10.1.2 Test the deployed agent
 
 ```python
 # call_deployed.py
@@ -96,9 +96,9 @@ Run:
 (.venv) PS> python call_deployed.py
 ```
 
-You should see streaming events arrive — the router's decision, the specialist's tool calls, the final response.
+You should see streaming events arrive â€” the router's decision, the specialist's tool calls, the final response.
 
-### 9.1.3 Tune the runtime
+### 10.1.3 Tune the runtime
 
 Update with non-default runtime parameters:
 
@@ -125,7 +125,7 @@ agent_engine = client.agent_engines.update(
 
 `min_instances=1` keeps one instance warm to reduce cold-start latency. `container_concurrency` controls requests per instance; start small and tune from observed latency and tool-call duration.
 
-### 9.1.4 List and manage deployed agents
+### 10.1.4 List and manage deployed agents
 
 Use the Vertex AI Agent Engine console page or the SDK to list and inspect deployed agents. If your `gcloud` installation includes Agent Engine commands, prefer the command names shown by `gcloud ai --help` or the current docs for your SDK version.
 
@@ -133,13 +133,13 @@ To delete:
 
 Delete from the console or with the current Agent Engine SDK/API delete method for your resource.
 
-Be careful — deleting the Agent Engine also deletes the sessions and memories tied to it.
+Be careful â€” deleting the Agent Engine also deletes the sessions and memories tied to it.
 
-## 9.2 Path B — Deploy to Cloud Run
+## 10.2 Path B â€” Deploy to Cloud Run
 
 Cloud Run is a great fit when you want a normal HTTP service that happens to have an agent inside.
 
-### 9.2.1 Deploy from source
+### 10.2.1 Deploy from source
 
 ADK includes a Cloud Run-friendly server. From your working directory:
 
@@ -183,7 +183,7 @@ $ gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
     --role="roles/run.builder"
 ```
 
-### 9.2.2 Test the Cloud Run service
+### 10.2.2 Test the Cloud Run service
 
 ```powershell
 PS> $URL = (gcloud run services describe support-assistant --region=$env:LOCATION --format="value(status.url)")
@@ -222,7 +222,7 @@ $ curl -s -X POST "${URL}/run" \
     }'
 ```
 
-### 9.2.3 Configure scaling
+### 10.2.3 Configure scaling
 
 ```powershell
 (.venv) PS> gcloud run services update support-assistant `
@@ -234,7 +234,7 @@ $ curl -s -X POST "${URL}/run" \
     --memory=1Gi
 ```
 
-## 9.3 Path C — Deploy to GKE
+## 10.3 Path C â€” Deploy to GKE
 
 For full Kubernetes control. Sketch:
 
@@ -271,13 +271,13 @@ For full Kubernetes control. Sketch:
 
 3. Deploy with a standard Deployment + Service + (optionally) Gateway. Use **Workload Identity** to map the pod's k8s SA to your `agent-runner` GCP service account.
 
-4. Cloud Trace, Cloud Logging, and Cloud Monitoring auto-attach to GKE workloads — no extra wiring.
+4. Cloud Trace, Cloud Logging, and Cloud Monitoring auto-attach to GKE workloads â€” no extra wiring.
 
-## 9.4 Networking and security
+## 10.4 Networking and security
 
 For all three deployment paths:
 
-### 9.4.1 Private Service Connect (PSC)
+### 10.4.1 Private Service Connect (PSC)
 
 If your agent needs to call private VPC services (internal APIs, on-prem resources via Cloud Interconnect):
 
@@ -285,17 +285,17 @@ If your agent needs to call private VPC services (internal APIs, on-prem resourc
 - Cloud Run: use VPC connectors via `--vpc-connector` or **Direct VPC egress** via `--vpc-egress=all-traffic --network=...`.
 - GKE: native VPC.
 
-### 9.4.2 VPC Service Controls
+### 10.4.2 VPC Service Controls
 
 Wrap the project in a VPC-SC perimeter to prevent data exfiltration:
 
-1. Console → **Security → VPC Service Controls**.
+1. Console â†’ **Security â†’ VPC Service Controls**.
 2. Create a perimeter that includes your project and the `aiplatform.googleapis.com`, `storage.googleapis.com`, `secretmanager.googleapis.com` APIs.
 3. Define ingress / egress rules for the specific identities allowed in/out.
 
 VPC-SC is a Standard/Plus edition feature for the Gemini Enterprise app.
 
-### 9.4.3 Customer-Managed Encryption Keys (CMEK)
+### 10.4.3 Customer-Managed Encryption Keys (CMEK)
 
 For data-at-rest encryption with your own keys, attach CMEK to:
 
@@ -319,11 +319,11 @@ $ gcloud storage buckets update "${STAGING_BUCKET}" \
     --default-encryption-key="projects/${PROJECT_ID}/locations/${LOCATION}/keyRings/agent-keyring/cryptoKeys/agent-cmek"
 ```
 
-### 9.4.4 Region pinning for data residency
+### 10.4.4 Region pinning for data residency
 
-If you have residency requirements, deploy everything in the same region — Agent Engine, Cloud Run / GKE, the staging bucket, the RAG corpus, KMS keys, Memory Bank — and never use `global` endpoints.
+If you have residency requirements, deploy everything in the same region â€” Agent Engine, Cloud Run / GKE, the staging bucket, the RAG corpus, KMS keys, Memory Bank â€” and never use `global` endpoints.
 
-## 9.5 Versioning and rollouts
+## 10.5 Versioning and rollouts
 
 ### Agent Engine versioning
 
@@ -349,7 +349,7 @@ PS> gcloud run services update-traffic support-assistant `
 
 10% to canary, 90% to last-known-good. Watch metrics, ramp up.
 
-## 9.6 Smoke test deployment
+## 10.6 Smoke test deployment
 
 Always finish a deploy with a smoke test:
 
@@ -357,7 +357,7 @@ Always finish a deploy with a smoke test:
 (.venv) PS> python call_deployed.py
 ```
 
-If anything fails, the right diagnostic is the **Trace** in section 11 — spans show exactly where it fell over.
+If anything fails, the right diagnostic is the **Trace** in section 12 â€” spans show exactly where it fell over.
 
 ---
 
@@ -370,4 +370,4 @@ If anything fails, the right diagnostic is the **Trace** in section 11 — spans
 - [ ] Networking decisions made: PSC if needed, VPC-SC if regulated, CMEK if mandated.
 - [ ] You know how to roll back to a previous version.
 
-Move on to **`10_governance.md`** for Identity, Registry, Gateway, and Model Armor.
+Move on to **`11_governance.md`** for IAM, Gemini Enterprise registration, and Model Armor.

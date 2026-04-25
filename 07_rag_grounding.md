@@ -1,11 +1,11 @@
-# 06 — Ground the agent in private data with RAG Engine and Vector Search
+﻿# 07 â€” Ground the agent in private data with RAG Engine and Vector Search
 
-LLMs hallucinate when asked about things they weren't trained on — your runbooks, your product docs, your policies. The fix is **Retrieval-Augmented Generation (RAG)**: at inference time, look up relevant snippets from your data and pass them to the model as context.
+LLMs hallucinate when asked about things they weren't trained on â€” your runbooks, your product docs, your policies. The fix is **Retrieval-Augmented Generation (RAG)**: at inference time, look up relevant snippets from your data and pass them to the model as context.
 
 The platform offers two paths:
 
-- **RAG Engine** — managed end-to-end. You point it at files; it handles parsing, chunking, embedding, indexing, and retrieval. Best for most teams.
-- **Vector Search** — direct, AI-native vector index. Use when you need full control of embeddings or exotic data types.
+- **RAG Engine** â€” managed end-to-end. You point it at files; it handles parsing, chunking, embedding, indexing, and retrieval. Best for most teams.
+- **Vector Search** â€” direct, AI-native vector index. Use when you need full control of embeddings or exotic data types.
 
 This section uses RAG Engine for the main path and shows Vector Search as the alternative in 6.6.
 
@@ -21,7 +21,7 @@ $ source ./set-env.sh
 $ source .venv/bin/activate
 ```
 
-## 6.1 Prepare some sample documents
+## 7.1 Prepare some sample documents
 
 Make a folder and put a few sample docs in it. In real life this is your actual product documentation, runbooks, FAQs, etc.
 
@@ -87,9 +87,9 @@ If a customer reports persistent 503 errors:
    sample of the failed request IDs.
 ```
 
-Add 5–10 more files in real-world deployments. Larger corpora benefit from a coverage strategy — make sure every common question has at least one source document.
+Add 5â€“10 more files in real-world deployments. Larger corpora benefit from a coverage strategy â€” make sure every common question has at least one source document.
 
-## 6.2 Upload to Cloud Storage
+## 7.2 Upload to Cloud Storage
 
 ```powershell
 (.venv) PS> gcloud storage cp -r kb_docs "$($env:STAGING_BUCKET)/kb/"
@@ -101,7 +101,7 @@ Add 5–10 more files in real-world deployments. Larger corpora benefit from a c
 (.venv) $ gcloud storage ls "${STAGING_BUCKET}/kb/kb_docs/"
 ```
 
-## 6.3 Create a RAG corpus
+## 7.3 Create a RAG corpus
 
 A **corpus** is the searchable index. You add files to it and query against it.
 
@@ -164,7 +164,7 @@ On macOS/Linux, add this to `set-env.sh`:
 export RAG_CORPUS="projects/123456/locations/us-central1/ragCorpora/9999"
 ```
 
-## 6.4 Test the corpus directly
+## 7.4 Test the corpus directly
 
 Before wiring it into the agent, sanity-check that retrieval works:
 
@@ -195,9 +195,9 @@ Run:
 (.venv) PS> python query_rag.py
 ```
 
-You should see chunks from `refund_policy.md` ranked first. If you get empty results, your `vector_distance_threshold` is too tight — raise it (e.g., `0.7`) or remove it.
+You should see chunks from `refund_policy.md` ranked first. If you get empty results, your `vector_distance_threshold` is too tight â€” raise it (e.g., `0.7`) or remove it.
 
-## 6.5 Wire RAG into the agent
+## 7.5 Wire RAG into the agent
 
 Edit `support_assistant\agent.py`:
 
@@ -215,7 +215,7 @@ from vertexai import rag
 search_kb = VertexAiRagRetrieval(
     name="search_acme_kb",
     description=(
-        "Search ACME's internal knowledge base — product plans, pricing, "
+        "Search ACME's internal knowledge base â€” product plans, pricing, "
         "policies, runbooks, troubleshooting guides. Use this for any "
         "question about how ACME products work or what ACME's policies are."
     ),
@@ -260,9 +260,9 @@ You: My API is throwing 503s, what should I check?
 Agent: [calls search_acme_kb] -> "Three things to check first: ..."
 ```
 
-In the trace, you'll see the retrieved chunks alongside the model's response — exactly the documents the answer came from.
+In the trace, you'll see the retrieved chunks alongside the model's response â€” exactly the documents the answer came from.
 
-## 6.6 (Alternative) Vector Search directly
+## 7.6 (Alternative) Vector Search directly
 
 When you need:
 
@@ -271,9 +271,9 @@ When you need:
 - Very high QPS (>1000 qps).
 - Multi-tenant isolation at the index level.
 
-… use Vector Search directly instead of RAG Engine.
+â€¦ use Vector Search directly instead of RAG Engine.
 
-### 6.6.1 Create an index
+### 7.6.1 Create an index
 
 ```python
 # create_vs_index.py
@@ -302,7 +302,7 @@ The `vs_data/` folder must contain JSONL files where each row is:
 
 You produce these by embedding your text with `text-embedding-005`.
 
-### 6.6.2 Deploy an index endpoint
+### 7.6.2 Deploy an index endpoint
 
 ```python
 endpoint = aiplatform.MatchingEngineIndexEndpoint.create(
@@ -312,7 +312,7 @@ endpoint = aiplatform.MatchingEngineIndexEndpoint.create(
 endpoint.deploy_index(index=index, deployed_index_id="acme_kb_v1")
 ```
 
-### 6.6.3 Query
+### 7.6.3 Query
 
 ```python
 neighbors = endpoint.find_neighbors(
@@ -324,7 +324,7 @@ neighbors = endpoint.find_neighbors(
 
 Wire the result into your agent as a function tool.
 
-## 6.7 Add more sources
+## 7.7 Add more sources
 
 RAG Engine supports more than just Cloud Storage:
 
@@ -337,13 +337,13 @@ RAG Engine supports more than just Cloud Storage:
 
 In the console: **Vertex AI -> RAG Engine -> your corpus -> Import files -> Source**. Pick the source, authenticate, and select folders.
 
-## 6.8 Re-index when documents change
+## 7.8 Re-index when documents change
 
-Re-run `rag.import_files(...)` whenever your underlying docs change. By default, RAG Engine de-duplicates by file URI — re-importing the same path replaces existing chunks for those files. For very frequent updates, schedule it with Cloud Scheduler or a CI workflow.
+Re-run `rag.import_files(...)` whenever your underlying docs change. By default, RAG Engine de-duplicates by file URI â€” re-importing the same path replaces existing chunks for those files. For very frequent updates, schedule it with Cloud Scheduler or a CI workflow.
 
-## 6.9 Evaluate retrieval quality
+## 7.9 Evaluate retrieval quality
 
-The Gen AI Evaluation Service has built-in retrieval metrics. Add a `groundedness` metric to your eval task from section 2.C:
+The Gen AI Evaluation Service has built-in retrieval metrics. Add a `groundedness` metric to your eval task from section 3.C:
 
 ```python
 from vertexai.evaluation import EvalTask
@@ -367,4 +367,4 @@ eval_task = EvalTask(
 - [ ] You've tested in `adk web` and the agent cites the right docs.
 - [ ] (Optional) You know how to fall back to Vector Search if needed.
 
-Move on to **`07_memory_bank.md`** to give the agent long-term memory.
+Move on to **`08_memory_bank.md`** to give the agent long-term memory.
