@@ -1,3 +1,5 @@
+"""Support triage ADK agent."""
+
 from google.adk.agents import Agent
 
 
