@@ -25,21 +25,6 @@ Follow the sections in order. Each file is self-contained and ends with a "What 
 | 13 | [`13_distribution.md`](13_distribution.md) | Distribute | Surface in the Gemini Enterprise web app |
 | 14 | [`14_checklist_and_cleanup.md`](14_checklist_and_cleanup.md) | - | Final E2E checklist and resource cleanup |
 
-## Conventions used throughout
-
-- Lines starting with `PS>` mean Windows PowerShell. Lines starting with `$` mean macOS/Linux Bash or Zsh. Plain code blocks are file contents (Python, YAML, JSON).
-- Wherever you see `<ANGLE_BRACKETS>` in commands, replace with your own value.
-- Most `gcloud` commands are the same on Windows, macOS, and Linux. The differences are usually environment variables, virtual environment activation, path separators, and line-continuation characters.
-- The running example uses these names - change them only if you have a reason to:
- - **Project ID:** `my-agent-platform`
- - **Region:** `us-central1`
- - **Staging bucket:** `gs://my-agent-platform-agent-staging`
- - **Service account:** `agent-runner@my-agent-platform.iam.gserviceaccount.com`
-
-## A note on dates and previews
-
-This guide was reviewed against public Google Cloud documentation in April 2026. Several agent features are still marked Preview in the docs, so exact API names, console labels, and command surfaces can shift. If a command fails, check the linked Google Cloud docs before assuming you typed it wrong.
-
 ## Primary references
 
 - Gemini Enterprise: https://docs.cloud.google.com/gemini/enterprise/docs
@@ -49,4 +34,4 @@ This guide was reviewed against public Google Cloud documentation in April 2026.
 - Model Armor: https://docs.cloud.google.com/model-armor
 - Gen AI Evaluation: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/evaluation-overview
 
-Ready? Open `01_prerequisites.md` to start.
+Ready? Open <a href="./01_prerequisites.md">01_prerequisites.md</a> to start.
