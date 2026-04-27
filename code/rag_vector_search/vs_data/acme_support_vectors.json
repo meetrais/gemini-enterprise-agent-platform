@@ -1,0 +1,3 @@
+{"id":"plans","embedding":[0.12,0.48,0.31,0.09],"restricts":[{"namespace":"source","allow":["plans.md"]}]}
+{"id":"refund-policy","embedding":[0.77,0.14,0.22,0.51],"restricts":[{"namespace":"source","allow":["refund_policy.md"]}]}
+{"id":"troubleshooting-503","embedding":[0.33,0.82,0.19,0.44],"restricts":[{"namespace":"source","allow":["troubleshooting_503.md"]}]}
