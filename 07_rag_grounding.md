@@ -9,6 +9,8 @@ The platform offers two paths:
 
 This section uses RAG Engine for the main path and shows Vector Search as the alternative in 7.6.
 
+In the Agent Platform console, these capabilities are under **Build -> RAG Engine**, **Build -> Vector Search**, and **Build -> Search**. Use RAG Engine when you want a managed retrieval pipeline. Use Vector Search when you need lower-level control over embeddings and indexes. Use Search when you need an app-facing search experience over enterprise data.
+
 ```powershell
 cd $HOME\agent-platform-demo
 . .\set-env.ps1
@@ -199,12 +201,12 @@ You should see chunks from `refund_policy.md` ranked first. If you get empty res
 
 ## 7.5 Wire RAG into the agent
 
-Edit `support_assistant\agent.py`:
+Edit `code\support_assistant\agent.py`:
 
 ```python
 import os
 from google.adk.agents import Agent
-from google.adk.tools import google_search, code_execution
+from google.adk.tools import google_search
 from google.adk.tools.retrieval import VertexAiRagRetrieval
 from vertexai import rag
 
@@ -238,7 +240,7 @@ root_agent = Agent(
  tools=[
  search_kb,
  get_account_status, get_recent_invoices, issue_refund,
- code_execution, google_search,
+ google_search,
  ],
 )
 ```
@@ -246,7 +248,7 @@ root_agent = Agent(
 Test:
 
 ```powershell
-adk web
+adk web --port 8000 code
 ```
 
 Try:
@@ -363,7 +365,7 @@ eval_task = EvalTask(
 - ✅ A RAG corpus (`acme-support-kb`) populated from Cloud Storage.
 - ✅ `RAG_CORPUS` saved as an env var.
 - ✅ A standalone `query_rag.py` proves retrieval works.
-- ✅ `support_assistant\agent.py` updated with `search_acme_kb` as a tool.
+- ✅ `code\support_assistant\agent.py` updated with `search_acme_kb` as a tool.
 - ✅ You've tested in `adk web` and the agent cites the right docs.
 - ✅ (Optional) You know how to fall back to Vector Search if needed.
 

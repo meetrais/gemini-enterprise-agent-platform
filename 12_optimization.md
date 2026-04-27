@@ -1,7 +1,8 @@
 ﻿# 12 - Optimize: Simulation, Evaluation, Observability
 
-The platform's "Optimize" pillar gives you three tools:
+The Agent Platform **Optimise** area highlights **Topology** and **Evaluation**. This section uses those as the production feedback loop:
 
+- **Topology** - understand how agents, tools, retrieval, sessions, memory, and deployments are connected.
 - **Agent Simulation** - run synthetic users and scenarios against your agent in a sandbox.
 - **Agent Evaluation** - score outputs with rubrics, including Auto SxS comparing versions.
 - **Agent Observability** - Cloud Trace, Cloud Logging, Cloud Monitoring with OpenTelemetry traces of every agent step.
@@ -9,22 +10,33 @@ The platform's "Optimize" pillar gives you three tools:
 Together they form an evaluation-driven release cycle: change something -> simulate -> evaluate -> ship -> observe.
 
 ```powershell
-cd $HOME\agent-platform-demo
-. .\set-env.ps1
+cd C:\Code\gemini-enterprise-agent-platform
 .\.venv\Scripts\Activate.ps1
 ```
 
 ```bash
-cd "$HOME/agent-platform-demo"
-source ./set-env.sh
+cd /path/to/gemini-enterprise-agent-platform
 source .venv/bin/activate
 ```
 
-## 12.A - Agent Simulation
+## 12.A - Topology
+
+Before running evaluations, document the current topology. In **Agent Platform -> Optimise -> Topology**, use the graph to confirm the runtime components you expect to exist:
+
+- Agent deployment or Agent Engine reasoning engine.
+- ADK agent and any specialist agents.
+- Function tools, MCP servers, or OpenAPI-backed tools.
+- RAG Engine corpus, Vector Search index, or Search app.
+- Sessions and Memory Bank.
+- Gemini Enterprise app registration, if users access the agent there.
+
+Capture the topology in your release notes. If the graph shows an unexpected dependency, such as a dev MCP server connected to prod, fix that before evaluation.
+
+## 12.B - Agent Simulation
 
 Simulation runs your deployed agent against AI-driven personas across scenario scripts. It catches behavior bugs that single test cases miss.
 
-### 12.A.1 Define personas
+### 12.B.1 Define personas
 
 Create `simulation\personas.json`:
 
@@ -65,7 +77,7 @@ nano simulation/personas.json
 ]
 ```
 
-### 12.A.2 Define scenarios
+### 12.B.2 Define scenarios
 
 Create `simulation\scenarios.json`:
 
@@ -94,7 +106,7 @@ Create `simulation\scenarios.json`:
 ]
 ```
 
-### 12.A.3 Run the simulation
+### 12.B.3 Run the simulation
 
 Create `simulation\run_sim.py`:
 
@@ -173,7 +185,7 @@ if success < THRESHOLD:
 
 In CI/CD, run this after each simulation; non-zero exit blocks the deploy.
 
-## 12.B - Agent Evaluation with Auto SxS
+## 12.C - Evaluation with Auto SxS
 
 You used the Gen AI Evaluation Service in section 3.C for model-level evals. Now use it at the **agent level** to compare deployed versions head-to-head.
 
@@ -269,7 +281,7 @@ Output a single integer 1 or 5 and a one-sentence rationale.
 
 Plug into `AgentEvalTask` alongside the built-ins.
 
-## 12.C - Agent Observability
+## 12.D - Observability
 
 When you deploy via ADK to Agent Runtime (Agent Engine), Cloud Run, or GKE, use Cloud Trace, Cloud Logging, and Cloud Monitoring as your common observability stack. Some telemetry is automatic in managed paths; custom business metrics still require code.
 
@@ -383,7 +395,7 @@ Apply it:
 gcloud monitoring dashboards create --config-from-file=dashboard.json
 ```
 
-### 12.C.4 Alert policies
+### 12.D.4 Alert policies
 
 Create `alerts.yaml`:
 
@@ -441,7 +453,7 @@ def issue_refund(account_id: str, amount_usd: float, reason: str) -> dict:
 
 Now you can chart "refund volume per hour" right next to latency.
 
-## 12.D - Auto SxS in CI
+## 12.E - Auto SxS in CI
 
 Tie sections 12.A and 12.B together so they gate a release:
 

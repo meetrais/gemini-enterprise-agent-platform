@@ -23,7 +23,7 @@ source .venv/bin/activate
 
 ## 9.1 Refactor `agent.py` into multiple agents
 
-Replace `support_assistant\agent.py` with:
+Replace `code\support_assistant\agent.py` with:
 
 ```python
 """ACME Support Assistant - multi-agent system."""
@@ -161,7 +161,7 @@ You can see all of this clearly in `adk web` traces: each step shows which agent
 ## 9.3 Test the system
 
 ```powershell
-adk web
+adk web --port 8000 code
 ```
 
 Try these conversations:

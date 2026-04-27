@@ -2,6 +2,8 @@
 
 The **Agent Development Kit (ADK)** is the code-first framework used in this guide for building, testing, and later deploying production agents. Section 4 created `code/support_triage_agent` for Gemini Enterprise registration. In this section, create a separate local learning agent named `code/support_assistant` so the examples do not overwrite or conflict with the triage agent.
 
+In the Agent Platform console, this belongs under **Build -> ADK**. Use **Build -> Agent Garden** when you want sample agents and starter patterns; this guide builds a small support assistant from scratch so you can see each moving part.
+
 ```powershell
 cd C:\Code\gemini-enterprise-agent-platform
 .\.venv\Scripts\Activate.ps1
@@ -318,4 +320,4 @@ Use debug logs when an agent chooses the wrong tool, ignores an instruction, or 
 - ✅ The ADK API server can create a session and run a message.
 - ✅ You can switch models with `GOOGLE_GENAI_MODEL`.
 
-Move on to **[06_tools.md](06_tools.md)** to give the agent real capabilities.
+Move on to **[06_mcp_servers.md](06_mcp_servers.md)** to connect the agent to Agent Platform MCP servers.

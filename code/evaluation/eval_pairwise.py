@@ -1,4 +1,6 @@
 import os
+from pathlib import Path
+
 import pandas as pd
 import vertexai
 from vertexai.evaluation import EvalTask, PairwiseMetric, MetricPromptTemplateExamples
@@ -7,7 +9,10 @@ from google import genai
 vertexai.init(project=os.environ["PROJECT_ID"], location="us-central1")
 client = genai.Client(vertexai=True, project=os.environ["PROJECT_ID"], location="us-central1")
 
-dataset = pd.read_csv("eval_data/support_eval.csv")
+ROOT_DIR = Path(__file__).resolve().parents[2]
+EVAL_DATA_DIR = ROOT_DIR / "eval_data"
+
+dataset = pd.read_csv(EVAL_DATA_DIR / "support_eval.csv")
 
 BASE_MODEL = "gemini-2.5-flash"
 TUNED_MODEL = os.environ["TUNED_MODEL"]
@@ -38,4 +43,4 @@ eval_task = EvalTask(
 )
 result = eval_task.evaluate()
 print(result.summary_metrics)
-result.metrics_table.to_csv("eval_data/pairwise_result.csv", index=False)
+result.metrics_table.to_csv(EVAL_DATA_DIR / "pairwise_result.csv", index=False)

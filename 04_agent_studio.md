@@ -2,6 +2,8 @@
 
 Gemini Enterprise can register custom agents that are already deployed to Agent Engine. In this section, you'll create a small ADK triage agent, deploy it to Agent Engine, and add it to a Gemini Enterprise app with **Custom agent via Agent Engine**.
 
+In the Agent Platform console, this work relates to **Agents** and **Govern -> Agent Registry**. In the Gemini Enterprise app console, the same deployed agent is added from the app's **Agents** page.
+
 In this section you'll build the **Triage Agent**: a small classifier that reads an incoming support message and assigns it to `billing`, `technical`, `account`, or `general`.
 
 ```powershell
@@ -103,17 +105,24 @@ Do not include markdown fences. Do not include any other text.""",
 
 ### 4.3.2 Deploy it to Agent Engine
 
-Create `code/deploy_triage_agent_engine.py`. This script deploys the local ADK triage agent to Agent Engine and prints the `projects/.../reasoningEngines/...` resource path that Gemini Enterprise needs.
+Create `code\agent_engine\deploy_triage_agent_engine.py`. This script deploys the local ADK triage agent to Agent Engine and prints the `projects/.../reasoningEngines/...` resource path that Gemini Enterprise needs.
 
-Keeping this script in the `code` directory is intentional because it imports the adjacent `support_triage_agent` package.
+The script lives in `code\agent_engine` because it is part of the Agent Engine deployment flow. It adds the parent `code` folder to the Python import path so it can import `support_triage_agent`.
 
 ```python
 # deploy_triage_agent_engine.py
 import os
+import sys
 import time
+from pathlib import Path
 
 print("Loading Agent Engine deployment libraries...", flush=True)
 import vertexai
+
+CODE_DIR = Path(__file__).resolve().parents[1]
+if str(CODE_DIR) not in sys.path:
+ sys.path.insert(0, str(CODE_DIR))
+
 from support_triage_agent.agent import root_agent
 from vertexai.agent_engines import AdkApp
 
@@ -179,7 +188,7 @@ PowerShell:
 $env:PROJECT_ID = "YOUR_PROJECT_ID"
 $env:LOCATION = "us-central1"
 $env:STAGING_BUCKET = "gs://<YOUR_STAGING_BUCKET>"
-python code\deploy_triage_agent_engine.py
+python code\agent_engine\deploy_triage_agent_engine.py
 ```
 
 macOS/Linux:
@@ -188,7 +197,7 @@ macOS/Linux:
 export PROJECT_ID="YOUR_PROJECT_ID"
 export LOCATION="us-central1"
 export STAGING_BUCKET="gs://<YOUR_STAGING_BUCKET>"
-python code/deploy_triage_agent_engine.py
+python code/agent_engine/deploy_triage_agent_engine.py
 ```
 
 Deployment can take several minutes the first time because Agent Engine packages the code, uploads staging artifacts, installs dependencies, and starts the managed runtime.
@@ -256,7 +265,7 @@ If the agent does not appear on the **Our agents** tab:
 3. Clear any filter text in the table.
 4. Refresh the page once.
 5. If the row still does not appear, click **+ Add agent** and register it again with **Custom agent via Agent Engine**.
-6. Use the exact `projects/.../reasoningEngines/...` path printed by `python code\deploy_triage_agent_engine.py`.
+6. Use the exact `projects/.../reasoningEngines/...` path printed by `python code\agent_engine\deploy_triage_agent_engine.py`.
 
 If the agent row **Preview** action opens a 404 page:
 
@@ -282,7 +291,7 @@ projects/<PROJECT_ID_OR_NUMBER>/locations/<LOCATION>/reasoningEngines/<REASONING
 ```
 
 2. Confirm the Agent Engine deployment finished and printed the resource path.
-3. Confirm the app registration uses the same resource path printed by `python code\deploy_triage_agent_engine.py`.
+3. Confirm the app registration uses the same resource path printed by `python code\agent_engine\deploy_triage_agent_engine.py`.
 4. Confirm **Support Triage Agent** appears on **Our agents** with **Agent state** `Enabled`.
 5. Confirm the current user has permission to use the agent if you are testing as a non-admin.
 6. Wait a few minutes and retry. First-time Agent Engine deployments can take time to become ready.
@@ -293,7 +302,7 @@ If the category is wrong or the response is not JSON:
 2. Redeploy:
 
 ```powershell
-python code\deploy_triage_agent_engine.py
+python code\agent_engine\deploy_triage_agent_engine.py
 ```
 
 3. Copy the new `projects/.../reasoningEngines/...` value if a new resource is created.

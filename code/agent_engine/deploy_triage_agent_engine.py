@@ -1,10 +1,17 @@
 """Deploy the support triage ADK agent to Agent Engine."""
 
 import os
+import sys
 import time
+from pathlib import Path
 
 print("Loading Agent Engine deployment libraries...", flush=True)
 import vertexai
+
+CODE_DIR = Path(__file__).resolve().parents[1]
+if str(CODE_DIR) not in sys.path:
+ sys.path.insert(0, str(CODE_DIR))
+
 from support_triage_agent.agent import root_agent
 from vertexai.agent_engines import AdkApp
 

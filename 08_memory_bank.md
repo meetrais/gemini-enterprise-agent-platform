@@ -10,6 +10,8 @@ The platform provides both:
 - **Agent Engine Sessions** - managed conversation state.
 - **Agent Engine Memory Bank** - managed long-term memory, with Gemini auto-extracting key facts from session history asynchronously.
 
+In the Agent Platform console, these are **Scale -> Sessions** and **Scale -> Memory Bank**. They share the same underlying Agent Engine resource, which is why the SDK resource path still uses `reasoningEngines/...`.
+
 ```powershell
 cd $HOME\agent-platform-demo
 . .\set-env.ps1
@@ -92,7 +94,7 @@ Memories are isolated per user identity, can be configured with TTL for automati
 
 ## 8.3 Wire ADK to Memory Bank for local runs
 
-Edit `support_assistant\agent.py`:
+Edit `code\support_assistant\agent.py`:
 
 ```python
 import os
@@ -303,7 +305,7 @@ On macOS/Linux, use `${PROJECT_ID}`, `${AGENT_SA}`, and `${AGENT_ENGINE_ID}` in 
 ## What you should have now
 
 - ✅ An Agent Engine instance created with ID saved in env.
-- ✅ `support_assistant\agent.py` configured to use Memory Bank.
+- ✅ `code\support_assistant\agent.py` configured to use Memory Bank.
 - ✅ `test_memory.py` proves memory survives across sessions.
 - ✅ You've inspected memories in the console.
 - ✅ You can read/write memories directly via the SDK.

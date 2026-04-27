@@ -1,20 +1,19 @@
 ﻿# 11 - Governance: IAM, Gemini Enterprise registration, Model Armor
 
-This section tightens the production controls around the agent you deployed in section 10. The public docs support three practical governance layers for this guide:
+This section tightens the production controls around the agent you deployed in section 10. In the Agent Platform console, this maps to **Govern -> Agent Registry**, **Govern -> Policies**, **Govern -> Gateways**, and **Govern -> Security**. The public docs support these practical governance layers for this guide:
 
 - Dedicated agent identity with least-privilege IAM.
-- Gemini Enterprise registration and sharing for app access.
+- Agent Registry and Gemini Enterprise registration for discovery and app access.
+- Policies, Gateways, and Security controls around the serving path.
 - Model Armor and platform logging where your serving path supports them.
 
 ```powershell
-cd $HOME\agent-platform-demo
-. .\set-env.ps1
+cd C:\Code\gemini-enterprise-agent-platform
 .\.venv\Scripts\Activate.ps1
 ```
 
 ```bash
-cd "$HOME/agent-platform-demo"
-source ./set-env.sh
+cd /path/to/gemini-enterprise-agent-platform
 source .venv/bin/activate
 ```
 
@@ -66,7 +65,21 @@ On macOS/Linux, use the same commands with `${PROJECT_ID}` and `${AGENT_SA}` plu
 
 Where supported, use IAM Conditions to limit a binding to the Agent Engine resource or storage prefix the agent needs. Keep these conditions simple and test them immediately; a too-tight condition can break deploys or memory calls.
 
-## 11.2 Register the ADK agent with Gemini Enterprise
+## 11.2 Register and discover agents
+
+Use **Agent Platform -> Govern -> Agent Registry** as the governed catalog of approved agents and MCP servers in the project. Agent Registry is useful when one team builds an agent or MCP server and another team needs to discover and reuse it without hard-coding endpoints.
+
+At minimum, record:
+
+- Display name and owner.
+- Environment, such as dev, test, or prod.
+- Runtime location, such as an Agent Engine reasoning engine path.
+- Supported protocol, such as ADK, A2A, or MCP.
+- Required auth and scopes.
+
+Keep the registry entry aligned with the deployed runtime version from section 10.
+
+## 11.3 Register the ADK agent with Gemini Enterprise
 
 Registering the deployed ADK agent makes it available in a Gemini Enterprise app. This is separate from deploying the agent to Agent Runtime (Agent Engine).
 
@@ -94,7 +107,9 @@ Console path:
 
 Important: Google's Gemini Enterprise docs note that Model Armor, when enabled in Gemini Enterprise, does not protect conversations with ADK agents registered into the web app. Keep Model Armor in your own runtime path when you need prompt and response screening.
 
-## 11.3 Runtime policy controls
+## 11.4 Policies, Gateways, and runtime controls
+
+Use **Agent Platform -> Govern -> Policies** for organization-approved rules such as who can deploy, which models or tools are allowed, and which environments require extra review. Use **Agent Platform -> Govern -> Gateways** when traffic should pass through a controlled entry point for auth, inspection, routing, rate limits, or audit. Use **Agent Platform -> Govern -> Security** for the security posture view of agent assets and access.
 
 Use the serving surface from section 10:
 
@@ -104,11 +119,11 @@ Use the serving surface from section 10:
 
 For high-impact tools such as refunds, password resets, or outbound emails, keep tool confirmation in ADK even when the outer app is authenticated.
 
-## 11.4 Model Armor
+## 11.5 Model Armor
 
 Model Armor screens prompts and responses for prompt injection, jailbreak attempts, harmful content, sensitive data, and malicious URLs. Use it before calling the model and before showing the final response anywhere you control the serving path.
 
-### 11.4.1 Create a Model Armor template
+### 11.5.1 Create a Model Armor template
 
 Create `armor_template.py`:
 
@@ -151,7 +166,7 @@ python armor_template.py
 
 Add RAI and Sensitive Data Protection settings once you confirm the exact template fields available in your installed `google-cloud-modelarmor` version.
 
-### 11.4.2 Test the template directly
+### 11.5.2 Test the template directly
 
 Create `armor_test.py`:
 
@@ -187,7 +202,7 @@ python armor_test.py
 python armor_test.py
 ```
 
-### 11.4.3 Wire Model Armor into your serving path
+### 11.5.3 Wire Model Armor into your serving path
 
 If you call Agent Engine from your own app or API, put Model Armor checks around the call:
 
@@ -199,7 +214,7 @@ If you call Agent Engine from your own app or API, put Model Armor checks around
 
 For direct Gemini Enterprise app registrations, remember the caveat from section 11.2 and do not assume Model Armor is automatically applied to the ADK-agent conversation.
 
-## 11.5 Threat detection and compliance
+## 11.6 Threat detection and compliance
 
 For regulated or sensitive agents, evaluate:
 
@@ -216,7 +231,8 @@ For regulated or sensitive agents, evaluate:
 
 - ✅ `agent-runner` is the runtime identity and has only required roles.
 - ✅ Observability roles are added where needed.
-- ✅ The deployed ADK agent is ready to register with Gemini Enterprise.
+- ✅ The deployed ADK agent has a clear Agent Registry and Gemini Enterprise registration plan.
+- ✅ Policies, Gateways, and Security controls are documented for the serving path.
 - ✅ Model Armor template created and tested.
 - ✅ Tool confirmation remains enabled for high-impact tools.
 - ✅ Compliance choices are documented for VPC-SC, CMEK, audit logs, and regional placement.

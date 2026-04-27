@@ -259,7 +259,7 @@ pip freeze | Out-File -Encoding utf8 requirements.txt
 
 ## 2.8 Smoke test - call a Gemini model
 
-Create `smoke_test.py`:
+Create `code\project_setup\smoke_test.py`:
 
 ```python
 import os
@@ -281,7 +281,7 @@ print(response.text)
 Run it:
 
 ```powershell
-python smoke_test.py
+python code\project_setup\smoke_test.py
 ```
 
 If you see `OK` (or close to it), your project, auth, billing, APIs, and SDKs all work end-to-end. If you get a `403 PERMISSION_DENIED`, double-check the IAM roles in section 1.3. If you get a `404 not found` for the model, check the current Agent Platform model list and use an available Gemini model in your region.

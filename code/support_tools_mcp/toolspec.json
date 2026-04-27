@@ -1,0 +1,18 @@
+{
+  "tools": [
+    {
+      "name": "classify_support_request",
+      "title": "Classify Support Request",
+      "description": "Classifies a support message.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": ["text"]
+      }
+    }
+  ]
+}

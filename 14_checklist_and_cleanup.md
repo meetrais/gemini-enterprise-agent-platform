@@ -14,7 +14,7 @@ source ./set-env.sh
 source .venv/bin/activate
 ```
 
-## 14.1 End-to-end checklist
+## 14.1 End-to-end Agent Platform checklist
 
 ### Build
 
@@ -24,13 +24,16 @@ source .venv/bin/activate
 - [ ] **Agent Designer** - built a low-code triage prototype and captured test prompts.
 - [ ] **ADK** - created `support_assistant`, defined `root_agent`, and ran `adk run` / `adk web`.
 - [ ] **Tools** - added function tools and tool confirmation for high-impact actions.
+- [ ] **MCP servers** - documented whether this guide uses a project MCP server or local function tools only.
 - [ ] **RAG Engine** - created a corpus, imported documents, and tested retrieval.
+- [ ] **Vector Search / Search** - documented whether direct vector indexes or enterprise Search apps are in scope.
 - [ ] **Sessions and Memory Bank** - verified cross-session behavior or documented why memory is out of scope.
 - [ ] **Multi-agent orchestration** - tested router plus billing, technical, and account specialists.
 
 ### Deploy
 
 - [ ] **Agent Runtime (Agent Engine)** - deployed the ADK agent and smoke-tested it.
+- [ ] **Deployments** - verified the deployed runtime in Agent Platform -> Scale -> Deployments.
 - [ ] **Cloud Run or GKE** - used only if you need custom HTTP, containers, or Kubernetes control.
 - [ ] **Networking** - decided whether PSC, VPC-SC, CMEK, or regional pinning are required.
 - [ ] **Rollback** - know how to redeploy a previous version or Cloud Run revision.
@@ -40,6 +43,8 @@ source .venv/bin/activate
 - [ ] **Service account** - `agent-runner` has only required roles.
 - [ ] **Tool approvals** - refunds, password resets, and other high-impact tools require confirmation.
 - [ ] **Gemini Enterprise registration** - ADK agent registered with the app if end users need it there.
+- [ ] **Agent Registry** - production agents and MCP servers have owners, environments, and endpoint metadata.
+- [ ] **Policies, Gateways, Security** - serving path controls are documented and tested.
 - [ ] **Model Armor** - template created and tested for the runtime path you control.
 - [ ] **Audit and compliance** - logging, SCC, VPC-SC, CMEK, and data residency decisions documented.
 
@@ -47,6 +52,7 @@ source .venv/bin/activate
 
 - [ ] **Simulation** - personas and scenarios exist for at least the risky flows.
 - [ ] **Agent evaluation** - prompt set includes expected intent and expected tool use.
+- [ ] **Topology** - Agent Platform -> Optimise -> Topology matches the expected production architecture.
 - [ ] **Observability** - logs, traces, metrics, and at least one alert are in place.
 - [ ] **Release gate** - evaluation or simulation thresholds are part of your deploy process.
 

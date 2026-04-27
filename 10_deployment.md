@@ -10,15 +10,15 @@ You have three deployment paths. Pick based on needs:
 
 This section deploys to Agent Runtime (Agent Engine) first (recommended), then shows the Cloud Run and GKE alternatives.
 
+In the Agent Platform console, the managed path is **Scale -> Deployments**. The SDK and API still refer to the managed runtime as Agent Engine, and resource names still use `reasoningEngines/...`.
+
 ```powershell
-cd $HOME\agent-platform-demo
-. .\set-env.ps1
+cd C:\Code\gemini-enterprise-agent-platform
 .\.venv\Scripts\Activate.ps1
 ```
 
 ```bash
-cd "$HOME/agent-platform-demo"
-source ./set-env.sh
+cd /path/to/gemini-enterprise-agent-platform
 source .venv/bin/activate
 ```
 

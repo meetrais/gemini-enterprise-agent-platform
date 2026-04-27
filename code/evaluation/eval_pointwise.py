@@ -7,7 +7,7 @@ from vertexai.evaluation import EvalTask, PointwiseMetric
 
 vertexai.init(project=os.environ["PROJECT_ID"], location="us-central1")
 
-ROOT_DIR = Path(__file__).resolve().parents[1]
+ROOT_DIR = Path(__file__).resolve().parents[2]
 EVAL_DATA_DIR = ROOT_DIR / "eval_data"
 
 dataset = pd.read_csv(EVAL_DATA_DIR / "support_eval.csv")

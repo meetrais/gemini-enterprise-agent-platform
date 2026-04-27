@@ -6,6 +6,8 @@ This section covers three things:
 2. **3.B** - Tune a Gemini model with supervised fine-tuning, end to end.
 3. **3.C** - Run a Gen AI Evaluation Service evaluation to compare model versions.
 
+In the Agent Platform console, model selection and tuning live under **Models**. Evaluation appears under **Optimise -> Evaluation** when you are evaluating agent or model behavior as part of a release process.
+
 You don't have to do 3.B and 3.C for every project - they're optional but useful before production. Skim them at minimum so you know what's possible.
 
 Before you start:
@@ -183,7 +185,7 @@ Your job appears in **Agent Platform -> Models -> Tuning** with status `Running`
 
 ## 3.B.4 Launch the tuning job (SDK method)
 
-If you prefer the SDK, create `tune_model.py`:
+If you prefer the SDK, create `code\model_tuning\tune_model.py`:
 
 ```python
 import os
@@ -207,7 +209,7 @@ print("Tuning job started:", job.resource_name)
 Run it:
 
 ```powershell
-python tune_model.py
+python code\model_tuning\tune_model.py
 ```
 
 The job runs asynchronously. Poll its status:
@@ -252,14 +254,14 @@ Set that endpoint as `TUNED_MODEL`, then run the test script. From the repo root
 
 ```powershell
 $env:TUNED_MODEL = "projects/<PROJECT_NUMBER>/locations/us-central1/endpoints/<ENDPOINT_ID>"
-python code\test_tuned.py
+python code\model_tuning\test_tuned.py
 ```
 
 If you are already in the `code` folder:
 
 ```powershell
 $env:TUNED_MODEL = "projects/<PROJECT_NUMBER>/locations/us-central1/endpoints/<ENDPOINT_ID>"
-python test_tuned.py
+python model_tuning\test_tuned.py
 ```
 
 Use the deployed endpoint resource (`.../endpoints/...`) here, not the model version resource (`.../models/...@1`).
@@ -355,17 +357,22 @@ In real life, target **100+ rows**, sourced from real or realistic traffic.
 
 ## 3.C.2 Pointwise evaluation - score one model
 
-Create `eval_pointwise.py`:
+Create `code\evaluation\eval_pointwise.py`:
 
 ```python
 import os
+from pathlib import Path
+
 import pandas as pd
 import vertexai
 from vertexai.evaluation import EvalTask, PointwiseMetric
 
 vertexai.init(project=os.environ["PROJECT_ID"], location="us-central1")
 
-dataset = pd.read_csv("eval_data/support_eval.csv")
+ROOT_DIR = Path(__file__).resolve().parents[2]
+EVAL_DATA_DIR = ROOT_DIR / "eval_data"
+
+dataset = pd.read_csv(EVAL_DATA_DIR / "support_eval.csv")
 
 # Custom rubric: classification correctness
 classification_correctness = PointwiseMetric(
@@ -405,13 +412,13 @@ result = eval_task.evaluate(model="gemini-2.5-flash")
 
 print(result.summary_metrics)
 print(result.metrics_table.head())
-result.metrics_table.to_csv("eval_data/pointwise_result.csv", index=False)
+result.metrics_table.to_csv(EVAL_DATA_DIR / "pointwise_result.csv", index=False)
 ```
 
 Run:
 
 ```powershell
-python eval_pointwise.py
+python code\evaluation\eval_pointwise.py
 ```
 
 You'll see:
@@ -423,10 +430,12 @@ You'll see:
 
 This is what Auto SxS does under the hood when you compare versions.
 
-Create `eval_pairwise.py`:
+Create `code\evaluation\eval_pairwise.py`:
 
 ```python
 import os
+from pathlib import Path
+
 import pandas as pd
 import vertexai
 from vertexai.evaluation import EvalTask, PairwiseMetric, MetricPromptTemplateExamples
@@ -435,7 +444,10 @@ from google import genai
 vertexai.init(project=os.environ["PROJECT_ID"], location="us-central1")
 client = genai.Client(vertexai=True, project=os.environ["PROJECT_ID"], location="us-central1")
 
-dataset = pd.read_csv("eval_data/support_eval.csv")
+ROOT_DIR = Path(__file__).resolve().parents[2]
+EVAL_DATA_DIR = ROOT_DIR / "eval_data"
+
+dataset = pd.read_csv(EVAL_DATA_DIR / "support_eval.csv")
 
 BASE_MODEL = "gemini-2.5-flash"
 TUNED_MODEL = os.environ["TUNED_MODEL"]
@@ -466,10 +478,16 @@ eval_task = EvalTask(
 )
 result = eval_task.evaluate()
 print(result.summary_metrics)
-result.metrics_table.to_csv("eval_data/pairwise_result.csv", index=False)
+result.metrics_table.to_csv(EVAL_DATA_DIR / "pairwise_result.csv", index=False)
 ```
 
-Run it. The summary shows what fraction of examples the tuned model won, lost, or tied. If the tuned model wins >55% on a meaningful sample, it's a real improvement.
+Run it:
+
+```powershell
+python code\evaluation\eval_pairwise.py
+```
+
+The summary shows what fraction of examples the tuned model won, lost, or tied. If the tuned model wins >55% on a meaningful sample, it's a real improvement.
 
 ## 3.C.4 Adaptive rubrics (advanced)
 
