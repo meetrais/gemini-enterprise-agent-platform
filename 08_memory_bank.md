@@ -10,7 +10,7 @@ The platform provides both:
 - **Agent Engine Sessions** - managed conversation state.
 - **Agent Engine Memory Bank** - managed long-term memory, with Gemini auto-extracting key facts from session history asynchronously.
 
-In the Agent Platform console, these are **Scale -> Sessions** and **Scale -> Memory Bank**. They share the same underlying Agent Engine resource, which is why the SDK resource path still uses `reasoningEngines/...`.
+In the Agent Platform console, these are **Scale -> Sessions** and **Scale -> Memory Bank**.
 
 ```powershell
 cd $HOME\agent-platform-demo
@@ -28,7 +28,7 @@ source .venv/bin/activate
 
 The Agent Engine instance is the home for both Sessions and Memory Bank. You create it once and reuse it across deployments.
 
-Create `create_agent_engine.py`:
+Create `code\memory_bank\create_agent_engine.py`:
 
 ```python
 import os
@@ -51,7 +51,7 @@ print(agent_engine.api_resource.name.split("/")[-1])
 Run:
 
 ```powershell
-python create_agent_engine.py
+python code\memory_bank\create_agent_engine.py
 ```
 
 You'll get something like:
@@ -94,15 +94,65 @@ Memories are isolated per user identity, can be configured with TTL for automati
 
 ## 8.3 Wire ADK to Memory Bank for local runs
 
-Edit `code\support_assistant\agent.py`:
+This section creates the local demo files. You don't run `agent.py` or `services.py` directly; `test_memory.py` imports them and runs the demo in section 8.4.
+
+Make sure these env vars are set:
+
+```powershell
+$env:PROJECT_ID = "YOUR_PROJECT_ID"
+$env:LOCATION = "us-central1"
+$env:AGENT_ENGINE_ID = "YOUR_AGENT_ENGINE_ID"
+$env:GOOGLE_CLOUD_PROJECT = $env:PROJECT_ID
+$env:GOOGLE_CLOUD_LOCATION = $env:LOCATION
+$env:GOOGLE_GENAI_USE_VERTEXAI = "True"
+```
+
+Create `code\memory_bank\agent.py`:
 
 ```python
 import os
 from google.adk.agents import Agent
+from google.adk.tools.preload_memory_tool import PreloadMemoryTool
+
+def get_account_status(account_id: str) -> dict:
+ return {
+  "account_id": account_id,
+  "plan": "Pro",
+  "status": "active",
+  "support_tier": "email support with 24-hour SLA",
+ }
+
+def get_recent_invoices(account_id: str) -> list[dict]:
+ return [
+  {
+   "account_id": account_id,
+   "invoice_id": "INV-1001",
+   "amount": "$20.00",
+   "status": "paid",
+  }
+ ]
+
+root_agent = Agent(
+ name="memory_bank_support_assistant",
+ model=os.environ.get("GOOGLE_GENAI_MODEL", "gemini-2.5-flash"),
+ description="ACME support assistant used for the Memory Bank demo.",
+ instruction=(
+  "You are ACME's support assistant. "
+  "ACME is a SaaS platform for managing IoT fleet telemetry. "
+  "Use any prior user memories provided in your context to personalize answers. "
+  "If you know the user's account ID from memory, use it instead of asking again. "
+  "Keep answers concise."
+ ),
+ tools=[PreloadMemoryTool(), get_account_status, get_recent_invoices],
+)
+```
+
+Create `code\memory_bank\services.py`:
+
+```python
+import os
 from google.adk.memory import VertexAiMemoryBankService
 from google.adk.sessions import VertexAiSessionService
-
-# ... your tools ...
 
 memory_service = VertexAiMemoryBankService(
  project=os.environ["PROJECT_ID"],
@@ -115,90 +165,122 @@ session_service = VertexAiSessionService(
  location=os.environ["LOCATION"],
  agent_engine_id=os.environ["AGENT_ENGINE_ID"],
 )
-
-root_agent = Agent(
- name="support_assistant",
- model="gemini-2.5-pro",
- instruction=(
- "You are ACME's support assistant. "
- "Use any prior user memories provided in your context to personalize "
- "answers (e.g., recall their account ID instead of asking again)."
- ),
- tools=[search_kb, get_account_status, get_recent_invoices, issue_refund],
-)
-
-# When you instantiate a Runner, pass these services in.
 ```
 
-When deploying to Agent Runtime (Agent Engine) with the `AdkApp` template (section 10), session management is handled for deployed ADK agents. Keep the explicit service wiring above for local testing and for examples where you want to control the service instances.
-
-## 8.4 Test end-to-end with a Python runner
-
-Create `test_memory.py`:
+Create `code\memory_bank\test_memory.py`:
 
 ```python
-import asyncio, os
+import asyncio
+import os
+import sys
+from pathlib import Path
+
+os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "True")
+os.environ.setdefault("GOOGLE_CLOUD_PROJECT", os.environ["PROJECT_ID"])
+os.environ.setdefault("GOOGLE_CLOUD_LOCATION", os.environ["LOCATION"])
+
 from google.adk.runners import Runner
 from google.genai import types
-from support_assistant.agent import root_agent, memory_service, session_service
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from memory_bank.agent import root_agent
+from memory_bank.services import memory_service, session_service
 
 async def chat(runner, user_id, session_id, text):
  msg = types.Content(role="user", parts=[types.Part(text=text)])
  async for event in runner.run_async(
- user_id=user_id, session_id=session_id, new_message=msg
+  user_id=user_id,
+  session_id=session_id,
+  new_message=msg,
  ):
- if event.is_final_response():
- return event.content.parts[0].text
+  if event.is_final_response():
+   return event.content.parts[0].text
+ return None
+
+async def add_session_to_memory(app_name, user_id, session_id):
+ session = await session_service.get_session(
+  app_name=app_name,
+  user_id=user_id,
+  session_id=session_id,
+ )
+ result = await memory_service.add_session_to_memory(session)
+ print("Memory generation requested.")
+ if result is not None:
+  print(result)
+
+async def print_memory_search(app_name, user_id, query):
+ search_memory = getattr(memory_service, "search_memory", None)
+ if not search_memory:
+  print("Direct memory search is not available in this ADK version.")
+  return
+ result = await search_memory(app_name=app_name, user_id=user_id, query=query)
+ print("Memory search result:")
+ print(result)
 
 async def main():
+ app_name = "memory_bank_support_assistant"
  runner = Runner(
- agent=root_agent,
- app_name="support_assistant",
- memory_service=memory_service,
- session_service=session_service,
+  agent=root_agent,
+  app_name=app_name,
+  memory_service=memory_service,
+  session_service=session_service,
  )
- user_id = "alice@example.com"
+ user_id = os.environ.get("MEMORY_TEST_USER", "alice@example.com")
 
- # Session 1
  s1 = await session_service.create_session(
- app_name="support_assistant", user_id=user_id
+  app_name=app_name,
+  user_id=user_id,
  )
- print(await chat(runner, user_id, s1.id,
- "Hi, I'm on account A-12345. I prefer to be contacted by email."))
- print(await chat(runner, user_id, s1.id,
- "What plan am I on?"))
+ print(await chat(
+  runner,
+  user_id,
+  s1.id,
+  "Hi, I'm on account A-12345. I prefer to be contacted by email.",
+ ))
+ print(await chat(runner, user_id, s1.id, "What plan am I on?"))
 
- # End the session. Memory Bank will extract memories asynchronously.
- await session_service.close_session(session_id=s1.id)
- print("Session 1 closed. Waiting 30s for memory extraction...")
+ await add_session_to_memory(app_name, user_id, s1.id)
+ print("Session 1 sent to Memory Bank. Waiting 30s for memory extraction...")
  await asyncio.sleep(30)
+ await print_memory_search(app_name, user_id, "account ID and contact preference")
 
- # Session 2 - new conversation, same user. Agent should recall things.
  s2 = await session_service.create_session(
- app_name="support_assistant", user_id=user_id
+  app_name=app_name,
+  user_id=user_id,
  )
- print(await chat(runner, user_id, s2.id,
- "Hi, can you look up my latest invoices?"))
- # The agent should use memories to know account = A-12345 without asking.
+ print(await chat(runner, user_id, s2.id, "Hi, can you look up my latest invoices?"))
 
-asyncio.run(main())
+if __name__ == "__main__":
+ asyncio.run(main())
 ```
+
+Optional sanity-check that the files import and compile:
+
+```powershell
+python -m py_compile code\memory_bank\agent.py code\memory_bank\services.py code\memory_bank\test_memory.py
+```
+
+Then continue to section 8.4 and run `test_memory.py`.
+
+## 8.4 Test end-to-end with a Python runner
+
+Run the demo now:
 
 Run:
 
 ```powershell
-python test_memory.py
+python code\memory_bank\test_memory.py
 ```
 
-The first session establishes facts. After it closes, Memory Bank extracts them in the background. The second session starts fresh - but the agent has access to the user's memories and uses them.
+The first session establishes facts. The script then fetches that session and calls `memory_service.add_session_to_memory(session)`, which triggers Memory Bank extraction. The demo agent also uses `PreloadMemoryTool()`, so the second session can retrieve memories for the same user before responding.
 
 ## 8.5 Inspect memories in the console
 
-1. In the navigation menu, under **Products**, expand **Agent Platform**.
-2. Click **Agents**.
-3. Open `support-assistant-engine`.
-4. Open the **Memories** tab.
-5. Filter by `user_id = alice@example.com`.
+1. In the Agent Platform console, open **Agents -> Memory Bank**.
+2. Select the Agent Engine instance named `support-assistant-engine`.
+3. Open the **Memories** tab.
+4. Filter by `user_id = alice@example.com`.
 
 You should see entries like:
 
@@ -212,7 +294,7 @@ Topic: communication_pref Content: prefers email
 Sometimes you want to inject a memory programmatically (e.g., from a CRM record) or read them from a non-ADK app.
 
 ```python
-# memory_api.py
+# code/memory_bank/memory_api.py
 import os, vertexai
 
 client = vertexai.Client(project=os.environ["PROJECT_ID"], location=os.environ["LOCATION"])
@@ -241,11 +323,22 @@ for m in client.agent_engines.memories.list(name=os.environ["AGENT_ENGINE_NAME"]
 client.agent_engines.memories.delete(name="<MEMORY_RESOURCE_NAME>")
 ```
 
+Run:
+
+```powershell
+python code\memory_bank\memory_api.py
+```
+
 ## 8.7 Configure what gets remembered
 
 By default Memory Bank extracts whatever Gemini judges to be durable user-specific information. You can constrain it.
 
 ```python
+# code/memory_bank/configure_memory_bank.py
+import os, vertexai
+
+client = vertexai.Client(project=os.environ["PROJECT_ID"], location=os.environ["LOCATION"])
+
 client.agent_engines.update(
  name=os.environ["AGENT_ENGINE_NAME"],
  config={
@@ -270,6 +363,12 @@ client.agent_engines.update(
  }
  },
 )
+```
+
+Run:
+
+```powershell
+python code\memory_bank\configure_memory_bank.py
 ```
 
 A short TTL plus an allow-list is the safest starting point.
@@ -305,8 +404,8 @@ On macOS/Linux, use `${PROJECT_ID}`, `${AGENT_SA}`, and `${AGENT_ENGINE_ID}` in 
 ## What you should have now
 
 - ✅ An Agent Engine instance created with ID saved in env.
-- ✅ `code\support_assistant\agent.py` configured to use Memory Bank.
-- ✅ `test_memory.py` proves memory survives across sessions.
+- ✅ Memory Bank helper code created under `code\memory_bank`.
+- ✅ `code\memory_bank\test_memory.py` proves memory survives across sessions.
 - ✅ You've inspected memories in the console.
 - ✅ You can read/write memories directly via the SDK.
 - ✅ An allow-list / TTL configured for the Memory Bank instance.
