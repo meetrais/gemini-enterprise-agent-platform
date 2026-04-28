@@ -1,275 +1,199 @@
-﻿# 09 - Multi-agent orchestration and the A2A protocol
+# 09 - Multi-agent orchestration and the A2A protocol
 
-A single agent is rarely the best architecture. Specialists outperform generalists: a billing agent that knows refund policy and tools cold beats one that has to know everything. ADK supports composing specialized agents into hierarchies, with a coordinator that decides who handles what.
+A single agent is rarely the best architecture. Specialists outperform generalists: a billing agent that knows refund policy and tools beats one that has to know everything. ADK supports composing specialized agents into hierarchies, with a coordinator that decides who handles what.
 
 This section restructures your support assistant into:
 
-- **Router** (`gemini-2.5-flash`) - the triage agent. Reads the user message and delegates.
-- **Billing Agent** (`gemini-2.5-pro`) - handles billing/refund flows.
-- **Tech Agent** (`gemini-2.5-pro`) - handles technical/troubleshooting flows.
-- **Account Agent** (`gemini-2.5-pro`) - handles login/email/MFA flows.
+- **Router** (`gemini-2.5-flash`) - triages the user request and transfers to a specialist.
+- **Billing Agent** (`gemini-2.5-pro`) - handles billing, refunds, and invoices.
+- **Tech Agent** (`gemini-2.5-pro`) - handles technical and troubleshooting flows.
+- **Account Agent** (`gemini-2.5-pro`) - handles login, email, MFA, and password reset flows.
 
 ```powershell
-cd $HOME\agent-platform-demo
-. .\set-env.ps1
+cd C:\Code\gemini-enterprise-agent-platform
 .\.venv\Scripts\Activate.ps1
+.\set-env.ps1
 ```
 
 ```bash
-cd "$HOME/agent-platform-demo"
-source ./set-env.sh
+cd /path/to/gemini-enterprise-agent-platform
 source .venv/bin/activate
+source ./set-env.sh
 ```
 
-## 9.1 Refactor `agent.py` into multiple agents
+## 9.1 Multi-agent code
 
-Replace `code\support_assistant\agent.py` with:
+This repo includes the multi-agent files under `code\multi_agent`:
+
+| File | Purpose |
+|------|---------|
+| `code\multi_agent\agent.py` | ADK router plus billing, tech, and account sub-agents. |
+| `code\multi_agent\run_local_demo.py` | Scripted local runner that sends three test prompts through the router. |
+| `code\multi_agent\workflow_examples.py` | Sequential and parallel workflow-agent examples for deterministic flows. |
+
+The main pattern in `agent.py` is:
 
 ```python
-"""ACME Support Assistant - multi-agent system."""
-
-import os
-from google.adk.agents import Agent
-from google.adk.memory import VertexAiMemoryBankService
-from google.adk.sessions import VertexAiSessionService
-from google.adk.tools import google_search, code_execution
-from google.adk.tools.retrieval import VertexAiRagRetrieval
-from vertexai import rag
-
-
-# ----- Function tools (from section 6) -----
-def get_account_status(account_id: str) -> dict:
- """Looks up the current status of an ACME customer account."""
- return {"status": "active", "plan": "Pro", "balance_usd": 12.40,
- "last_login_iso": "2026-04-22T10:11:00Z"}
-
-def get_recent_invoices(account_id: str, limit: int = 5) -> list[dict]:
- """Returns the most recent invoices for a customer."""
- return [
- {"invoice_id": "INV-1042", "date_iso": "2026-03-01",
- "amount_usd": 20.00, "status": "paid"},
- {"invoice_id": "INV-1043", "date_iso": "2026-04-01",
- "amount_usd": 40.00, "status": "paid"},
- ][:limit]
-
-def issue_refund(account_id: str, amount_usd: float, reason: str) -> dict:
- """Issues a refund. Requires user confirmation."""
- if amount_usd > 100:
- return {"refund_id": None, "status": "requires_approval"}
- return {"refund_id": "R-987", "status": "completed",
- "amount_usd_refunded": amount_usd}
-
-def reset_password(account_id: str) -> dict:
- """Sends a password reset email to the account's primary email."""
- return {"status": "email_sent"}
-
-
-# ----- KB retrieval -----
-search_kb = VertexAiRagRetrieval(
- name="search_acme_kb",
- description="Search ACME's KB for product, pricing, policy, runbook info.",
- rag_resources=[rag.RagResource(rag_corpus=os.environ["RAG_CORPUS"])],
- similarity_top_k=8,
- vector_distance_threshold=0.6,
-)
-
-
-# ----- Specialist agents -----
-billing_agent = Agent(
- name="billing_agent",
- model="gemini-2.5-pro",
- description="Resolves billing questions, charges, refunds, invoices.",
- instruction=(
- "You are ACME's billing specialist. "
- "ALWAYS ask for the account ID first if not provided. "
- "Use get_account_status, get_recent_invoices to investigate. "
- "Use search_acme_kb to look up policy. "
- "Before issue_refund: explicitly confirm the amount and reason "
- "with the user, and never issue a refund > $100 without manager "
- "approval (the tool will tell you if approval is needed)."
- ),
- tools=[get_account_status, get_recent_invoices, issue_refund, search_kb],
-)
-
-tech_agent = Agent(
- name="tech_agent",
- model="gemini-2.5-pro",
- description="Resolves technical issues, errors, integration problems.",
- instruction=(
- "You are ACME's technical-support specialist. "
- "Always search_acme_kb FIRST before answering. "
- "If the user reports outages or 5xx errors, walk them through the "
- "troubleshooting runbook step by step. "
- "Use code_execution for any calculations or log/data analysis. "
- "If unresolved after the runbook, summarize what was tried and "
- "say you'll escalate to L2."
- ),
- tools=[search_kb, code_execution, google_search],
-)
-
-account_agent = Agent(
- name="account_agent",
- model="gemini-2.5-pro",
- description="Handles login, email change, MFA, password reset.",
- instruction=(
- "You are ACME's account-management specialist. "
- "Verify the account ID first. For password resets call reset_password."
- ),
- tools=[get_account_status, reset_password, search_kb],
-)
-
-
-# ----- Router / coordinator -----
 root_agent = Agent(
- name="support_router",
- model="gemini-2.5-flash", # cheap and fast
- description="Top-level support router. Triages and delegates to a specialist.",
+ name="multi_agent_support_router",
+ model="gemini-2.5-flash",
  instruction=(
- "You are the entry-point for ACME Customer Support. "
- "Your ONLY job is to triage the user's request and delegate to the "
- "right specialist sub-agent: billing_agent, tech_agent, account_agent. "
- "Do not answer specialist questions yourself. "
- "If the user's intent is unclear, ask one short clarifying question. "
- "If the request is general greeting or off-topic, respond yourself "
- "with a brief friendly note."
+  "Triage the user's request and transfer to billing_agent, "
+  "tech_agent, or account_agent."
  ),
  sub_agents=[billing_agent, tech_agent, account_agent],
 )
-
-
-# ----- Memory + Session services -----
-memory_service = VertexAiMemoryBankService(
- project=os.environ["PROJECT_ID"],
- location=os.environ["LOCATION"],
- agent_engine_id=os.environ["AGENT_ENGINE_ID"],
-)
-session_service = VertexAiSessionService(
- project=os.environ["PROJECT_ID"],
- location=os.environ["LOCATION"],
- agent_engine_id=os.environ["AGENT_ENGINE_ID"],
-)
 ```
+
+Each specialist has its own model, instruction, and tools. The billing specialist owns invoice and refund tools; the tech specialist owns troubleshooting guidance and code execution; the account specialist owns password reset.
+
+Accuracy note: in current ADK versions, code execution is configured with the agent's `code_executor=` parameter, not by importing `code_execution` from `google.adk.tools`.
 
 ## 9.2 How delegation works
 
-When `root_agent` decides to delegate, ADK transfers the conversation to the named sub-agent. The sub-agent has its own instruction, model, and tools, but inherits the session - so it sees what the user already said.
+When `root_agent` decides to delegate, ADK transfers the conversation to the selected sub-agent. The sub-agent has its own instruction, model, and tools, but shares the conversation context, so it sees what the user already said.
 
-When the sub-agent finishes, control returns to the router (or stays with the sub-agent for a multi-turn specialist exchange - depends on the conversation).
+When the specialist finishes, control can return to the router, or the specialist can continue the multi-turn exchange if the user is still in that specialist flow.
 
-You can see all of this clearly in `adk web` traces: each step shows which agent ran, with what tools.
+You can see this in `adk web` traces: each step shows which agent ran, what tools it called, and where control moved next.
 
-## 9.3 Test the system
+## 9.3 Run the web trace demo
+
+Run ADK's local web UI from the repo root:
 
 ```powershell
 adk web --port 8000 code
 ```
 
+Open the local URL printed by ADK, then select `multi_agent` in the app picker.
+
 Try these conversations:
 
-- **Billing flow:**
- ```
- You: I think I was double-charged. My account is A-12345.
- Router -> billing_agent -> get_account_status -> get_recent_invoices -> answer.
+- **Billing flow**
+
+ ```text
+ I think I was double-charged. My account is A-12345.
  ```
 
-- **Technical flow:**
- ```
- You: My API just started returning 503 errors.
- Router -> tech_agent -> search_acme_kb -> walks the runbook.
- ```
+- **Technical flow**
 
-- **Account flow:**
- ```
- You: I want to change the email on my account.
- Router -> account_agent -> asks for account ID -> resolves.
+ ```text
+ My API just started returning 503 errors.
  ```
 
-In the trace, expand each step. You should see the router's reasoning, the delegation event, then the specialist's chain of tool calls.
+- **Account flow**
 
-## 9.4 Workflow agents (alternative orchestration)
+ ```text
+ I need to reset the password for account A-12345.
+ ```
 
-For deterministic flows (e.g., "always run A then B then C"), use **workflow agents** instead of free-form delegation:
+In the trace, expand each step. You should see the router, the delegation event, then the specialist's tool calls.
+
+## 9.4 Run the scripted local demo
+
+Run:
+
+```powershell
+python code\multi_agent\run_local_demo.py
+```
+
+The script uses `InMemorySessionService`, so it does not persist session history after the script exits. It is meant for quick routing validation, not Memory Bank testing.
+
+Optional compile check:
+
+```powershell
+python -m py_compile code\multi_agent\agent.py code\multi_agent\run_local_demo.py code\multi_agent\workflow_examples.py
+```
+
+## 9.5 Workflow agents for deterministic orchestration
+
+For deterministic flows, use workflow agents instead of free-form delegation:
 
 ```python
-from google.adk.agents import SequentialAgent, ParallelAgent
+from google.adk.agents import ParallelAgent, SequentialAgent
 
-# Always: classify -> answer -> log
-deterministic_pipeline = SequentialAgent(
+ticket_pipeline = SequentialAgent(
  name="ticket_pipeline",
  sub_agents=[classifier_agent, responder_agent, logger_agent],
 )
 
-# Run two independent searches in parallel:
 parallel_search = ParallelAgent(
  name="parallel_search",
  sub_agents=[kb_search_agent, web_search_agent],
 )
 ```
 
-Sequential, parallel, and loop agents are part of ADK Python 2.0 and are useful when you don't want the model to decide the flow.
+The examples are in `code\multi_agent\workflow_examples.py`.
 
-## 9.5 Agent2Agent (A2A) protocol - talking to agents you don't own
+Use workflow agents when the order is fixed, such as:
 
-A2A is Google's open protocol for agent-to-agent calls. It's how a Gemini agent can hand off to a LangGraph agent, a CrewAI agent, or a partner agent in the Marketplace, regardless of framework.
+1. classify a ticket,
+2. draft a response,
+3. write an internal log.
 
-### 9.5.1 Expose your agent over A2A
+Use router plus sub-agents when the model should choose the next specialist dynamically.
 
-Agent Runtime (Agent Engine) supports agents built with the Agent2Agent protocol. Treat A2A registration as an integration step: confirm the exact endpoint and registration requirements in the current Agent Engine or Gemini Enterprise docs for your deployment type.
+## 9.6 Agent2Agent (A2A) protocol - talking to agents you don't own
 
-### 9.5.2 Call another A2A agent as a tool
+A2A is Google's open protocol for agent-to-agent interoperability. In Vertex AI Agent Engine, A2A support is currently documented as a preview feature. It lets an agent built in one framework communicate with an A2A-compliant agent hosted somewhere else.
 
-Suppose your org has a separate `legal_review_agent` that summarizes contract risk:
+### 9.6.1 Expose your agent over A2A
 
-```python
-from google.adk.tools import A2AAgentTool
+Current Agent Engine A2A development uses an A2A agent wrapper rather than a normal ADK `sub_agents` relationship. The documented shape is:
 
-legal_review = A2AAgentTool(
- name="legal_review",
- description="Submit a contract or policy text for legal-risk review.",
- endpoint="https://reasoning-engines.googleapis.com/v1/projects/.../reasoningEngines/<ID>",
- auth={"type": "google_default"},
-)
+1. define an `AgentCard` that describes the remote agent's skills,
+2. define an `AgentExecutor` that handles A2A tasks,
+3. optionally use an ADK `LlmAgent` inside that executor,
+4. wrap it as an `A2aAgent` for local testing and deployment.
 
-root_agent = Agent(
- name="support_router",
- model="gemini-2.5-flash",
- instruction="...",
- sub_agents=[billing_agent, tech_agent, account_agent],
- tools=[legal_review], # Now any specialist can also call this remote agent
-)
-```
+Treat A2A as an integration boundary, not just another local specialist. Confirm the exact preview API in the current Agent Engine docs before production use.
 
-### 9.5.3 Discovering A2A agents in your org
+### 9.6.2 Call another A2A agent
 
-In Gemini Enterprise, admins can register A2A agents and make them available to users in the web app. In developer code, keep the remote endpoint and auth settings in configuration rather than hard-coding them.
+An A2A agent hosted on Agent Engine exposes protocol operations such as:
 
-## 9.6 Running 3rd-party frameworks alongside ADK
+- `handle_authenticated_agent_card`
+- `on_message_send`
+- `on_get_task`
+- `on_cancel_task`
 
-ADK is the most ergonomic choice on Google Cloud, but Agent Runtime (Agent Engine) supports other Python agent frameworks too:
+In practice, call the remote agent through the SDK or a standard authenticated HTTP client, using the agent card URL and Google credentials. Keep the remote endpoint and auth settings in configuration rather than hard-coding them.
 
-- **LangChain / LangGraph** - `vertexai.preview.reasoning_engines.LangchainAgent`
-- **CrewAI** - wrap with the runnable interface
-- **LlamaIndex Query Pipeline** - first-class support
-- **Custom Python** - any Python class with `query()` and `stream_query()` methods
+Do not use a made-up `A2AAgentTool` import unless your installed ADK version explicitly provides one. If you want a local ADK agent to behave like a tool, the current ADK package provides `google.adk.tools.agent_tool.AgentTool`, but that is for local agent composition, not the A2A protocol.
 
-Memory Bank works across all of these with notebook samples for LangGraph and CrewAI. Mix-and-match is fine.
+### 9.6.3 Discovering A2A agents in your org
 
-## 9.7 Best practices for multi-agent
+In Gemini Enterprise, admins can register or expose agents for organizational use depending on your edition and deployment path. For developer code, treat discovery as configuration: resolve the remote agent card or Agent Engine resource by environment, service discovery, or an internal registry.
+
+## 9.7 Running third-party frameworks alongside ADK
+
+ADK is the most ergonomic choice on Google Cloud, but Agent Engine also documents templates or support paths for other agent frameworks, including:
+
+- **LangChain / LangGraph**
+- **Agent2Agent (preview)**
+- **LlamaIndex (preview)**
+- **AG2 / AutoGen**
+- **Custom Python**
+
+Use ADK for the local multi-agent router in this course. Reach for A2A or custom framework templates when the remote agent is owned by another team, uses another framework, or has to be accessed through a protocol boundary.
+
+## 9.8 Best practices for multi-agent
 
 - **Keep the router cheap.** Use a flash-tier model - its only job is triage.
-- **Specialists own their domain.** Don't share tools across agents that don't need them.
+- **Specialists own their domain.** Do not share tools across agents that do not need them.
 - **Limit depth.** A -> B -> C is fine. A -> B -> C -> D -> E gets brittle. Flatten with workflow agents if you find yourself going deep.
-- **Test the boundaries.** "What plan am I on, and why am I getting 503s?" is a real user message. Make sure your router handles compound intents - usually by delegating to the most relevant agent and letting that agent ask follow-ups.
-- **Trace religiously.** When something misroutes, look at exactly what the router saw before assuming the model was dumb. Often the issue is your instruction.
+- **Test boundaries.** "What plan am I on, and why am I getting 503s?" is a real user message. Make sure your router handles compound intents.
+- **Trace religiously.** When something misroutes, inspect exactly what the router saw before changing code.
+- **Use A2A for boundaries.** Local sub-agents are best inside one codebase. A2A is best when the other agent is remote, separately owned, or framework-neutral.
 
 ---
 
 ## What you should have now
 
 - ✅ Four agents defined: router, billing, tech, account.
-- ✅ Router delegates correctly on at least three test cases.
-- ✅ You've watched a delegation in the trace pane and understand the flow.
-- ✅ You know how to use SequentialAgent / ParallelAgent for deterministic flows.
-- ✅ You understand how A2A lets you call agents you don't own.
+- ✅ Multi-agent code under `code\multi_agent`.
+- ✅ Router delegation tested in `adk web` or `run_local_demo.py`.
+- ✅ You know when to use `SequentialAgent` and `ParallelAgent`.
+- ✅ You understand A2A as a preview integration protocol for agents you do not own.
 
 Move on to **[`10_deployment.md`](10_deployment.md)** to ship this to production.
